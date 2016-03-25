@@ -510,7 +510,7 @@ class ProjectsController extends Controller {
 				foreach ($input['sq_o'] as $key => $value) {
     				array_push($owners, Owners::where('id', '=', $value)->pluck('name'));
 				}
-				$query['owner'] = implode($owners, ', ');
+				$query['owner'] = implode($owners, ',');
 			}
 			else {
 				$query['owner'] = Owners::where('id', '=', $input['sq_o'])->pluck('name');	
