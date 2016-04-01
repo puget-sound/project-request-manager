@@ -8,7 +8,7 @@
 	@if ($query['sterm'] != "") 
 	<h4>Searched for "{{ $query['sterm'] }}"</h4>
 	@endif
-	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascsade: <strong>{{ $query['cascade'] }}</strong></p>
+	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
 	<p class="text-muted">
 	@if (count($projects) == 1)
 	Returned {{ count($projects) }} result.
