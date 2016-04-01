@@ -17,8 +17,9 @@ Project Search
 	
 	<div class="form-group">
 	{!! Form::label('sq_o', 'Owner ') !!}
-	<select multiple="multiple" name="sq_o[]" class="form-control">
-		<option value="">Any</option>
+	<br>
+	<select multiple="multiple" id="sq_o" name="sq_o[]" class="form-control">
+		<!--<option value="">Any</option>-->
 		@foreach ($owners as $owner)
 		<option value="{{ $owner->id }}">{{ $owner->name }}</option>
 		@endforeach
@@ -52,4 +53,35 @@ Project Search
 
 
 
+@endsection
+
+@section('extra-scripts')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#sq_o').multiselect({
+            buttonText: function(options, select) {
+            	if (options.length === 0) {
+                    return 'Any owner';
+                }
+                else {
+                     var labels = [];
+                     options.each(function() {
+                         if ($(this).attr('label') !== undefined) {
+                             labels.push($(this).attr('label'));
+                         }
+                         else {
+                             labels.push($(this).html());
+                         }
+                     });
+                     return labels.join(', ') + '';
+                 }
+            },
+            maxHeight: 200,
+            onChange: function(option, checked, select) {
+                $(".dropdown-toggle").dropdown("toggle");
+            },
+            buttonClass: 'btn btn-default sq_o_button'
+        });
+    });
+</script>
 @endsection
