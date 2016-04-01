@@ -11,7 +11,7 @@ Project Search
   <div class="col-md-6">
 {!! Form::open(['method' => 'GET', 'action' => ['ProjectsController@process_search']]) !!}
 	<div class="form-group">
-	{!! Form::label('sq_n', 'Project Name: ') !!}
+	{!! Form::label('sq_n', 'Project Name ') !!}
 	{!! Form::text('sq_n', null, ['class' => 'form-control']) !!}
 	</div>
 	

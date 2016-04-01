@@ -468,7 +468,7 @@ class ProjectsController extends Controller {
 	}
 
 	public function project_search() {
-		$owners = Owners::where('active', '=', 'Active')->get();
+		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->get();
 		return view('content.search', ['owners' => $owners]);
 	}
 
