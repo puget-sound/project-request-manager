@@ -16,7 +16,7 @@
 	Returned {{ count($projects) }} results.
 	@endif
 	</p>
-	<a class='btn btn-sm btn-primary' href="{{ URL::previous() }}">Back to Search</a>
+	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">Back to Search</a>
 	<hr>
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>

@@ -1,3 +1,8 @@
+body {
+  /* Margin bottom for breathing room */
+  margin-bottom: 60px;
+}
+
 .navbar-fixed-top {
     min-height: 80px;
 }

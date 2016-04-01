@@ -468,7 +468,7 @@ class ProjectsController extends Controller {
 	}
 
 	public function project_search() {
-		$owners = Owners::where('active', '=', 'Active')->get();
+		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->get();
 		return view('content.search', ['owners' => $owners]);
 	}
 
@@ -500,11 +500,22 @@ class ProjectsController extends Controller {
 			$input['sq_p'] = "%";
 			$query['priority'] = "Any";
 		}
-		$query['owner'] = Owners::where('id', '=', $input['sq_o'])->pluck('name');
-		if (!isset($input['sq_o']) || $input['sq_o'] == "") {
-			$input['sq_o'] = "%";
+		if (!isset($input['sq_o']) || $input['sq_o'] == "" || $input['sq_o'][0] == "" ) {
+			$input['sq_o'] = "";
 			$query['owner'] = "Any";
-		}	
+		}
+		else {
+			if(is_array($input['sq_o'])) {
+				$owners = [];
+				foreach ($input['sq_o'] as $key => $value) {
+    				array_push($owners, Owners::where('id', '=', $value)->pluck('name'));
+				}
+				$query['owner'] = implode($owners, ', ');
+			}
+			else {
+				$query['owner'] = Owners::where('id', '=', $input['sq_o'])->pluck('name');	
+			}
+		}
 		if (!isset($input['sq_c'])) {
 			$input['sq_c'] = "%";
 			$query['cascade'] = "Any";
@@ -540,17 +551,27 @@ class ProjectsController extends Controller {
 		} else {
 			$query['so'] = "";
 		}
-		$results = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
+		$statement = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
 		->where('request_name', 'LIKE', '%' . $input['sq_n'] . '%')
 		//->orWhere('project_desc', 'LIKE', '%' . $input['sq_n'] . '%')
 		->where('status', $statusoperator, $input['sq_s'])
 		->where('priority', 'LIKE', $input['sq_p'])
-		->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
+		
+		//->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
+		
+		//->whereIn('project_owner', $input['sq_o'])
+		
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
 		->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%')
 		->orderBy('priority', 'asc')
-		->orderBy('order')
-		->get();
+		->orderBy('order');
+		if(is_array($input['sq_o'])) {
+			$statement->whereIn('project_owner', $input['sq_o']);
+		}
+		else {
+			$statement->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%');
+		}
+		$results = $statement->get();
 		return view('content.results', ['projects' => $results, 'query' => $query]);
 	}
 
