@@ -17,8 +17,11 @@
 	@endif
 	</p>
 	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">Back to Search</a>
+	<button id="search-results-csv" type="button" class="btn btn-link pull-right">
+		<span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download CSV
+	</button>
 	<hr>
-	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
+	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;' id="project-request-results">
 		<thead>
 		<th>Project Name</th>
 		<th>Project Owner</th>
@@ -27,7 +30,7 @@
 		<th data-sortable="true">ERP Category</th>
 		<th data-sortable="true" data-sortable-type="date">Request By</th>
 		<th>Status</th>
-		<th data-sortable="false">Actions</th>
+		<th data-sortable="false" data-field="actions">Actions</th>
 		</thead>
 		<tbody class="projects_searchable">
 			@foreach($projects as $project)
@@ -97,4 +100,15 @@
 		</tbody>
 	</table>
 	
+@endsection
+@section('extra-scripts')
+<script type="text/javascript" src="{{ URL::asset('js/FileSaver.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('js/tableExport.min.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    	$( "#search-results-csv" ).on( "click", function() {
+  			$('#project-request-results').tableExport({type:'csv', ignoreColumn:['actions']});
+		});
+    });
+</script>
 @endsection
