@@ -77,10 +77,7 @@ Project Search
                  }
             },
             maxHeight: 200,
-            onChange: function(option, checked, select) {
-                $(".dropdown-toggle").dropdown("toggle");
-            },
-            buttonClass: 'btn btn-default sq_o_button'
+            buttonClass: 'btn btn-default sq_o_button',
         });
     });
 </script>

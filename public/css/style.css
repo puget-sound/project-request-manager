@@ -23,3 +23,7 @@ body {
 .sq_o_button b.caret {
 	margin-left:5px;
 }
+
+#search-results-csv {
+	margin-right:25px;
+}
