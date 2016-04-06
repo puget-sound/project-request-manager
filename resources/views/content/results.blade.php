@@ -92,7 +92,7 @@
 					<span class='label label-success' style="background-color: purple;">New</span>
 					@endif
 				</td>
-				<td style="vertical-align:middle;">
+				<td style="vertical-align:middle;" data-tableexport-value="{{ url('request') }}/{{ $project->id }}">
 					  <a href='{{ url('request') }}/{{ $project->id }}' class="btn btn-sm btn-primary"><span class='glyphicon glyphicon-eye-open'></span>&nbsp;&nbsp;View</a>
 				</td>
 			</tr>
@@ -107,7 +107,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
     	$( "#search-results-csv" ).on( "click", function() {
-  			$('#project-request-results').tableExport({type:'csv', ignoreColumn:['actions']});
+  			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results'});
 		});
     });
 </script>
