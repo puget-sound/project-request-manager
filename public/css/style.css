@@ -44,3 +44,13 @@ body {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);
 }
+
+.current-sprint {
+  background-color: rgb(92, 184, 92);
+  color:#fff;
+}
+
+.future-sprint {
+  color: rgb(92, 184, 92);
+  background-color: rgb(234, 246, 234);
+}
