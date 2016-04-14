@@ -87,10 +87,10 @@
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
-					@if ($project->status == "3" && $project->sprint == $current_sprint)
+					@if (($project->status == "3" && $project->sprint == $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
 					<span class='label label-success'>Scheduled {{$project->sprint}}</span>
 					@endif
-					@if (($project->status == "3" && $project->sprint > $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
+					@if ($project->status == "3" && $project->sprint > $current_sprint)
 					<span class='label label-success label-future'>Scheduled {{$project->sprint}}</span>
 					@endif
 					@if ($project->status == "4")

@@ -20,7 +20,7 @@ Manage Sprints
 			</thead>
 			<tbody>
 				@foreach ($sprints as $sprint)
-				<tr>	
+				<tr>
 					<td style="vertical-align:middle;"><strong>Sprint {{ $sprint->sprintNumber }}</strong></td>
 					<td style="vertical-align:middle;">
 					@if (\Carbon\Carbon::now() >= $sprint->sprintStart && \Carbon\Carbon::now() <= $sprint->sprintEnd )
@@ -30,7 +30,7 @@ Manage Sprints
 					<span class="label label-default">Past</span>
 					@endif
 					@if (\Carbon\Carbon::now() < $sprint->sprintStart)
-					<span class="label label-primary">Future</span>
+					<span class="label label-success label-future">Future</span>
 					@endif
 					</td>
 					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
