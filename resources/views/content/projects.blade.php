@@ -36,8 +36,8 @@
 		</thead>
 		<tbody class="projects_searchable">
 			@foreach($projects as $project)
-			<tr> 
-				<td style="vertical-align: middle;">	
+			<tr>
+				<td style="vertical-align: middle;">
 				@if (in_array($project->id, $notifications))
 					<a href='{{ url('flag/' . $project->id) }}' style="color: black" class='flag' csrf='{{ csrf_token() }}'><span class="glyphicon glyphicon-flag"></span></a>
 				@else
@@ -50,8 +50,8 @@
 				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class="label @if($project->priority == '0')label-danger"> High @endif @if($project->priority == '1')label-warning"> Medium @endif @if($project->priority == '2')label-primary"> Low @endif</span></td>
 				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
 				<td style="vertical-align:middle;">
-					@if ($project->inst_priority == 0 || $project->inst_priority == NULL) 
-						<span class="badge" style='font-size: 10.5px;'>Undetermined</span> 
+					@if ($project->inst_priority == 0 || $project->inst_priority == NULL)
+						<span class="badge" style='font-size: 10.5px;'>Undetermined</span>
 					@else <span class="badge" style='font-size: 10.5px; background-color: maroon;' title=
 						@if ($project->inst_priority == 1)
 							"These are projects that must be done - Security Patches, Required Maintenance, Critical items located in legacy, end-of-life systems in imminent danger of failure."
@@ -82,13 +82,16 @@
 					<span class='label label-primary'>Review</span>
 					@endif
 					@if ($project->status == "1")
-					<span class='label label-default'>Pending</span>
+					<span class='label label-warning'>Pending</span>
 					@endif
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
-					@if ($project->status == "3")
-					<span class='label label-warning'>Scheduled</span>
+					@if ($project->status == "3" && $project->sprint == $current_sprint)
+					<span class='label label-success'>Scheduled {{$project->sprint}}</span>
+					@endif
+					@if (($project->status == "3" && $project->sprint > $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
+					<span class='label label-success label-future'>Scheduled {{$project->sprint}}</span>
 					@endif
 					@if ($project->status == "4")
 					<span class='label label-danger'>Oracle</span>
@@ -97,7 +100,7 @@
 					<span class='label label-danger'>Deferred</span>
 					@endif
 					@if ($project->status == "6")
-					<span class='label label-success'>Completed</span>
+					<span class='label label-default'>Completed</span>
 					@endif
 					@if ($project->status == "7")
 					<span class='label label-success' style="background-color: purple;">New</span>

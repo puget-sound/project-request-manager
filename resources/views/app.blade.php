@@ -22,7 +22,6 @@
 	</head>
 
 	<body style="padding-top: 80px;">
-
 	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -57,7 +56,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Administration<span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="{{ url('sprints') }}"><span class="glyphicon glyphicon-flash"></span>&nbsp;&nbsp;Sprint Management</a></li> 
+                <li><a href="{{ url('sprints') }}"><span class="glyphicon glyphicon-flash"></span>&nbsp;&nbsp;Sprint Management</a></li>
                 <li><a href="{{ url('owners') }}"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;&nbsp;Project Owners</a></li>
                 <li><a href="{{ url('users') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;System Users</a></li>
               </ul>

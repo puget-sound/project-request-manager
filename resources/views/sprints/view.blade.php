@@ -31,13 +31,13 @@
 					<span class='label label-primary'>Review</span>
 					@endif
 					@if ($project->status == "1")
-					<span class='label label-default'>Pending</span>
+					<span class='label label-warning'>Pending</span>
 					@endif
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
 					@if ($project->status == "3")
-					<span class='label label-warning'>Scheduled</span>
+					<span class='label label-success'>Scheduled</span>
 					@endif
 					@if ($project->status == "4")
 					<span class='label label-danger'>Oracle</span>
@@ -46,7 +46,7 @@
 					<span class='label label-danger'>Deferred</span>
 					@endif
 					@if ($project->status == "6")
-					<span class='label label-success'>Completed</span>
+					<span class='label label-default'>Completed</span>
 					@endif
 				</td>
 				<td style="vertical-align:middle;">
@@ -61,5 +61,5 @@
 			@endforeach
 		</tbody>
 	</table>
-	
+
 @endsection
