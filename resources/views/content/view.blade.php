@@ -19,13 +19,13 @@ View Project Request
 	<span class='label label-primary'>NEEDS REVIEW</span>
 	@endif
 	@if ($projects->status == "1")
-	<span class='label label-default'>PENDING</span>
+	<span class='label label-warning'>PENDING</span>
 	@endif
 	@if ($projects->status == "2")
 	<span class='label label-info'>READY TO SCHEDULE</span>
 	@endif
 	@if ($projects->status == "3")
-	<span class='label label-warning'>SCHEDULED</span>
+	<span class='label label-success'>SCHEDULED</span>
 	@endif
 	@if ($projects->status == "4")
 	<span class='label label-danger'>REFER TO ORACLE</span>
@@ -34,7 +34,7 @@ View Project Request
 	<span class='label label-danger'>DEFERRED</span>
 	@endif
 	@if ($projects->status == "6")
-	<span class='label label-success'>COMPLETED</span>
+	<span class='label label-default'>COMPLETED</span>
 	@endif
 	@if ($projects->status == "7")
 	<span class='label label-success' style="background-color: purple;">NEW REQUEST</span>
