@@ -2,6 +2,7 @@
 
 use View;
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 class ComposerServiceProvider extends ServiceProvider {
 
@@ -14,8 +15,17 @@ class ComposerServiceProvider extends ServiceProvider {
     {
         View::composer('*', function($view)
         {
-	       $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get()); 
-        });       
+          $sprints = \App\Sprints::get();
+          $current_sprint = '';
+
+          foreach ($sprints as $sprint) {
+    				if (\Carbon\Carbon::now() >= $sprint->sprintStart && \Carbon\Carbon::now() <= $sprint->sprintEnd ) {
+              $current_sprint = $sprint->sprintNumber;
+            }
+          }
+
+         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint);
+        });
     }
 
     /**

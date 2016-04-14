@@ -33,7 +33,7 @@ class ProjectsController extends Controller {
 		->where('project_owner', '=', $owner_id)
 		->whereNotIn('status', [6, 5])
 		->orderBy('priority')
-		->orderBy('order')		
+		->orderBy('order')
 		->get();
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
 		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
@@ -440,7 +440,7 @@ class ProjectsController extends Controller {
 		->where('order', '>', $project->order)
 		->get();
 		//mark complete
-		$project['status'] = 6;		
+		$project['status'] = 6;
 		$project->save();
 		//move everything else up if there's something to move up
 		if (count($reorder_projects) > 0) {
@@ -513,7 +513,7 @@ class ProjectsController extends Controller {
 				$query['owner'] = implode($owners, ', ');
 			}
 			else {
-				$query['owner'] = Owners::where('id', '=', $input['sq_o'])->pluck('name');	
+				$query['owner'] = Owners::where('id', '=', $input['sq_o'])->pluck('name');
 			}
 		}
 		if (!isset($input['sq_c'])) {
@@ -556,11 +556,11 @@ class ProjectsController extends Controller {
 		//->orWhere('project_desc', 'LIKE', '%' . $input['sq_n'] . '%')
 		->where('status', $statusoperator, $input['sq_s'])
 		->where('priority', 'LIKE', $input['sq_p'])
-		
+
 		//->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
-		
+
 		//->whereIn('project_owner', $input['sq_o'])
-		
+
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
 		->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%')
 		->orderBy('priority', 'asc')

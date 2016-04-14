@@ -42,7 +42,7 @@ View Project Request
 </h4>
 
 <div style='width: 250px; height: 55px; background-color: white;'>
-	<div style='float: left; width: 100px; border-radius: 5px; height: 55px; margin-right: 5px; background-color: 
+	<div style='float: left; width: 100px; border-radius: 5px; height: 55px; margin-right: 5px; background-color:
 	@if ($projects->priority == 0)
 		#d9534f
 	@elseif ($projects->priority == 1)
