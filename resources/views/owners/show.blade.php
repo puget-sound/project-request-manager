@@ -5,14 +5,16 @@ View Project Owners
 @endsection
 
 @section('content')
+	<div class="row">
+		<div class="col-md-6">
 {!! Form::open(['url' => 'owners']) !!}
 @include('errors.list')
 <div class="form-group">
-	{!! Form::label('name', 'Owner Name: ') !!}
+	{!! Form::label('name', 'Owner Name ') !!}
 	{!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 <div class="form-group">
-	{!! Form::submit('Add Project Owner', ['class' => 'btn btn-primary form-control']) !!}
+	{!! Form::submit('Add Project Owner', ['class' => 'btn btn-primary']) !!}
 </div>
 {!! Form::close() !!}
 	<table class='table sortable-theme-bootstrap table-striped' data-sortable>
@@ -32,4 +34,6 @@ View Project Owners
 @endforeach
 		</tbody>
 	</table>
+</div>
+</div>
 @endsection
