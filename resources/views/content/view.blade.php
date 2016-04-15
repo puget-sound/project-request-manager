@@ -69,10 +69,10 @@ View Project Request
 		<p style='font-size: 10px; width: 70px; text-align: center; color: white;'>ORDER</p>
 	</div>
 	@if ($projects->sprint != NULL)
-	@if (($projects->status == "3" && $projects->sprint == $current_sprint) || ($projects->status == "3" && $projects->sprint < $current_sprint))
+	@if ($projects->sprint == $current_sprint || $projects->sprint < $current_sprint)
 	<div class="current-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
 	@endif
-	@if ($projects->status == "3" && $projects->sprint > $current_sprint)
+	@if ($projects->sprint > $current_sprint)
 	<div class="future-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
 	@endif
 		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->sprint }}</p>

@@ -11,9 +11,9 @@
 	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
 	<p class="text-muted">
 	@if (count($projects) == 1)
-	Returned {{ count($projects) }} result.
+	Returned <strong>{{ count($projects) }}</strong> result.
 	@else
-	Returned {{ count($projects) }} results.
+	Returned <strong>{{ count($projects) }}</strong> results.
 	@endif
 	</p>
 	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">Back to Search</a>
@@ -28,7 +28,7 @@
 		<th>Priority</th>
 		<th>Order</th>
 		<th data-sortable="true">ERP Category</th>
-		<th data-sortable="true" data-sortable-type="date">Request By</th>
+		<th data-sortable="true" data-sortable-type="date">To Be<br>Completed By</th>
 		<th>Status</th>
 		<!--<th data-sortable="false" data-field="actions">Actions</th>-->
 		<th style="display:none;" data-tableexport-display="always">Project Link</th>

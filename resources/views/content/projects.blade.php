@@ -30,7 +30,7 @@
 		<th data-sortable="true">Priority</th>
 		<th data-sortable="true">Order</th>
 		<th data-sortable="true">ERP Category</th>
-		<th data-sortable="true" data-sortable-type="date">Request By</th>
+		<th data-sortable="true" data-sortable-type="date">To Be<br>Completed By</th>
 		<th data-sortable="true">Status</th>
 		<!--<th data-sortable="false">Actions</th>-->
 		</thead>
