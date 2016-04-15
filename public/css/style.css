@@ -54,3 +54,33 @@ body {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);
 }
+
+.sprints-list .table > tbody > tr > td {
+  width:20%;
+}
+
+.sprints-list .table > tbody > tr > td.sprint-header {
+  color:#555;
+  text-transform:uppercase;
+  padding:35px 8px 15px 8px;
+  border-top:none;
+}
+
+.sprints-list .table > tbody > tr > td.sprint-header.sprint-header-active, .table > tbody > tr > td.sprint-header.sprint-header-past {
+  padding-top:15px;
+}
+
+.new-sprint {
+    margin-left:25px;
+}
+
+.new-sprint a {
+  vertical-align: top;
+}
+
+#view-past-sprints {
+  margin-top:35px;
+  display:block;
+  margin-left:10px;
+  margin-bottom:10px;
+}

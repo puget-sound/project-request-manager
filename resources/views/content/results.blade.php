@@ -30,19 +30,20 @@
 		<th data-sortable="true">ERP Category</th>
 		<th data-sortable="true" data-sortable-type="date">Request By</th>
 		<th>Status</th>
-		<th data-sortable="false" data-field="actions">Actions</th>
+		<!--<th data-sortable="false" data-field="actions">Actions</th>-->
+		<th style="display:none;" data-tableexport-display="always">Project Link</th>
 		</thead>
 		<tbody class="projects_searchable">
 			@foreach($projects as $project)
 			<tr {{--@if ($project->inst_priority == 1) class='warning' @endif--}}>
-				<td style="vertical-align:middle;">{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</td>
+				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
 				<td style="vertical-align:middle;">{{ $project->name }}</td>
-				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class="label @if($project->priority == '0')label-danger"> High @endif @if($project->priority == '1')label-warning"> Medium @endif @if($project->priority == '2')label-primary"> Low @endif</span></td>
+				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')text-danger"> High @endif @if($project->priority == '1')text-warning"> Medium @endif @if($project->priority == '2')text-primary"> Low @endif</span></td>
 				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
 				<td style="vertical-align:middle;">
 					@if ($project->inst_priority == 0 || $project->inst_priority == NULL)
-						<span class="badge" style='font-size: 10.5px;'>Undetermined</span>
-					@else <span class="badge" style='font-size: 10.5px; background-color: maroon;' title=
+						<em class="text-muted">Undetermined</em>
+					@else <span title=
 						@if ($project->inst_priority == 1)
 							"These are projects that must be done - Security Patches, Required Maintenance, Critical items located in legacy, end-of-life systems in imminent danger of failure."
 						@endif
@@ -95,9 +96,10 @@
 					<span class='label label-success' style="background-color: purple;">New</span>
 					@endif
 				</td>
-				<td style="vertical-align:middle;" data-tableexport-value="{{ url('request') }}/{{ $project->id }}">
+				<td style="display:none;" data-tableexport-display="always">{{ url('request') }}/{{ $project->id }}</td>
+				<!--<td style="vertical-align:middle;" data-tableexport-value="{{ url('request') }}/{{ $project->id }}">
 					  <a href='{{ url('request') }}/{{ $project->id }}' class="btn btn-sm btn-primary"><span class='glyphicon glyphicon-eye-open'></span>&nbsp;&nbsp;View</a>
-				</td>
+				</td>-->
 			</tr>
 			@endforeach
 		</tbody>

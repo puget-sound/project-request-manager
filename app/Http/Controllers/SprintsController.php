@@ -11,11 +11,13 @@ use Carbon\Carbon;
 
 class SprintsController extends Controller {
 	public function show() {
-		$sprints = Sprints::get();
+		$sprints = Sprints::orderBy('sprintNumber', 'ASC')->get();
 		$details_sprints = array();
 		foreach ($sprints as $sprint) {
 			$sprintTotal = count(Projects::where('sprint', '=', $sprint->sprintNumber)->get());
+			$sprint->sprintTotal = $sprintTotal;
 			$sprintComplete = count(Projects::where('sprint', '=', $sprint->sprintNumber)->where('status', '=', '6')->get());
+			$sprint->sprintComplete = $sprintComplete;
 			if ($sprintTotal > 0) {
 			$sprint['completed'] = round(($sprintComplete / $sprintTotal) * 100);
 			}
