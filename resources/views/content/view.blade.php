@@ -24,8 +24,11 @@ View Project Request
 	@if ($projects->status == "2")
 	<span class='label label-info'>READY TO SCHEDULE</span>
 	@endif
-	@if ($projects->status == "3")
+	@if (($projects->status == "3" && $projects->sprint == $current_sprint) || ($projects->status == "3" && $projects->sprint < $current_sprint))
 	<span class='label label-success'>SCHEDULED</span>
+	@endif
+	@if ($projects->status == "3" && $projects->sprint > $current_sprint)
+	<span class='label label-success label-future'>SCHEDULED</span>
 	@endif
 	@if ($projects->status == "4")
 	<span class='label label-danger'>REFER TO ORACLE</span>
@@ -51,7 +54,7 @@ View Project Request
 		#337ab7
 	@endif
 	'>
-		<p style='font-size: 20px; width: 100px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px; text-shadow: 1px 1px #000;'>
+		<p style='font-size: 20px; width: 100px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px;'>
 	@if ($projects->priority == 0)
 		HIGH
 	@elseif ($projects->priority == 1)
@@ -59,16 +62,21 @@ View Project Request
 	@elseif ($projects->priority == 2)
 		LOW
 	@endif</p>
-		<p style='font-size: 10px; width: 100px; text-align: center; color: white; text-shadow: 1px 1px #000;'>PRIORITY</p>
+		<p style='font-size: 10px; width: 100px; text-align: center; color: white;'>PRIORITY</p>
 	</div>
 	<div style='float: left; width: 70px; border-radius: 5px; height: 55px; background-color: gray; margin-right: 5px;'>
-		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px; text-shadow: 1px 1px #000;'>{{ $projects->order }}</p>
-		<p style='font-size: 10px; width: 70px; text-align: center; color: white; text-shadow: 1px 1px #000;'>ORDER</p>
+		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->order }}</p>
+		<p style='font-size: 10px; width: 70px; text-align: center; color: white;'>ORDER</p>
 	</div>
 	@if ($projects->sprint != NULL)
-	<div style='float: left; width: 70px; border-radius: 5px; height: 55px; background-color: #5bc0de'>
-		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px; text-shadow: 1px 1px #000;'>{{ $projects->sprint }}</p>
-		<p style='font-size: 10px; width: 70px; text-align: center; color: white; text-shadow: 1px 1px #000;'>SPRINT</p>
+	@if ($projects->sprint == $current_sprint || $projects->sprint < $current_sprint)
+	<div class="current-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
+	@endif
+	@if ($projects->sprint > $current_sprint)
+	<div class="future-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
+	@endif
+		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->sprint }}</p>
+		<p style='font-size: 10px; width: 70px; text-align: center;'>SPRINT</p>
 	</div>
 	@endif
 </div>

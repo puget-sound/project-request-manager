@@ -18,10 +18,10 @@
 		</thead>
 		<tbody class="projects_searchable">
 			@foreach($projects as $project)
-			<tr @if ($project->inst_priority == 1) class='warning' @endif>
-				<td style="vertical-align:middle;">{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</td>
+			<tr>
+				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
 				<td style="vertical-align:middle;">{{ $project->name }}</td>
-				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class="label @if($project->priority == '0')label-danger"> High @endif @if($project->priority == '1')label-warning"> Medium @endif @if($project->priority == '2')label-primary"> Low @endif</span></td>
+				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')text-danger"> High @endif @if($project->priority == '1')text-warning"> Medium @endif @if($project->priority == '2')text-primary"> Low @endif</span></td>
 				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
 				<td style="vertical-align: middle;">
 					@if ($project->status == "")
@@ -36,8 +36,11 @@
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
-					@if ($project->status == "3")
+					@if (($project->status == "3" && $project->sprint == $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
 					<span class='label label-success'>Scheduled</span>
+					@endif
+					@if ($project->status == "3" && $project->sprint > $current_sprint)
+					<span class='label label-success label-future'>Scheduled</span>
 					@endif
 					@if ($project->status == "4")
 					<span class='label label-danger'>Oracle</span>
@@ -50,11 +53,11 @@
 					@endif
 				</td>
 				<td style="vertical-align:middle;">
-					  <a href='{{ url('request') }}/{{ $project->id }}' class="btn btn-sm btn-primary"><span class='glyphicon glyphicon-eye-open'></span>&nbsp;&nbsp;View</a>
+					  <!--<a href='{{ url('request') }}/{{ $project->id }}' class="btn btn-sm btn-primary"><span class='glyphicon glyphicon-eye-open'></span>&nbsp;&nbsp;View</a>-->
 					  @if ($project->status == "6" || $project->status == "5")
 					  <a class="btn btn-sm btn-default" disabled href="#"><span class='glyphicon glyphicon-lock'></span>&nbsp;&nbsp;Locked Project</a>
 					  @else
-					  <a class="btn btn-sm btn-success" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark Complete</a>
+					  <a href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark complete</a>
 					  @endif
 				</td>
 			</tr>
