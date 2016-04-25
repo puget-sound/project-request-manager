@@ -42,12 +42,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 				<tr>
 					<td style="vertical-align:middle;"><strong><a href="{{ url('sprint/' . $sprint->sprintNumber)}}">Sprint {{ $sprint->sprintNumber }}</a></strong></td>
 					<td style="vertical-align:middle;">
-					@if (\Carbon\Carbon::now() > $sprint->sprintStart && \Carbon\Carbon::now() > $sprint->sprintEnd )
-					<span class="label label-default">Past</span>
-					@endif
-					@if (\Carbon\Carbon::now() < $sprint->sprintStart)
 					<span class="label label-success label-future">Future</span>
-					@endif
 					</td>
 					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
@@ -74,12 +69,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 				<tr>
 					<td style="vertical-align:middle;"><strong><a href="{{ url('sprint/' . $sprint->sprintNumber)}}">Sprint {{ $sprint->sprintNumber }}</a></strong></td>
 					<td style="vertical-align:middle;">
-					@if (\Carbon\Carbon::now() > $sprint->sprintStart && \Carbon\Carbon::now() > $sprint->sprintEnd )
 					<span class="label label-default">Past</span>
-					@endif
-					@if (\Carbon\Carbon::now() < $sprint->sprintStart)
-					<span class="label label-success label-future">Future</span>
-					@endif
 					</td>
 					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
