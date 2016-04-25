@@ -547,7 +547,7 @@ class ProjectsController extends Controller {
 			}
 		}
 		if ($statusoperator == "NOT LIKE") {
-			$query['so'] = "Not";
+			$query['so'] = "Hide";
 		} else {
 			$query['so'] = "";
 		}
