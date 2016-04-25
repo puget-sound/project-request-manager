@@ -2,6 +2,7 @@
 
 use View;
 use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
 
 class ComposerServiceProvider extends ServiceProvider {
 
@@ -16,10 +17,10 @@ class ComposerServiceProvider extends ServiceProvider {
         {
           $sprints = \App\Sprints::get();
           $current_sprint = '';
-          $today = date("Y-m-d");
+          $today = Carbon::today();
 
           for ($i = 0; $i < count($sprints); $i++) {
-    				if ($today >= $sprints[$i]->sprintStart && ($today <= $sprints[$i]->sprintEnd || $today <= $sprints[$i+1]->sprintStart)){
+    				if ($today >= $sprints[$i]->sprintStart && ($today <= $sprints[$i]->sprintEnd || $today < $sprints[$i+1]->sprintStart)){
               $current_sprint = $sprints[$i]->sprintNumber;
             }
           }
