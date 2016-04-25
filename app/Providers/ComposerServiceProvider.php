@@ -17,10 +17,11 @@ class ComposerServiceProvider extends ServiceProvider {
         {
           $sprints = \App\Sprints::get();
           $current_sprint = '';
+          $today = Carbon::today();
 
-          foreach ($sprints as $sprint) {
-    				if (\Carbon\Carbon::now() >= $sprint->sprintStart && \Carbon\Carbon::now() <= $sprint->sprintEnd ) {
-              $current_sprint = $sprint->sprintNumber;
+          for ($i = 0; $i < count($sprints); $i++) {
+    				if ($today >= $sprints[$i]->sprintStart && ($today <= $sprints[$i]->sprintEnd || $today < $sprints[$i+1]->sprintStart)){
+              $current_sprint = $sprints[$i]->sprintNumber;
             }
           }
 
