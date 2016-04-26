@@ -8,7 +8,7 @@
 	@if ($query['sterm'] != "")
 	<h4>Searched for "{{ $query['sterm'] }}"</h4>
 	@endif
-	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
+	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Include Completed Projects: <strong>{{ $query['completed'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
 	<p class="text-muted">
 	@if (count($projects) == 1)
 	Returned <strong>{{ count($projects) }}</strong> result.
@@ -113,7 +113,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
     	$( "#search-results-csv" ).on( "click", function() {
-  			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results'});
+  			$('#project-request-results').tableExport({type:'xls', fileName: 'PRM-results', htmlContent: true});
 		});
     });
 </script>

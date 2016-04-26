@@ -14,7 +14,7 @@ Project Search
 	{!! Form::label('sq_n', 'Project Name ') !!}
 	{!! Form::text('sq_n', null, ['class' => 'form-control']) !!}
 	</div>
-	
+
 	<div class="form-group">
 	{!! Form::label('sq_o', 'Owner ') !!}
 	<br>
@@ -30,9 +30,14 @@ Project Search
 	{!! Form::label('sq_s', 'Status ') !!}
 	<div class='form-inline'>
 		{!! Form::select('sq_so', ['LIKE' => 'Show', 'NOT LIKE' => 'Hide'], null, ['class' => 'form-control']) !!}
-		{!! Form::select('sq_s', ['' => 'Any', '7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled', '4' => 'Refer to Oracle', '5' => 'Deferred', '6' => 'Completed'], null, ['class' => 'form-control']) !!}
+		{!! Form::select('sq_s', ['' => 'Any', '7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled', '4' => 'Refer to Oracle', '5' => 'Deferred'], null, ['class' => 'form-control']) !!}
 	</div>
-	</div>	
+  <div class="checkbox">
+    <label>
+      {!! Form::checkbox('sq_co', 'Y', null, null) !!} Include Completed projects
+    </label>
+  </div>
+	</div>
 	<div class="form-group">
 	{!! Form::label('sq_p', 'Project Priority ') !!}
 	{!! Form::select('sq_p', ['' => 'Any', '0' => 'High', '1' => 'Medium', '2' => 'Low'], null, ['class' => 'form-control']) !!}
