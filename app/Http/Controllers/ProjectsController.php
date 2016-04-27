@@ -527,6 +527,17 @@ class ProjectsController extends Controller {
 				$query['cascade'] = "Any";
 			}
 		}
+		if (!isset($input['sq_co'])) {
+			$input['sq_co'] = "%";
+			$query['completed'] = "No";
+		} else {
+			$query['completed'] = $input['sq_co'];
+			if ($query['completed'] == "Y") {
+				$query['completed'] = "Yes";
+			} else {
+				$query['completed'] = "No";
+			}
+		}
 		if (!isset($input['sq_ip'])) {
 			$input['sq_ip'] = "%";
 			$query['ip'] = "Any";
@@ -556,11 +567,8 @@ class ProjectsController extends Controller {
 		//->orWhere('project_desc', 'LIKE', '%' . $input['sq_n'] . '%')
 		->where('status', $statusoperator, $input['sq_s'])
 		->where('priority', 'LIKE', $input['sq_p'])
-
 		//->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
-
 		//->whereIn('project_owner', $input['sq_o'])
-
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
 		->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%')
 		->orderBy('priority', 'asc')
@@ -570,6 +578,9 @@ class ProjectsController extends Controller {
 		}
 		else {
 			$statement->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%');
+		}
+		if($query['completed'] != "Yes") {
+			$statement->where('status', 'NOT LIKE', '6');
 		}
 		$results = $statement->get();
 		return view('content.results', ['projects' => $results, 'query' => $query]);
