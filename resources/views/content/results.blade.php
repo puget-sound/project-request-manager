@@ -107,13 +107,11 @@
 
 @endsection
 @section('extra-scripts')
-<script type="text/javascript" src="{{ URL::asset('js/blob.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('js/FileSaver.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('js/tableExport.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
     	$( "#search-results-csv" ).on( "click", function() {
-  			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results', htmlContent: true});
+  			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results'});
 		});
     });
 </script>
