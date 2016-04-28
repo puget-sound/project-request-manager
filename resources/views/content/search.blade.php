@@ -61,6 +61,7 @@ Project Search
 @endsection
 
 @section('extra-scripts')
+  <script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('#sq_o').multiselect({
