@@ -48,10 +48,6 @@
                   @endforeach
                 </ul>
             </li>
-            <!--
-            <li @if (Request::segment(2) == ('completed') || Request::segment(2) == ('deferred') || Request::is('requests')) class="active" @endif><a href="{{ url('requests') }}">My Projects</a></li>
-            <li @if (Request::segment(2) == ('all')) class="active" @endif><a href="{{ url('requests/all') }}">All Projects</a></li>
-            -->
             @if (Helpers::full_authenticate()->admin == 1)
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Administration<span class="caret"></span></a>
@@ -79,6 +75,7 @@
     <div class="container">
     	<div class='page-header'>
     		<h2>@yield('title')</h2>
+				@yield('under-title')
     	</div>
 		@yield('content')
 	</div>
@@ -91,7 +88,6 @@
   <script type="text/javascript" src="{{ URL::asset('js/sortable.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('js/handlebars.runtime.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('js/bootstrap3-wysihtml5.min.js') }}"></script>
-  <script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('functions.js') }}"></script>
 
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>

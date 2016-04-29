@@ -2,12 +2,16 @@
 
 @section('title')
 	@if (Request::segment(1) == ('projects'))
-		View {{ $owner->name }} Projects
+		{{ $owner->name }} Projects
 	@elseif (Request::segment(2) == ('all'))
-		View All Projects
+		All Projects
 	@else
-		View My Projects
+		My Projects
 	@endif
+@endsection
+
+@section('under-title')
+	@if ($user->admin == 1) <p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p> @endif
 @endsection
 
 @section('content')
@@ -19,10 +23,12 @@
 			</div>
 		</div>
 		<div class='col-md-3'>
-			 @if ($user->admin == 1) <a href="{{ url('requests/create') }}" class='btn btn-primary' style='width: 100%;'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a> @endif
+			 <button id="search-results-csv" type="button" class="btn btn-link pull-right">
+		 		<span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download CSV
+		 	</button>
 		</div>
 	</div>
-	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true" style='margin-top: 10px;'>
+	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true" style='margin-top: 10px;' id="project-request-results">
 		<thead>
 		<th></th>
 		<th data-sortable="true">Project Name</th>
@@ -113,4 +119,15 @@
 			@endforeach
 		</tbody>
 	</table>
+@endsection
+
+@section('extra-scripts')
+<script type="text/javascript" src="{{ URL::asset('js/tableExport.min.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    	$( "#search-results-csv" ).on( "click", function() {
+  			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results', ignoreColumn: [0]});
+		});
+    });
+</script>
 @endsection

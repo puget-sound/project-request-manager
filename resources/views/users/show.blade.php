@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-View System Users
+System Users
 @endsection
 @section('content')
 	@include('errors.list')
@@ -30,7 +30,7 @@ View System Users
 			<td style="vertical-align:middle;">{{ $user->username }}</td>
 			<td style="vertical-align:middle;">
 				@if($user->admin == 1)
-					<span class='label label-success'>Admin</span> 
+					<span class='label label-success'>Admin</span>
 				@else
 					<span class='label label-primary'>User</span>
 				@endif
