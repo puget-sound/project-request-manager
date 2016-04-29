@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-View Project Request
+{{ $projects->request_name }}
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@ View Project Request
 @include('modals.project-actions-delete', ['sprints' => $sprints, 'project' => $projects])
 @include('errors.list')
 <div class="col-md-9" style='padding-left: 0px;'>
-<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>
+<!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
 <h4 class='text-muted'>{{ $projects->name }}</h4>
 <h4>
 	@if ($projects->status == "")
