@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-View Project Owners
+Project Owners
 @endsection
 
 @section('content')

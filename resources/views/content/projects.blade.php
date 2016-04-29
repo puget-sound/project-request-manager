@@ -2,11 +2,11 @@
 
 @section('title')
 	@if (Request::segment(1) == ('projects'))
-		View {{ $owner->name }} Projects
+		{{ $owner->name }} Projects
 	@elseif (Request::segment(2) == ('all'))
-		View All Projects
+		All Projects
 	@else
-		View My Projects
+		My Projects
 	@endif
 @endsection
 
