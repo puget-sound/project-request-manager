@@ -7,7 +7,7 @@ Add Sprint
 @section('content')
 	<div class="row">
 	  <div class="col-md-6">
-{!! Form::open(['url' => 'sprints']) !!}
+{!! Form::open(['url' => 'sprints', 'id'=> 'sprintCreate']) !!}
 
 	@include('errors.list')
 	<div class="form-group">
@@ -19,11 +19,11 @@ Add Sprint
 	</div>
 	<div class="form-group">
 		{!! Form::label('sprintStart', 'Sprint Start ') !!}
-		{!! Form::input('date', 'sprintStart', null, ['class' => 'form-control']) !!}
+		{!! Form::input('date', 'sprintStart', null, ['class' => 'form-control','id' => 'sprintStart']) !!}
 	</div>
 	<div class="form-group">
 		{!! Form::label('sprintEnd', 'Sprint End ') !!}
-		{!! Form::input('date', 'sprintEnd', null, ['class' => 'form-control']) !!}
+		{!! Form::input('date', 'sprintEnd', null, ['class' => 'form-control', 'id'=> 'sprintEnd']) !!}
 	</div>
 		{!! Form::submit('Add Sprint', ['class' => 'btn btn-primary']) !!}
 
@@ -31,4 +31,19 @@ Add Sprint
 	<a href="{{ url('sprints') }}">Cancel</a>
 	</div>
 </div>
+@endsection
+
+@section('extra-scripts')
+<script type="text/javascript" src="{{ URL::asset('js/tableExport.min.js') }}"></script>
+<script type="text/javascript">
+$(function() {
+$( "#sprintStart, #sprintEnd" ).datepicker({
+			dateFormat: "yy-mm-dd",
+			showOtherMonths: true,
+      selectOtherMonths: true,
+			onClose: function( selectedDate ) {
+    		$( "#sprintEnd" ).datepicker( "option", "minDate", selectedDate );
+  		}});
+});
+</script>
 @endsection
