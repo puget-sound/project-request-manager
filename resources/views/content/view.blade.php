@@ -3,6 +3,9 @@
 @section('title')
 {{ $projects->request_name }}
 @endsection
+@section('under-title')
+<p class="view-project-date">added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
+@endsection
 
 @section('content')
 @include('modals.project-actions', ['sprints' => $sprints])
@@ -10,37 +13,37 @@
 @include('errors.list')
 <div class="col-md-9" style='padding-left: 0px;'>
 <!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
-<h4 class='text-muted'>{{ $projects->name }}</h4>
+<h4 class='view-project-name'>{{ $projects->name }}</h4>
 <h4>
 	@if ($projects->status == "")
-	<span class='label label-default'>STATUS UNKNOWN</span>
+	<span class='label label-default'>Unknown</span>
 	@endif
 	@if ($projects->status == "0")
-	<span class='label label-primary'>NEEDS REVIEW</span>
+	<span class='label label-primary'>Review</span>
 	@endif
 	@if ($projects->status == "1")
-	<span class='label label-warning'>PENDING</span>
+	<span class='label label-warning'>Pending</span>
 	@endif
 	@if ($projects->status == "2")
-	<span class='label label-info'>READY TO SCHEDULE</span>
+	<span class='label label-info'>Ready</span>
 	@endif
 	@if (($projects->status == "3" && $projects->sprint == $current_sprint) || ($projects->status == "3" && $projects->sprint < $current_sprint))
-	<span class='label label-success'>SCHEDULED</span>
+	<span class='label label-success'>Scheduled</span>
 	@endif
 	@if ($projects->status == "3" && $projects->sprint > $current_sprint)
-	<span class='label label-success label-future'>SCHEDULED</span>
+	<span class='label label-success label-future'>Scheduled</span>
 	@endif
 	@if ($projects->status == "4")
-	<span class='label label-danger'>REFER TO ORACLE</span>
+	<span class='label label-danger'>Oracle</span>
 	@endif
 	@if ($projects->status == "5")
-	<span class='label label-danger'>DEFERRED</span>
+	<span class='label label-danger'>Deferred</span>
 	@endif
 	@if ($projects->status == "6")
-	<span class='label label-default'>COMPLETED</span>
+	<span class='label label-default'>Completed</span>
 	@endif
 	@if ($projects->status == "7")
-	<span class='label label-success' style="background-color: purple;">NEW REQUEST</span>
+	<span class='label label-success' style="background-color: purple;">New</span>
 	@endif
 </h4>
 
