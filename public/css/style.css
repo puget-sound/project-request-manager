@@ -40,6 +40,14 @@ body {
   color:#F0AD4E;
 }
 
+.view-project-name {
+  margin-top:0px;
+}
+
+.view-project-date {
+  color:#999;
+}
+
 .label-future {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);
