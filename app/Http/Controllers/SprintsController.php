@@ -52,6 +52,17 @@ class SprintsController extends Controller {
 		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprints' => $sprints]);
 	}
 
+	public function edit($sprintNumber) {
+		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
+		return view('sprints.edit', ['sprint' => $sprint]);
+	}
+
+	public function update($sprintNumber, SprintsRequest $request) {
+		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
+		$sprint->update($request->all());
+		return redirect('sprints/')->withSuccess("Successfully updated Sprint.");
+	}
+
 	public function assign_project(EmptyRequest $request) {
 		$id = $request['project_id'];
 		$sprint = $request['sprint'];

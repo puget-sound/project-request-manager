@@ -59,6 +59,8 @@ Route::get('users/{id}/delete', 'UsersController@remove');
 //Sprints Controller
 Route::get('sprints', 'SprintsController@show');
 Route::get('sprint/{id}', 'SprintsController@view');
+Route::get('sprint/{id}/edit', 'SprintsController@edit');
+Route::patch('sprint/{id}', 'SprintsController@update');
 Route::get('sprints/create', 'SprintsController@create');
 Route::post('sprints', 'SprintsController@store');
 Route::patch('sprints/assign_project', 'SprintsController@assign_project');

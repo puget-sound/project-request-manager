@@ -1,13 +1,11 @@
 @extends('app')
-
 @section('title')
-Add Sprint
+Edit Sprint
 @endsection
-
 @section('content')
 	<div class="row">
 	  <div class="col-md-6">
-{!! Form::open(['url' => 'sprints', 'id'=> 'sprintCreate']) !!}
+	{!! Form::model($sprint, ['method' => 'PATCH', 'action' => ['SprintsController@update', $sprint->sprintNumber], 'id'=> 'sprintEdit']) !!}
 
 	@include('errors.list')
 	<div class="form-group">
@@ -25,14 +23,13 @@ Add Sprint
 		{!! Form::label('sprintEnd', 'Sprint End ') !!}
 		{!! Form::input('date', 'sprintEnd', null, ['class' => 'form-control', 'id'=> 'sprintEnd']) !!}
 	</div>
-		{!! Form::submit('Add Sprint', ['class' => 'btn btn-primary']) !!}
+		{!! Form::submit('Save Sprint', ['class' => 'btn btn-primary']) !!}
 
 {!! Form::close() !!}
-	<a href="{{ url('sprints') }}">Cancel</a>
-	</div>
+<a href="{{ url('sprints') }}">Cancel</a>
+</div>
 </div>
 @endsection
-
 @section('extra-scripts')
 <script type="text/javascript">
 $(function() {
