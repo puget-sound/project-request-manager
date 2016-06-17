@@ -39,7 +39,8 @@ Project Search
 	</div>
 	<div class="form-group">
 	{!! Form::label('sq_p', 'Project Priority ') !!}
-	{!! Form::select('sq_p', ['' => 'Any', '0' => 'High', '1' => 'Medium', '2' => 'Low'], null, ['class' => 'form-control']) !!}
+  <br>
+	{!! Form::select('sq_p[]', ['0' => 'High', '1' => 'Medium', '2' => 'Low'], null, ['class' => 'form-control', 'multiple'=> 'multiple', 'id'=>'sq_p', 'data-label'=> 'Any priority']) !!}
 	</div>
 	<div class="form-group">
 	{!! Form::label('sq_ip', 'ERP Cateogry ') !!}
@@ -64,7 +65,7 @@ Project Search
   <script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-        $('#sq_o, #sq_s, #sq_ip').multiselect({
+        $('#sq_o, #sq_s, #sq_ip, #sq_p').multiselect({
             buttonText: function(options, select) {
             	if (options.length === 0) {
                     return (select).data('label');

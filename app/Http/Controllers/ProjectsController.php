@@ -420,6 +420,18 @@ class ProjectsController extends Controller {
 		}
 	}
 
+	public function translate_priority($code) {
+		if ($code == "0") {
+			return "High";
+		} else if ($code == "1") {
+			return "Medium";
+		} else if ($code == "2") {
+			return "Low";
+		} else {
+			return "Any";
+		}
+	}
+
 	public function update_status(ReorderRequest $request) {
 		//get user details
 		$user_id = Helpers::full_authenticate()->id;
@@ -511,19 +523,21 @@ class ProjectsController extends Controller {
 				$query['status'] = ProjectsController::translate_status($input['sq_s']);
 			}
 		}
-		$query['priority'] = $input['sq_p'];
-		if ($query['priority'] == 0) {
-			$query['priority'] = "High";
-		}
-		if ($query['priority'] == 1) {
-			$query['priority'] = "Medium";
-		}
-		if ($query['priority'] == 2) {
-			$query['priority'] = "Low";
-		}
-		if (!isset($input['sq_p']) || $input['sq_p'] == "") {
-			$input['sq_p'] = "%";
+		if (!isset($input['sq_p']) || $input['sq_p'] == "" || $input['sq_p'][0] == "") {
+			$input['sq_p'] = "";
 			$query['priority'] = "Any";
+		}
+		else {
+			if(is_array($input['sq_p'])) {
+				$priorities = [];
+				foreach ($input['sq_p'] as $key => $value) {
+    				array_push($priorities, ProjectsController::translate_priority($value));
+				}
+				$query['priority'] = implode($priorities, ', ');
+			}
+			else {
+				$query['priority'] = ProjectsController::translate_priority($input['sq_p']);
+			}
 		}
 		if (!isset($input['sq_o']) || $input['sq_o'] == "" || $input['sq_o'][0] == "" ) {
 			$input['sq_o'] = "";
@@ -581,7 +595,7 @@ class ProjectsController extends Controller {
 		}
 		$statement = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
 		->where('request_name', 'LIKE', '%' . $input['sq_n'] . '%')
-		->where('priority', 'LIKE', $input['sq_p'])
+		//->where('priority', 'LIKE', $input['sq_p'])
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
 		->orderBy('priority', 'asc')
 		->orderBy('order');
@@ -590,6 +604,12 @@ class ProjectsController extends Controller {
 		}
 		else {
 			$statement->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%');
+		}
+		if(is_array($input['sq_p'])) {
+			$statement->whereIn('priority', $input['sq_p']);
+		}
+		else {
+			$statement->where('priority', 'LIKE', '%' . $input['sq_p'] . '%');
 		}
 		if(is_array($input['sq_s'])) {
 			$statement->whereIn('status', $input['sq_s']);
