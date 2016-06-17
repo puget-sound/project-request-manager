@@ -29,8 +29,7 @@ Project Search
 	<div class="form-group">
 	{!! Form::label('sq_s', 'Status ') !!}
 	<div class='form-inline'>
-		{!! Form::select('sq_so', ['LIKE' => 'Show', 'NOT LIKE' => 'Hide'], null, ['class' => 'form-control']) !!}
-		{!! Form::select('sq_s', ['' => 'Any', '7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled', '4' => 'Refer to Oracle', '5' => 'Deferred'], null, ['class' => 'form-control']) !!}
+		{!! Form::select('sq_s[]', ['7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled', '4' => 'Refer to Oracle', '5' => 'Deferred'], null, ['class' => 'form-control', 'multiple' => 'multiple', 'id' => 'sq_s']) !!}
 	</div>
   <div class="checkbox">
     <label>
@@ -84,6 +83,27 @@ Project Search
             },
             maxHeight: 200,
             buttonClass: 'btn btn-default sq_o_button',
+        });
+        $('#sq_s').multiselect({
+            buttonText: function(options, select) {
+            	if (options.length === 0) {
+                    return 'Any status';
+                }
+                else {
+                     var labels = [];
+                     options.each(function() {
+                         if ($(this).attr('label') !== undefined) {
+                             labels.push($(this).attr('label'));
+                         }
+                         else {
+                             labels.push($(this).html());
+                         }
+                     });
+                     return labels.join(', ') + '';
+                 }
+            },
+            maxHeight: 200,
+            buttonClass: 'btn btn-default sq_s_button',
         });
     });
 </script>

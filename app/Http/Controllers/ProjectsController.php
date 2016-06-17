@@ -474,17 +474,27 @@ class ProjectsController extends Controller {
 
 	public function process_search() {
 		$input = Request::all();
-		$statusoperator = $input['sq_so'];
 		$query['sterm'] = $input['sq_n'];
 		if (!isset($input['sq_n']) || $input['sq_n'] == "") {
 			$input['sq_n'] = "%";
 			$query['sterm'] = "";
 		}
-		$query['status'] = ProjectsController::translate_status($input['sq_s']);
-		if (!isset($input['sq_s']) || $input['sq_s'] == "") {
-			$statusoperator = "LIKE";
-			$input['sq_s'] = "%";
+		//$query['status'] = ProjectsController::translate_status($input['sq_s']);
+		if (!isset($input['sq_s']) || $input['sq_s'] == "" || $input['sq_s'][0] == "") {
+			$input['sq_s'] = "";
 			$query['status'] = "Any";
+		}
+		else {
+			if(is_array($input['sq_s'])) {
+				$status_list = [];
+				foreach ($input['sq_s'] as $key => $value) {
+    				array_push($status_list, ProjectsController::translate_status($value));
+				}
+				$query['status'] = implode($status_list, ', ');
+			}
+			else {
+				$query['status'] = ProjectsController::translate_status($value);
+			}
 		}
 		$query['priority'] = $input['sq_p'];
 		if ($query['priority'] == 0) {
@@ -557,15 +567,10 @@ class ProjectsController extends Controller {
 				$query['ip'] = "Any";
 			}
 		}
-		if ($statusoperator == "NOT LIKE") {
-			$query['so'] = "Hide";
-		} else {
-			$query['so'] = "";
-		}
 		$statement = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
 		->where('request_name', 'LIKE', '%' . $input['sq_n'] . '%')
 		//->orWhere('project_desc', 'LIKE', '%' . $input['sq_n'] . '%')
-		->where('status', $statusoperator, $input['sq_s'])
+		//->where('status', 'LIKE', $input['sq_s'])
 		->where('priority', 'LIKE', $input['sq_p'])
 		//->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
 		//->whereIn('project_owner', $input['sq_o'])
@@ -573,6 +578,12 @@ class ProjectsController extends Controller {
 		->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%')
 		->orderBy('priority', 'asc')
 		->orderBy('order');
+		if(is_array($input['sq_s'])) {
+			$statement->whereIn('status', $input['sq_s']);
+		}
+		else {
+			$statement->where('status', 'LIKE', '%' . $input['sq_s'] . '%');
+		}
 		if(is_array($input['sq_o'])) {
 			$statement->whereIn('project_owner', $input['sq_o']);
 		}

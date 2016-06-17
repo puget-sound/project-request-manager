@@ -24,7 +24,7 @@ body {
   padding:12px 8px;
 }
 
-.sq_o_button b.caret {
+.sq_o_button b.caret, .sq_s_button b.caret {
 	margin-left:5px;
 }
 
