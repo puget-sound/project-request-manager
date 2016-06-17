@@ -16,7 +16,7 @@
 	Returned <strong>{{ count($projects) }}</strong> results.
 	@endif
 	</p>
-	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">Back to Search</a>
+	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">New Search</a>
 	<button id="search-results-csv" type="button" class="btn btn-link pull-right">
 		<span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download CSV
 	</button>

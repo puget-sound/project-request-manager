@@ -8,7 +8,7 @@ Project Search
 @include('errors.list')
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-5" id="project-search">
 {!! Form::open(['method' => 'GET', 'action' => ['ProjectsController@process_search']]) !!}
 	<div class="form-group">
 	{!! Form::label('sq_n', 'Project Name ') !!}
