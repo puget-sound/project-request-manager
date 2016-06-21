@@ -404,6 +404,34 @@ class ProjectsController extends Controller {
 		}
 	}
 
+	public function translate_category($code) {
+		if ($code == "0") {
+			return "Undetermined";
+		} else if ($code == "1") {
+			return "Category 1";
+		} else if ($code == "2") {
+			return "Category 2";
+		} else if ($code == "3") {
+			return "Category 3";
+		} else if ($code == "4") {
+			return "Category 4";
+		} else {
+			return "Any";
+		}
+	}
+
+	public function translate_priority($code) {
+		if ($code == "0") {
+			return "High";
+		} else if ($code == "1") {
+			return "Medium";
+		} else if ($code == "2") {
+			return "Low";
+		} else {
+			return "Any";
+		}
+	}
+
 	public function update_status(ReorderRequest $request) {
 		//get user details
 		$user_id = Helpers::full_authenticate()->id;
@@ -474,31 +502,42 @@ class ProjectsController extends Controller {
 
 	public function process_search() {
 		$input = Request::all();
-		$statusoperator = $input['sq_so'];
 		$query['sterm'] = $input['sq_n'];
 		if (!isset($input['sq_n']) || $input['sq_n'] == "") {
 			$input['sq_n'] = "%";
 			$query['sterm'] = "";
 		}
-		$query['status'] = ProjectsController::translate_status($input['sq_s']);
-		if (!isset($input['sq_s']) || $input['sq_s'] == "") {
-			$statusoperator = "LIKE";
-			$input['sq_s'] = "%";
+		if (!isset($input['sq_s']) || $input['sq_s'] == "" || $input['sq_s'][0] == "") {
+			$input['sq_s'] = "";
 			$query['status'] = "Any";
 		}
-		$query['priority'] = $input['sq_p'];
-		if ($query['priority'] == 0) {
-			$query['priority'] = "High";
+		else {
+			if(is_array($input['sq_s'])) {
+				$status_list = [];
+				foreach ($input['sq_s'] as $key => $value) {
+    				array_push($status_list, ProjectsController::translate_status($value));
+				}
+				$query['status'] = implode($status_list, ', ');
+			}
+			else {
+				$query['status'] = ProjectsController::translate_status($input['sq_s']);
+			}
 		}
-		if ($query['priority'] == 1) {
-			$query['priority'] = "Medium";
-		}
-		if ($query['priority'] == 2) {
-			$query['priority'] = "Low";
-		}
-		if (!isset($input['sq_p']) || $input['sq_p'] == "") {
-			$input['sq_p'] = "%";
+		if (!isset($input['sq_p']) || $input['sq_p'] == "" || $input['sq_p'][0] == "") {
+			$input['sq_p'] = "";
 			$query['priority'] = "Any";
+		}
+		else {
+			if(is_array($input['sq_p'])) {
+				$priorities = [];
+				foreach ($input['sq_p'] as $key => $value) {
+    				array_push($priorities, ProjectsController::translate_priority($value));
+				}
+				$query['priority'] = implode($priorities, ', ');
+			}
+			else {
+				$query['priority'] = ProjectsController::translate_priority($input['sq_p']);
+			}
 		}
 		if (!isset($input['sq_o']) || $input['sq_o'] == "" || $input['sq_o'][0] == "" ) {
 			$input['sq_o'] = "";
@@ -538,41 +577,46 @@ class ProjectsController extends Controller {
 				$query['completed'] = "No";
 			}
 		}
-		if (!isset($input['sq_ip'])) {
-			$input['sq_ip'] = "%";
+		if (!isset($input['sq_ip']) || $input['sq_ip'] == "" || $input['sq_ip'][0] == "") {
+			$input['sq_ip'] = "";
 			$query['ip'] = "Any";
-		} else {
-			$query['ip'] = $input['sq_ip'];
-			if ($query['ip'] == "1") {
-				$query['ip'] = "Category 1";
-			} else if ($query['ip'] == "2") {
-				$query['ip'] = "Category 2";
-			} else if ($query['ip'] == "3") {
-				$query['ip'] = "Category 3";
-			} else if ($query['ip'] == "4") {
-				$query['ip'] = "Category 4";
-			} else if ($query['ip'] == "0") {
-				$query['ip'] = "Undetermined";
-			} else {
-				$query['ip'] = "Any";
-			}
 		}
-		if ($statusoperator == "NOT LIKE") {
-			$query['so'] = "Hide";
-		} else {
-			$query['so'] = "";
+		else {
+			if(is_array($input['sq_ip'])) {
+				$categories = [];
+				foreach ($input['sq_ip'] as $key => $value) {
+    				array_push($categories, ProjectsController::translate_category($value));
+				}
+				$query['ip'] = implode($categories, ', ');
+			}
+			else {
+				$query['ip'] = ProjectsController::translate_category($input['sq_ip']);
+			}
 		}
 		$statement = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
 		->where('request_name', 'LIKE', '%' . $input['sq_n'] . '%')
-		//->orWhere('project_desc', 'LIKE', '%' . $input['sq_n'] . '%')
-		->where('status', $statusoperator, $input['sq_s'])
-		->where('priority', 'LIKE', $input['sq_p'])
-		//->where('project_owner', 'LIKE', '%' . $input['sq_o'] . '%')
-		//->whereIn('project_owner', $input['sq_o'])
+		//->where('priority', 'LIKE', $input['sq_p'])
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
-		->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%')
 		->orderBy('priority', 'asc')
 		->orderBy('order');
+		if(is_array($input['sq_ip'])) {
+			$statement->whereIn('inst_priority', $input['sq_ip']);
+		}
+		else {
+			$statement->where('inst_priority', 'LIKE', '%' . $input['sq_ip'] . '%');
+		}
+		if(is_array($input['sq_p'])) {
+			$statement->whereIn('priority', $input['sq_p']);
+		}
+		else {
+			$statement->where('priority', 'LIKE', '%' . $input['sq_p'] . '%');
+		}
+		if(is_array($input['sq_s'])) {
+			$statement->whereIn('status', $input['sq_s']);
+		}
+		else {
+			$statement->where('status', 'LIKE', '%' . $input['sq_s'] . '%');
+		}
 		if(is_array($input['sq_o'])) {
 			$statement->whereIn('project_owner', $input['sq_o']);
 		}

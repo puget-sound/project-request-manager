@@ -14,6 +14,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 				<th data-sortable="false">Complete %</th>
 				<th data-sortable="false">Start</th>
 				<th data-sortable="false">End</th>
+				<th></th>
 				<!--<th>Actions</th>-->
 			</thead>
 			<tbody>
@@ -22,7 +23,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 				</tr>
 				@foreach ($sprints as $sprint)
 					@if($sprint->sprintNumber == $current_sprint)
-				<tr>
+				<tr class="sprint-list-item">
 					<td style="vertical-align:middle;"><strong><a href="{{ url('sprint/' . $sprint->sprintNumber)}}">Sprint {{ $sprint->sprintNumber }}</a></strong></td>
 					<td style="vertical-align:middle;">
 					<span class="label label-success">Active</span>
@@ -30,6 +31,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
+					<td><small class="pull-right sprint-item-edit"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/edit') }}">edit</a></small></td>
 					<!--<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber)}}" class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;View Projects</a></td>-->
 				</tr>
 			@endif
@@ -39,7 +41,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 				</tr>
 				@foreach ($sprints as $sprint)
 					@if($sprint->sprintNumber > $current_sprint)
-				<tr>
+				<tr class="sprint-list-item">
 					<td style="vertical-align:middle;"><strong><a href="{{ url('sprint/' . $sprint->sprintNumber)}}">Sprint {{ $sprint->sprintNumber }}</a></strong></td>
 					<td style="vertical-align:middle;">
 					<span class="label label-success label-future">Future</span>
@@ -47,6 +49,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
+					<td><small class="pull-right sprint-item-edit"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/edit') }}">edit</a></small></td>
 					<!--<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber)}}" class='btn btn-primary btn-sm'><span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;View Projects</a></td>-->
 				</tr>
 			@endif
@@ -82,4 +85,15 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 	</div>
 </div>
 </div>
+@endsection
+@section('extra-scripts')
+<script type="text/javascript">
+    /*$(document).ready(function() {
+    	$( ".sprint-list-item" ).hover(function() {
+  			$(this).find('.sprint-item-edit').show();
+			}, function() {
+				$(this).find('.sprint-item-edit').hide();
+		});
+	});*/
+</script>
 @endsection

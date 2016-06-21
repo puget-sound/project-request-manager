@@ -8,7 +8,7 @@
 	@if ($query['sterm'] != "")
 	<h4>Searched for "{{ $query['sterm'] }}"</h4>
 	@endif
-	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['so'] }} {{ $query['status'] }}</strong>, Include Completed Projects: <strong>{{ $query['completed'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
+	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['status'] }}</strong>, Include Completed Projects: <strong>{{ $query['completed'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
 	<p class="text-muted">
 	@if (count($projects) == 1)
 	Returned <strong>{{ count($projects) }}</strong> result.
@@ -16,7 +16,7 @@
 	Returned <strong>{{ count($projects) }}</strong> results.
 	@endif
 	</p>
-	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">Back to Search</a>
+	<a class='btn btn-sm btn-primary' href="{{ url('projects/search') }}">New Search</a>
 	<button id="search-results-csv" type="button" class="btn btn-link pull-right">
 		<span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download CSV
 	</button>

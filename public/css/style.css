@@ -24,8 +24,23 @@ body {
   padding:12px 8px;
 }
 
-.sq_o_button b.caret {
-	margin-left:5px;
+.nav .dropdown-toggle .caret {
+  margin-left:5px;
+}
+
+.sq_select_button {
+  width: 260px;
+  text-align: left;
+}
+
+#project-search .multiselect-selected-text {
+  width:215px;
+  display:inline-block;
+}
+
+#project-search .multiselect-container {
+  min-width:260px;
+  padding:5px 0;
 }
 
 #search-results-csv {
@@ -86,6 +101,10 @@ body {
   vertical-align: top;
 }
 
+.sprint-item-edit {
+  /*display:none;*/
+}
+
 #view-past-sprints {
   margin-top:35px;
   display:block;
@@ -93,12 +112,16 @@ body {
   margin-bottom:10px;
 }
 
-#sprintCreate #sprintNumber {
+#sprintCreate #sprintNumber,
+#sprintEdit #sprintNumber {
     z-index: 0;
     width:175px;
 }
 
-#sprintCreate #sprintStart, #sprintCreate #sprintEnd {
+#sprintCreate #sprintStart,
+#sprintCreate #sprintEnd,
+#sprintEdit #sprintStart,
+#sprintEdit #sprintEnd {
   width:238px;
 }
 
