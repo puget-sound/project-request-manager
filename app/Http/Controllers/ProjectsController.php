@@ -353,6 +353,46 @@ class ProjectsController extends Controller {
 		}
 	}
 
+	public function send_to_liquidplanner($id) {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$project = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')->where('requests.id', '=', $id)->first();
+		$owners = Owners::where('active', '=', 'Active')->where('lp_id', '!=', '')->lists('name', 'id');
+		$owners = array('' => 'None') + $owners;
+		if ($project != NULL) {
+			Session::flash('url', Request::server('HTTP_REFERER'));
+			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners]);
+		} else {
+			return redirect()->back();
+		}
+	}
+
+	public function process_send() {
+		$input = Request::all();
+		if($input['project_owner'] != '') {
+			$client_id = Owners::findOrFail($input['project_owner'])->lp_id;
+		}
+		else {
+			$client_id = '';
+		}
+		$project_id = $input['project_id'];
+		if(strlen($project_id) < 4) {
+			$project_id = '0'.$project_id;
+		}
+		$email = env('LP_EMAIL');
+		$password = env('LP_PASSWORD');
+
+		$lp = new LiquidPlanner($email, $password);
+		$lp->workspace_id = env('LP_WORKSPACE');
+
+		$project = array('parent_id' => env('LP_PARENT'), 'name'=>'API TEST '.$input['request_name'], 'external_reference' => 'P'.$project_id, 'client_id' => $client_id);
+		$result = $lp->create_project($project);
+
+		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>'http://tsprojects.pugetsound.edu/request/'.$input['project_id']);
+		$link_result = $lp->create_link($link);
+		return redirect("request/" . $input['project_id'])->withSuccess("Successfully sent project to <a href='https://app.liquidplanner.com/space/$lp->workspace_id/projects/show/$result->id' target='_blank'>LiquidPlanner</a>.");
+	}
+
 	public function add_comment(CommentsRequest $request) {
 		$user_id = Helpers::full_authenticate()->id;
 		$request['comment_user_id'] = $user_id;
@@ -629,6 +669,56 @@ class ProjectsController extends Controller {
 		$results = $statement->get();
 		return view('content.results', ['projects' => $results, 'query' => $query]);
 	}
+}
 
+class LiquidPlanner {
+	private $_base_uri = "https://app.liquidplanner.com/api";
+	private $_ch;
+	public  $workspace_id;
+
+	function __construct($email, $password) {
+		$this->_ch = curl_init();
+		curl_setopt($this->_ch, CURLOPT_HEADER, false);
+		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($this->_ch, CURLOPT_USERPWD, "$email:$password");
+		curl_setopt($this->_ch, CURLOPT_HTTPHEADER, array('content-type: application/json'));
+		curl_setopt($this->_ch, CURLOPT_ENCODING, 'gzip');
+	}
+
+	public function get($url) {
+		curl_setopt($this->_ch, CURLOPT_HTTPGET, true);
+		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
+		return json_decode(curl_exec($this->_ch));
+	}
+
+	public function post($url, $body=null) {
+		curl_setopt($this->_ch, CURLOPT_POST, true);
+		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, json_encode($body));
+		return json_decode(curl_exec($this->_ch));
+	}
+
+	public function put($url, $body=null) {
+		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
+		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, json_encode($body));
+		return json_decode(curl_exec($this->_ch));
+	}
+
+	public function create_task($data) {
+		return $this->post("/workspaces/{$this->workspace_id}/tasks", array("task"=>$data));
+	}
+
+	public function create_project($data) {
+		return $this->post("/workspaces/{$this->workspace_id}/projects", array("project"=>$data));
+	}
+
+	public function create_link($data) {
+		return $this->post("/workspaces/{$this->workspace_id}/links", array("link"=>$data));
+	}
+
+	public function update_task($data) {
+		return $this->put("/workspaces/{$this->workspace_id}/tasks/{$data['id']}", array("task"=>$data));
+	}
 
 }

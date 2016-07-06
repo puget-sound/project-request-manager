@@ -24,4 +24,9 @@ class Users extends Model {
      * @var array
      */
     protected $hidden = [];
+
+    public function isLP()
+    {
+        return ($this->admin == 1);
+    }
 }

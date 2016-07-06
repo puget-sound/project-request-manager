@@ -29,6 +29,8 @@ Route::get('request', function () {return redirect()->back();});
 Route::get('request/{id}/edit', 'ProjectsController@edit');
 Route::get('request/{id}/delete', 'ProjectsController@delete');
 Route::get('request/{id}', 'ProjectsController@get_project');
+Route::get('request/{id}/send-to-liquidplanner', 'ProjectsController@send_to_liquidplanner');
+Route::get('projects/{id}/liquidplanner', 'ProjectsController@process_send');
 Route::patch('request/{id}', 'ProjectsController@update');
 Route::get('request/{id}/reorder', 'ProjectsController@reorder');
 Route::patch('request/reorder/process', 'ProjectsController@reorder_process');
