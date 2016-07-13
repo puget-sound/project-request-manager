@@ -376,6 +376,7 @@ class ProjectsController extends Controller {
 			$client_id = '';
 		}
 		$project_id = $input['project_id'];
+		$prm_project = Projects::where('id', '=', $project_id)->first();
 		if(strlen($project_id) < 4) {
 			$project_id = '0'.$project_id;
 		}
@@ -387,6 +388,8 @@ class ProjectsController extends Controller {
 
 		$project = array('parent_id' => env('LP_PARENT'), 'name'=>'API TEST '.$input['request_name'], 'external_reference' => 'P'.$project_id, 'client_id' => $client_id);
 		$result = $lp->create_project($project);
+		$prm_project['lp_id'] = "$result->id";
+		$prm_project->save();
 
 		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>'http://tsprojects.pugetsound.edu/request/'.$input['project_id']);
 		$link_result = $lp->create_link($link);

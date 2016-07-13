@@ -11,7 +11,10 @@
 @include('modals.project-actions', ['sprints' => $sprints])
 @include('modals.project-actions-delete', ['sprints' => $sprints, 'project' => $projects])
 @include('errors.list')
-<div class="col-md-9" style='padding-left: 0px;'>
+<div class="row">
+<div class="col-md-9">
+	<div class="row">
+		<div class="col-md-8">
 <!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
 <h4 class='view-project-name'>{{ $projects->name }}</h4>
 <h4>
@@ -83,6 +86,13 @@
 	</div>
 	@endif
 </div>
+</div>
+<div class="col-md-4">
+	@if ($projects->lp_id != "" && $user->admin == 1)
+	<p><a class="btn btn-default" href="#" role="button">Link to LiquidPlanner</a></p>
+@endif
+</div>
+</div>
 <h4 style='margin-top: 40px;'>Project Details</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 @if ($projects->stakeholders != "")<p><strong>Other Stakeholders:</strong> {{ $projects->stakeholders }}</p> @endif
 <p><strong>Project in Cascade:</strong> @if ($projects->cascade_flag == 'N') No @else Yes @endif</p>
@@ -113,7 +123,7 @@
 </div>
 
 
-<div class="col-md-3 list-group" style='margin-top: 10px;'>
+<div class="col-md-3 list-group">
   <div href="#" class="list-group-item active">
     Actions
   </div>
@@ -132,9 +142,11 @@
 	  	@if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Deassign from Sprint</a>@endif
 	  @endif
 	  @if ($user->admin == 1)
+			@if ($projects->lp_id == "")
 			<a class="list-group-item" href="{{ url('request/' . $projects->id . '/send-to-liquidplanner') }}"><span class='glyphicon glyphicon-share'></span>&nbsp;&nbsp;Send to LiquidPlanner</a>
+		@endif
 			<a href="#" class="list-group-item" data-toggle="modal" data-target="#deleteProject" data-prmtype="Delete" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete Project</a> @endif
   @endif
-
+</div>
 </div>
 @endsection
