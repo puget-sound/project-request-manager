@@ -346,8 +346,9 @@ class ProjectsController extends Controller {
 		->get();
 		$sprints = Sprints::orderBy('sprintNumber', 'desc')->lists('sprintNumber', 'id');
 		if ($projects != NULL) {
+			$lp_workspace = env('LP_WORKSPACE');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'lp_workspace'=> $lp_workspace]);
 		} else {
 			return redirect()->back();
 		}

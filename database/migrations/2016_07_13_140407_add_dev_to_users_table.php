@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLpToRequestTable extends Migration {
+class AddDevToUsersTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,10 @@ class AddLpToRequestTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('requests', function(Blueprint $table)
+		Schema::table('users', function(Blueprint $table)
 		{
-			//store LiquidPlanner project ID
-			$table->string('lp_id');
+			//identify dev users 
+			$table->tinyInteger('dev');
 		});
 	}
 
@@ -26,7 +26,7 @@ class AddLpToRequestTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('requests', function(Blueprint $table)
+		Schema::table('users', function(Blueprint $table)
 		{
 			//
 		});

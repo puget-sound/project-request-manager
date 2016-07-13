@@ -16,7 +16,7 @@ class Users extends Model {
      *
      * @var array
      */
-    protected $fillable = ['username', 'fullname', 'admin', 'active'];
+    protected $fillable = ['username', 'fullname', 'admin', 'active', 'dev'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -27,6 +27,6 @@ class Users extends Model {
 
     public function isLP()
     {
-        return ($this->admin == 1);
+        return ($this->admin == 1 || $this->dev == 1);
     }
 }

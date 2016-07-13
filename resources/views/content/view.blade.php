@@ -88,8 +88,8 @@
 </div>
 </div>
 <div class="col-md-4">
-	@if ($projects->lp_id != "" && $user->admin == 1)
-	<p><a class="btn btn-default" href="#" role="button">Link to LiquidPlanner</a></p>
+	@if ($projects->lp_id != "" && $user->isLP())
+	<p><a class="btn btn-default" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">Link to LiquidPlanner</a></p>
 @endif
 </div>
 </div>
@@ -124,13 +124,14 @@
 
 
 <div class="col-md-3 list-group">
-  <div href="#" class="list-group-item active">
-    Actions
-  </div>
    @if ($projects->status == 6 || $projects->status == 5)
   	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
  	@else
- 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->admin == 1)<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>@endif
+ 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->admin == 1)
+		<div href="#" class="list-group-item active">
+			Actions
+		</div>
+		<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>@endif
 	  @if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->admin == 1)<a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
 	  @if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
 	  @if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark As Complete</a>@endif

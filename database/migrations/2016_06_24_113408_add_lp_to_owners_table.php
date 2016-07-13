@@ -14,6 +14,7 @@ class AddLpToOwnersTable extends Migration {
 	{
 		Schema::table('project_owners', function(Blueprint $table)
 		{
+			//store LiquidPlanner client ID
 			$table->string('lp_id');
 		});
 	}
