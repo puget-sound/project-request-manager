@@ -22,6 +22,7 @@ Send to LiquidPlanner
 
 {!! Form::submit("Send to LiquidPlanner", ['class' => 'btn btn-primary form-control']) !!}
 {!! Form::close() !!}
+<a href="{{ url('request') }}/{{ $project->id }}">Cancel</a>
 </div>
 </div>
 @endsection
