@@ -87,9 +87,9 @@
 	@endif
 </div>
 </div>
-<div class="col-md-4">
+<div class="col-md-3 col-md-offset-1">
 	@if ($projects->lp_id != "" && $user->isLP())
-	<p><a class="btn btn-default" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">Link to LiquidPlanner</a></p>
+	<p><a class="btn btn-default lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
 @endif
 </div>
 </div>

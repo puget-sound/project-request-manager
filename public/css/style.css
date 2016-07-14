@@ -63,6 +63,16 @@ body {
   color:#999;
 }
 
+.lp-link {
+    border-color:#337ab7;
+    color:#337ab7;
+}
+
+.lp-link:hover {
+  border-color:#285f8f;
+  color:#285f8f;
+}
+
 .label-future {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);

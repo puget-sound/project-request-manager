@@ -15,7 +15,7 @@ class AddLpToRequestTable extends Migration {
 		Schema::table('requests', function(Blueprint $table)
 		{
 			//store LiquidPlanner project ID
-			$table->string('lp_id');
+			$table->string('lp_id', '15')->nullable();
 		});
 	}
 
