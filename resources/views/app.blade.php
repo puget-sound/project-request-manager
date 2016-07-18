@@ -74,6 +74,9 @@
     </nav>
     <div class="container">
     	<div class='page-header'>
+				<div class="title-right">
+					@yield('title-right')
+				</div>
     		<h2>@yield('title')</h2>
 				@yield('under-title')
     	</div>

@@ -10,8 +10,15 @@
 	@endif
 @endsection
 
+@section('title-right')
+	@if ($user->isLP())<div class="panel panel-default" id="claim-project-number">
+	<div class="panel-body claim-project-action"><span class="text-muted">Next project number is</span> <strong>0567</strong> <button class='btn btn-primary btn-xs'>Claim</button></div>
+	<div class="panel-body claim-project-result"><span class="text-muted">Claimed</span> <input class="form-control input-sm" type="text" value="0567"><small><a href="{{ url('requests') }}">claim another</a></small></div>
+</div>@endif
+@endsection
+
 @section('under-title')
-	@if ($user->admin == 1) <p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p> @endif
+	@if ($user->admin == 1)<p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p>@endif
 @endsection
 
 @section('content')
@@ -127,7 +134,13 @@
     $(document).ready(function() {
     	$( "#search-results-csv" ).on( "click", function() {
   			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results', ignoreColumn: [0]});
-		});
+			});
+			$( "#claim-project-number button" ).on( "click", function() {
+  			var num = $('#claim-project-number strong').text();
+				$('#claim-project-number .claim-project-action').hide();
+				$('#claim-project-number .claim-project-result').show();
+				$('#claim-project-number .claim-project-result input').select();
+			});
     });
 </script>
 @endsection
