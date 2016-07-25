@@ -33,28 +33,15 @@ body {
 }
 
 #claim-project-number {
-  width:265px;
+  width:275px;
 }
 
 #claim-project-number strong {
   margin-right:5px;
 }
 
-.claim-project-result {
-  display:none;
-}
-
-.claim-project-result span,
-.claim-project-result input {
-  display:inline-block;
-}
-
-.claim-project-result input {
-  width:75px;
-  height:22px;
-  margin-left:5px;
-  margin-right:8px;
-  padding:0px 10px;
+#claim-project-number p {
+    margin-bottom:0px;
 }
 
 .sq_select_button {

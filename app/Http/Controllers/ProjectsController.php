@@ -7,6 +7,7 @@ use App\CheckNotifications;
 use App\Notifications;
 use App\UserMappings;
 use App\Users;
+use App\ProjectNumber;
 use Session;
 use Request;
 use App\Sprints;
@@ -322,7 +323,11 @@ class ProjectsController extends Controller {
 		->whereNotIn('status', [5,6])
 		->first();
 		if ($duplicateOrder == NULL) {
-			Projects::create($request->all());
+			$project = Projects::create($request->all());
+			$project_number = ProjectNumber::all()->last();
+			$project->project_number = $project_number->project_number;
+			$project->save();
+			DB::table('project_number')->whereId($project_number->id)->increment('project_number');
 			return redirect('requests')->withSuccess("Successfully created project.");
 		} else {
 			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));
@@ -377,6 +382,7 @@ class ProjectsController extends Controller {
 			$client_id = '';
 		}
 		$project_id = $input['project_id'];
+		$lp_owner = $input['lp_owner'];
 		$prm_project = Projects::where('id', '=', $project_id)->first();
 		if(strlen($project_id) < 4) {
 			$project_id = '0'.$project_id;
@@ -387,7 +393,7 @@ class ProjectsController extends Controller {
 		$lp = new LiquidPlanner($email, $password);
 		$lp->workspace_id = env('LP_WORKSPACE');
 
-		$project = array('parent_id' => env('LP_PARENT'), 'name'=>'API TEST '.$input['request_name'], 'external_reference' => 'P'.$project_id, 'client_id' => $client_id);
+		$project = array('parent_id' => env('LP_PARENT'), 'name'=>'API TEST '.$input['request_name'], 'external_reference' => 'P'.$project_id, 'client_id' => $client_id, 'assignments' => array(array('person_id' => $lp_owner)));
 		$result = $lp->create_project($project);
 		$prm_project['lp_id'] = "$result->id";
 		$prm_project->save();
@@ -395,6 +401,16 @@ class ProjectsController extends Controller {
 		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>'http://tsprojects.pugetsound.edu/request/'.$input['project_id']);
 		$link_result = $lp->create_link($link);
 		return redirect("request/" . $input['project_id'])->withSuccess("Successfully sent project to <a href='https://app.liquidplanner.com/space/$lp->workspace_id/projects/show/$result->id' target='_blank'>LiquidPlanner</a>.");
+	}
+
+	public function get_project_number() {
+		$project = ProjectNumber::all()->last();
+		$project_number = $project->project_number;
+		DB::table('project_number')->whereId($project->id)->increment('project_number');
+		if(strlen($project_number) < 4) {
+			$project_number = '0'.$project_number;
+		}
+		return back()->withSuccess("You just claimed project number <strong>P$project_number</strong>");
 	}
 
 	public function add_comment(CommentsRequest $request) {

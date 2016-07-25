@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 	@if (Request::segment(1) == ('projects'))
 		{{ $owner->name }} Projects
@@ -12,8 +12,8 @@
 
 @section('title-right')
 	@if ($user->isLP())<div class="panel panel-default" id="claim-project-number">
-	<div class="panel-body claim-project-action"><span class="text-muted">Next project number is</span> <strong>0567</strong> <button class='btn btn-primary btn-xs'>Claim</button></div>
-	<div class="panel-body claim-project-result"><span class="text-muted">Claimed</span> <input class="form-control input-sm" type="text" value="0567"><small><a href="{{ url('requests') }}">claim another</a></small></div>
+	<div class="panel-body"><p class="claim-project-action"><span class="text-muted">Next project number is</span> <strong>P{{$next_project_number}}</strong> <a href="{{ url('requests/get-project-number') }}" class='btn btn-primary btn-xs'>Claim</a></p>
+	</div>
 </div>@endif
 @endsection
 
@@ -22,7 +22,6 @@
 @endsection
 
 @section('content')
-@include('errors.list')
 	<div class='row'>
 		<div class='col-md-9'>
 			<div class='input-group'>
@@ -137,8 +136,7 @@
 			});
 			$( "#claim-project-number button" ).on( "click", function() {
   			var num = $('#claim-project-number strong').text();
-				$('#claim-project-number .claim-project-action').hide();
-				$('#claim-project-number .claim-project-result').show();
+				$('#claim-project-number .claim-project-result').slideDown();
 				$('#claim-project-number .claim-project-result input').select();
 			});
     });

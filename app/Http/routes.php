@@ -23,6 +23,7 @@ Route::get('requests/all', 'ProjectsController@all_open_projects');
 Route::get('requests/all/completed', 'ProjectsController@all_completed_projects');
 Route::get('requests/all/deferred', 'ProjectsController@all_deferred_projects');
 Route::get('requests/create', 'ProjectsController@create');
+Route::get('requests/get-project-number', 'ProjectsController@get_project_number');
 Route::post('requests', 'ProjectsController@store');
 Route::post('flag/{project_id}', 'AjaxController@flag_project');
 Route::get('request', function () {return redirect()->back();});
