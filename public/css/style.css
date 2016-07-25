@@ -34,6 +34,11 @@ body {
 
 #claim-project-number {
   width:275px;
+  margin-top:-10px;
+}
+
+#claim-project-number .panel-body {
+  padding:10px 15px;
 }
 
 #claim-project-number strong {
