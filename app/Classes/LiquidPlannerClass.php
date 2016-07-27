@@ -40,6 +40,10 @@ class LiquidPlannerClass {
     return $this->get("/workspaces/{$this->workspace_id}/members");
   }
 
+	public function clients() {
+    return $this->get("/workspaces/{$this->workspace_id}/clients");
+  }
+
 	public function create_task($data) {
 		return $this->post("/workspaces/{$this->workspace_id}/tasks", array("task"=>$data));
 	}

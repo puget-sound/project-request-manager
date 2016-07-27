@@ -6,6 +6,7 @@ use App\Users;
 use App\UserMappings;
 use App\Http\Requests\OwnersRequest;
 use App\Http\Requests\UserMappingsRequest;
+use App\Classes\LiquidPlannerClass;
 use Request;
 
 class OwnersController extends Controller {
@@ -28,7 +29,19 @@ class OwnersController extends Controller {
 		->orderBy('fullname', 'asc')
 		->lists('fullname', 'id');
 		$group_users = Users::join('user_mappings', 'user_mappings.user_id', '=', 'users.id')->where('owner_id', '=', $id)->get();
-		return view('owners.manage', ['owner' => $select, 'group_users' => $group_users], compact('users'));
+		$email = env('LP_EMAIL');
+		$password = env('LP_PASSWORD');
+
+		$lp = new LiquidPlannerClass($email, $password);
+		$lp->workspace_id = env('LP_WORKSPACE');
+		$clients = $lp->clients();
+		foreach($clients as $client) {
+			if($client->id != '-1' && $client->id != '0')
+    	$lp_clients[$client->id] = $client->name;
+		}
+		asort($lp_clients);
+		$lp_clients = array('' => 'None') + $lp_clients;
+		return view('owners.manage', ['owner' => $select, 'group_users' => $group_users, 'lp_clients' => $lp_clients], compact('users'));
 	}
 
 	public function map_user(UserMappingsRequest $request) {
@@ -48,7 +61,7 @@ class OwnersController extends Controller {
 		$owner = Owners::where('id', '=', $input['owner_id'])->first();
 		$owner->lp_id = $input['lp_id'];
 		$owner->save();
-		return redirect()->back()->withSuccess("LiquidPlanner ID saved.");
+		return redirect()->back()->withSuccess("LiquidPlanner Client saved.");
 	}
 
 	public function store(OwnersRequest $request) {

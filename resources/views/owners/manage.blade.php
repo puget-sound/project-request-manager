@@ -23,13 +23,14 @@ Manage {{ $owner->name }}
 </div>
 </div>
 <div class="col-md-6">
-	<h5>LiquidPlanner ID</h5>
+	<h5>LiquidPlanner Client</h5>
 	<div class="row">
 		<div class="col-md-4">
 	{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id]]) !!}
+
 	<div class="form-group">
-		{!! Form::text('lp_id', $owner->lp_id, ['class' => 'form-control']) !!}
-		{!! Form::hidden('owner_id', $owner->id) !!}
+	{!! Form::select('lp_id', $lp_clients, null, ['class' => 'form-control']) !!}
+	{!! Form::hidden('owner_id', $owner->id) !!}
 	</div>
 	</div>
 	<div class="col-md-3">
