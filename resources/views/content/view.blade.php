@@ -4,7 +4,7 @@
 {{ $projects->request_name }}
 @endsection
 @section('under-title')
-<p class="view-project-date">added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
+<p class="view-project-date">@if($projects->project_number) {{'#'.$projects->project_number}}@endif added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
 @endsection
 
 @section('content')
