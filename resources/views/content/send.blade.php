@@ -23,6 +23,10 @@ Send to LiquidPlanner
 {!! Form::label('lp_owner', 'Owner') !!}
 {!! Form::select('lp_owner', $lp_owners, null, ['class' => 'form-control']) !!}
 </div>
+<div class="form-group">
+  {!! Form::label('lp_parent', 'Folder') !!}
+  {!! Form::select('lp_parent', $lp_parent, null, ['class' => 'form-control']) !!}
+</div>
 
 {!! Form::submit("Send to LiquidPlanner", ['class' => 'btn btn-primary form-control']) !!}
 {!! Form::close() !!}

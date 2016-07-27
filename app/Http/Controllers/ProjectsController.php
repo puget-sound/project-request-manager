@@ -45,6 +45,10 @@ class ProjectsController extends Controller {
 	public function my_open_projects() {
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
+		$is_owner = UserMappings::where('user_id', '=', $user_id)->first();
+		if($is_owner == '') {
+			return redirect('requests/all');
+		}
 		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
 		->where('user_mappings.user_id', '=', $user_id)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
@@ -381,9 +385,12 @@ class ProjectsController extends Controller {
 			if($member->id != '-1' && $member->id != '0')
     	$lp_owners[$member->id] = $member->user_name;
 		}
+		$lp_parent = Array(
+    env('LP_PARENT') => "EIS Projects In-Progress",
+    env('LP_PS_MNT_PARENT') => "PeopleSoft Maintenance");
 		if ($project != NULL) {
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners, 'lp_owners' => $lp_owners]);
+			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners, 'lp_owners' => $lp_owners, 'lp_parent' => $lp_parent]);
 		} else {
 			return redirect()->back();
 		}
@@ -408,7 +415,7 @@ class ProjectsController extends Controller {
 		$lp = new LiquidPlanner($email, $password);
 		$lp->workspace_id = env('LP_WORKSPACE');
 
-		$project = array('parent_id' => env('LP_PARENT'), 'name'=>'API TEST '.$input['request_name'], 'external_reference' => $prm_project->project_number, 'client_id' => $client_id, 'assignments' => array(array('person_id' => $lp_owner)));
+		$project = array('parent_id' => $input['lp_parent'], 'name'=> $input['request_name'], 'external_reference' => $prm_project->project_number, 'client_id' => $client_id, 'assignments' => array(array('person_id' => $lp_owner)));
 		$result = $lp->create_project($project);
 		$prm_project['lp_id'] = "$result->id";
 		$prm_project->save();
