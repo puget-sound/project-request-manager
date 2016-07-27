@@ -19,6 +19,7 @@ use App\Http\Requests\ReorderRequest;
 use App\Http\Requests\CommentsRequest;
 use App\Http\Requests\NotificationsRequest;
 use App\Comments;
+use App\Classes\LiquidPlannerClass;
 use Cas;
 use Carbon\Carbon;
 
@@ -175,49 +176,6 @@ class ProjectsController extends Controller {
 		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
 	}
 
-	public function all_completed_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '6')
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
-
-	public function all_deferred_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '5')
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
 
 	public function logout() {
 		Cas::logout();
@@ -378,7 +336,7 @@ class ProjectsController extends Controller {
 		$email = env('LP_EMAIL');
 		$password = env('LP_PASSWORD');
 
-		$lp = new LiquidPlanner($email, $password);
+		$lp = new LiquidPlannerClass($email, $password);
 		$lp->workspace_id = env('LP_WORKSPACE');
 		$members = $lp->members();
 		foreach($members as $member) {
@@ -412,7 +370,7 @@ class ProjectsController extends Controller {
 		$email = env('LP_EMAIL');
 		$password = env('LP_PASSWORD');
 
-		$lp = new LiquidPlanner($email, $password);
+		$lp = new LiquidPlannerClass($email, $password);
 		$lp->workspace_id = env('LP_WORKSPACE');
 
 		$project = array('parent_id' => $input['lp_parent'], 'name'=> $input['request_name'], 'external_reference' => $prm_project->project_number, 'client_id' => $client_id, 'assignments' => array(array('person_id' => $lp_owner)));
@@ -711,60 +669,4 @@ class ProjectsController extends Controller {
 		$results = $statement->get();
 		return view('content.results', ['projects' => $results, 'query' => $query]);
 	}
-}
-
-class LiquidPlanner {
-	private $_base_uri = "https://app.liquidplanner.com/api";
-	private $_ch;
-	public  $workspace_id;
-
-	function __construct($email, $password) {
-		$this->_ch = curl_init();
-		curl_setopt($this->_ch, CURLOPT_HEADER, false);
-		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($this->_ch, CURLOPT_USERPWD, "$email:$password");
-		curl_setopt($this->_ch, CURLOPT_HTTPHEADER, array('content-type: application/json'));
-		curl_setopt($this->_ch, CURLOPT_ENCODING, 'gzip');
-	}
-
-	public function get($url) {
-		curl_setopt($this->_ch, CURLOPT_HTTPGET, true);
-		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
-		return json_decode(curl_exec($this->_ch));
-	}
-
-	public function post($url, $body=null) {
-		curl_setopt($this->_ch, CURLOPT_POST, true);
-		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
-		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, json_encode($body));
-		return json_decode(curl_exec($this->_ch));
-	}
-
-	public function put($url, $body=null) {
-		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-		curl_setopt($this->_ch, CURLOPT_URL, $this->_base_uri.$url);
-		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, json_encode($body));
-		return json_decode(curl_exec($this->_ch));
-	}
-
-	public function members() {
-    return $this->get("/workspaces/{$this->workspace_id}/members");
-  }
-
-	public function create_task($data) {
-		return $this->post("/workspaces/{$this->workspace_id}/tasks", array("task"=>$data));
-	}
-
-	public function create_project($data) {
-		return $this->post("/workspaces/{$this->workspace_id}/projects", array("project"=>$data));
-	}
-
-	public function create_link($data) {
-		return $this->post("/workspaces/{$this->workspace_id}/links", array("link"=>$data));
-	}
-
-	public function update_task($data) {
-		return $this->put("/workspaces/{$this->workspace_id}/tasks/{$data['id']}", array("task"=>$data));
-	}
-
 }
