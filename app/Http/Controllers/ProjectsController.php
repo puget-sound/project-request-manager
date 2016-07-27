@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App;
 use App\Projects;
 use App\Owners;
 use App\CheckNotifications;
@@ -365,15 +366,26 @@ class ProjectsController extends Controller {
 		$project = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')->where('requests.id', '=', $id)->first();
 		$owners = Owners::where('active', '=', 'Active')->where('lp_id', '!=', '')->lists('name', 'id');
 		$owners = array('' => 'None') + $owners;
+		$email = env('LP_EMAIL');
+		$password = env('LP_PASSWORD');
+
+		$lp = new LiquidPlanner($email, $password);
+		$lp->workspace_id = env('LP_WORKSPACE');
+		$members = $lp->members();
+		foreach($members as $member) {
+			if($member->id != '-1' && $member->id != '0')
+    	$lp_owners[$member->id] = $member->user_name;
+		}
 		if ($project != NULL) {
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners]);
+			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners, 'lp_owners' => $lp_owners]);
 		} else {
 			return redirect()->back();
 		}
 	}
 
 	public function process_send() {
+		$base_url = App::make('url')->to('/');
 		$input = Request::all();
 		if($input['project_owner'] != '') {
 			$client_id = Owners::findOrFail($input['project_owner'])->lp_id;
@@ -398,7 +410,7 @@ class ProjectsController extends Controller {
 		$prm_project['lp_id'] = "$result->id";
 		$prm_project->save();
 
-		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>'http://tsprojects.pugetsound.edu/request/'.$input['project_id']);
+		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>"$base_url/request/".$input['project_id']);
 		$link_result = $lp->create_link($link);
 		return redirect("request/" . $input['project_id'])->withSuccess("Successfully sent project to <a href='https://app.liquidplanner.com/space/$lp->workspace_id/projects/show/$result->id' target='_blank'>LiquidPlanner</a>.");
 	}
@@ -724,6 +736,10 @@ class LiquidPlanner {
 		curl_setopt($this->_ch, CURLOPT_POSTFIELDS, json_encode($body));
 		return json_decode(curl_exec($this->_ch));
 	}
+
+	public function members() {
+    return $this->get("/workspaces/{$this->workspace_id}/members");
+  }
 
 	public function create_task($data) {
 		return $this->post("/workspaces/{$this->workspace_id}/tasks", array("task"=>$data));

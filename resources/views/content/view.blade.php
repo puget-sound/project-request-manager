@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 {{ $projects->request_name }}
 @endsection
@@ -10,7 +10,6 @@
 @section('content')
 @include('modals.project-actions', ['sprints' => $sprints])
 @include('modals.project-actions-delete', ['sprints' => $sprints, 'project' => $projects])
-@include('errors.list')
 <div class="row">
 <div class="col-md-9">
 	<div class="row">
