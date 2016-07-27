@@ -1,10 +1,9 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 System Users
 @endsection
 @section('content')
-	@include('errors.list')
 	@include('modals.confirm-delete')
 	<div class='row'>
 		<div class='col-md-9'>

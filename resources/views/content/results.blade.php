@@ -1,10 +1,10 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 	Search Results
 @endsection
 @section('content')
-	@include('errors.list')
+
 	@if ($query['sterm'] != "")
 	<h4>Searched for "{{ $query['sterm'] }}"</h4>
 	@endif

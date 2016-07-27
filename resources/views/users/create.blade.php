@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Add User
 @endsection
@@ -9,7 +9,6 @@ Add User
 	<div class="col-md-4">
 {!! Form::open(['url' => 'users']) !!}
 
-	@include('errors.list')
 	<div class="form-group">
 		{!! Form::label('username', 'Username') !!}
 		{!! Form::text('username', null, ['class' => 'form-control']) !!}

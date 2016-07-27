@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Project Owners
 @endsection
@@ -8,7 +8,6 @@ Project Owners
 	<div class="row">
 		<div class="col-md-6">
 {!! Form::open(['url' => 'owners']) !!}
-@include('errors.list')
 <div class="form-group">
 	{!! Form::label('name', 'Owner Name ') !!}
 	{!! Form::text('name', null, ['class' => 'form-control']) !!}

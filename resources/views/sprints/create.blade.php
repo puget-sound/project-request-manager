@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Add Sprint
 @endsection
@@ -8,8 +8,6 @@ Add Sprint
 	<div class="row">
 	  <div class="col-md-6">
 {!! Form::open(['url' => 'sprints', 'id'=> 'sprintCreate']) !!}
-
-	@include('errors.list')
 	<div class="form-group">
 		{!! Form::label('sprintNumber', 'Sprint Number ') !!}
 		<div class="input-group">

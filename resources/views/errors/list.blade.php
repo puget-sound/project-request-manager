@@ -7,7 +7,7 @@
 @if ($errors->any())
 		<div class="alert alert-danger">
 			@foreach ($errors->all() as $error)
-				<p> {{ str_replace('request name', 'Project Name', $error) }} </p>
+				<p class="text-center"> {{ str_replace('request name', 'Project Name', $error) }} </p>
 			@endforeach
 		</div>
 @endif

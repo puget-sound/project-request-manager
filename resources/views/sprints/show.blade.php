@@ -1,10 +1,9 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href="{{ url('sprints/create') }}"><span class='glyphicon glyphicon-plus'></span> New Sprint</a></small>
 @endsection
 @section('content')
-	@include('errors.list')
 	<div class="row">
 		<div class="col-md-8 sprints-list">
 		<table class="table sortable-theme-bootstrap" data-sortable>

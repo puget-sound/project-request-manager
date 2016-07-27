@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 	Projects Assigned to Sprint {{ $sprint->sprintNumber }}
 @endsection
@@ -7,7 +7,6 @@
 	{{ $sprint->sprintStart->format('F j, Y') }} - {{ $sprint->sprintEnd->format('F j, Y') }}
 @endsection
 @section('content')
-	@include('errors.list')
 	@include('modals.project-actions', ['sprints' => $sprints])
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>

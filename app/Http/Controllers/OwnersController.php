@@ -6,6 +6,7 @@ use App\Users;
 use App\UserMappings;
 use App\Http\Requests\OwnersRequest;
 use App\Http\Requests\UserMappingsRequest;
+use Request;
 
 class OwnersController extends Controller {
 	public function show() {
@@ -42,10 +43,18 @@ class OwnersController extends Controller {
 		return redirect()->back()->withSuccess("Removed $select from $select_owner.");
 	}
 
+	public function edit_lp_id() {
+		$input = Request::all();
+		$owner = Owners::where('id', '=', $input['owner_id'])->first();
+		$owner->lp_id = $input['lp_id'];
+		$owner->save();
+		return redirect()->back()->withSuccess("LiquidPlanner ID saved.");
+	}
+
 	public function store(OwnersRequest $request) {
 		//Check to See if duplicate order and priority already exists.
 		$duplicateOwner = Owners::where('name', '=', $request->name)->first();
-		if ($duplicateOwner == NULL) { 
+		if ($duplicateOwner == NULL) {
 			Owners::create($request->all());
 			return redirect('owners');
 		} else {

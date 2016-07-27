@@ -3,6 +3,10 @@ body {
   margin-bottom: 60px;
 }
 
+.alert {
+  margin-bottom:0px;
+}
+
 .title-right {
   float:right;
 }
