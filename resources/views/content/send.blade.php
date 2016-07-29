@@ -11,19 +11,19 @@ Send to LiquidPlanner
 {!! Form::model($project, ['method' => 'GET', 'action' => ['ProjectsController@process_send', $project->id]]) !!}
 {!! Form::hidden('project_id', $project->id) !!}
 <div class="form-group">
-{!! Form::label('request_name', 'Name') !!}
+{!! Form::label('request_name', 'Project Name') !!}
 {!! Form::text('request_name', null, ['class' => 'form-control']) !!}
 </div>
 <div class="form-group">
-{!! Form::label('project_owner', 'Client') !!}
-{!! Form::select('project_owner', $owners, null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-{!! Form::label('lp_owner', 'Owner') !!}
+{!! Form::label('lp_owner', 'LiquidPlanner Owner') !!}
 {!! Form::select('lp_owner', $lp_owners, null, ['class' => 'form-control']) !!}
 </div>
 <div class="form-group">
-  {!! Form::label('lp_parent', 'Folder') !!}
+{!! Form::label('project_owner', 'LiquidPlanner Client') !!}
+{!! Form::select('project_owner', $owners, null, ['class' => 'form-control']) !!}
+</div>
+<div class="form-group">
+  {!! Form::label('lp_parent', 'LiquidPlanner Parent Folder') !!}
   {!! Form::select('lp_parent', $lp_parent, null, ['class' => 'form-control']) !!}
 </div>
 

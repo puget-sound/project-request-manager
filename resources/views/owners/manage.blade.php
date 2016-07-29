@@ -6,10 +6,27 @@ Manage {{ $owner->name }}
 
 @section('content')
 
-{!! Form::open(['url' => 'owners/' . $owner->id . '/manage']) !!}
-
 	<div class="row">
 		<div class="col-md-6">
+			<h5>LiquidPlanner Client</h5>
+			<div class="row">
+				<div class="col-md-6">
+			{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id]]) !!}
+
+			<div class="form-group">
+			{!! Form::select('lp_id', $lp_clients, null, ['class' => 'form-control']) !!}
+			{!! Form::hidden('owner_id', $owner->id) !!}
+			</div>
+			</div>
+			<div class="col-md-3">
+		{!! Form::submit('Save', ['class' => 'btn btn-primary form-control']) !!}
+			{!! Form::close() !!}
+		</div>
+
+		</div>
+		</div>
+		<div class="col-md-6">
+			{!! Form::open(['url' => 'owners/' . $owner->id . '/manage']) !!}
 			<h5>Add User to {{ $owner->name }}</h5>
 			<div class="row">
 	<div class='col-md-6'>
@@ -20,24 +37,6 @@ Manage {{ $owner->name }}
 		{!! Form::submit('Add to Group', ['class' => 'btn btn-primary form-control']) !!}
 		{!! Form::close() !!}
 	</div>
-</div>
-</div>
-<div class="col-md-6">
-	<h5>LiquidPlanner Client</h5>
-	<div class="row">
-		<div class="col-md-4">
-	{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id]]) !!}
-
-	<div class="form-group">
-	{!! Form::select('lp_id', $lp_clients, null, ['class' => 'form-control']) !!}
-	{!! Form::hidden('owner_id', $owner->id) !!}
-	</div>
-	</div>
-	<div class="col-md-3">
-{!! Form::submit('Save', ['class' => 'btn btn-primary form-control']) !!}
-	{!! Form::close() !!}
-</div>
-
 </div>
 </div>
 </div>

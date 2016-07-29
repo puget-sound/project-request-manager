@@ -332,6 +332,7 @@ class ProjectsController extends Controller {
 		$userdata = Users::findOrFail($user_id);
 		$project = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')->where('requests.id', '=', $id)->first();
 		$owners = Owners::where('active', '=', 'Active')->where('lp_id', '!=', '')->lists('name', 'id');
+		asort($owners);
 		$owners = array('' => 'None') + $owners;
 		$email = env('LP_EMAIL');
 		$password = env('LP_PASSWORD');
@@ -343,6 +344,7 @@ class ProjectsController extends Controller {
 			if($member->id != '-1' && $member->id != '0')
     	$lp_owners[$member->id] = $member->user_name;
 		}
+		asort($lp_owners);
 		$lp_parent = Array(
     env('LP_PARENT') => "EIS Projects In-Progress",
     env('LP_PS_MNT_PARENT') => "PeopleSoft Maintenance");

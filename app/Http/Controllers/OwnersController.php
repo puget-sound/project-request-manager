@@ -68,8 +68,18 @@ class OwnersController extends Controller {
 		//Check to See if duplicate order and priority already exists.
 		$duplicateOwner = Owners::where('name', '=', $request->name)->first();
 		if ($duplicateOwner == NULL) {
-			Owners::create($request->all());
-			return redirect('owners');
+			$owner = Owners::create($request->all());
+			//connect to LiquidPlanner and create new client
+			$email = env('LP_EMAIL');
+			$password = env('LP_PASSWORD');
+
+			$lp = new LiquidPlannerClass($email, $password);
+			$lp->workspace_id = env('LP_WORKSPACE');
+			$client = array('name'=> $owner->name);
+			$result = $lp->create_client($client);
+			$owner['lp_id'] = "$result->id";
+			$owner->save();
+			return redirect('owners')->withSuccess("Successfully created ".$owner->name);
 		} else {
 			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));
 			return redirect()->back()->withErrors(['name' => 'This project owner already exists. Please try again.'])->withInput();
