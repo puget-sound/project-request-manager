@@ -160,6 +160,10 @@ body {
   width:238px;
 }
 
+.owner-add-member-form {
+  margin-bottom: 0;
+}
+
 /*! jQuery UI - v1.11.4 - 2016-05-18
 * http://jqueryui.com
 * Includes: core.css, datepicker.css, theme.css
