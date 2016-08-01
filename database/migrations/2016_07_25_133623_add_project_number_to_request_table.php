@@ -14,7 +14,7 @@ class AddProjectNumberToRequestTable extends Migration {
 	{
 		Schema::table('requests', function(Blueprint $table)
 		{
-			$table->string('project_number', '6')->nullable();
+			$table->string('project_number', '20')->nullable();
 		});
 	}
 

@@ -26,10 +26,22 @@ Send to LiquidPlanner
   {!! Form::label('lp_parent', 'LiquidPlanner Parent Folder') !!}
   {!! Form::select('lp_parent', $lp_parent, null, ['class' => 'form-control']) !!}
 </div>
-
 {!! Form::submit("Send to LiquidPlanner", ['class' => 'btn btn-primary form-control']) !!}
 {!! Form::close() !!}
 <a href="{{ url('request') }}/{{ $project->id }}">Cancel</a>
 </div>
 </div>
+@endsection
+
+@section('extra-scripts')
+  <script>
+    $(document).ready(function() {
+      $('#projectNumber2Label').on('click', function() {
+        $('#project_number').removeClass('hidden').addClass('show');
+      });
+      $('#projectNumber1Label').on('click', function() {
+        $('#project_number').addClass('hidden').removeClass('show');
+      });
+    });
+  </script>
 @endsection
