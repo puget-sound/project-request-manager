@@ -33,7 +33,7 @@ Manage {{ $owner->name }}
 				<td style='vertical-align: middle;'>{{ $group_user->fullname }}</td>
 				<td style='vertical-align: middle;'>{{ $group_user->username }}</td>
 				<td style='vertical-align: middle;'><input class='manageCheck' href="{{ url('owners/' . $group_user->owner_id . '/manage/editMap/' . $group_user->user_id) }}" type="checkbox" data-toggle="toggle" data-on="Edit" data-off='Read Only' @if ($group_user->edit == 1) checked @endif></td>
-				<td><a href="{{ url('owners/' . $group_user->owner_id . '/manage/unmap/' . $group_user->user_id) }}" class='btn btn-danger'>Remove From Group</a></td>
+				<td style='vertical-align:middle;'><a href="{{ url('owners/' . $group_user->owner_id . '/manage/unmap/' . $group_user->user_id) }}" class='text-danger'><span class="glyphicon glyphicon-trash"></span> Remove from Group</a></td>
 				</tr>
 				@endforeach
 
@@ -44,21 +44,15 @@ Manage {{ $owner->name }}
 <div class="row">
 	<div class="col-md-6">
 		<h5>LiquidPlanner Client</h5>
-		<div class="row">
-			<div class="col-md-6">
-		{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id]]) !!}
+		{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id], 'class'=>'form-inline']) !!}
 
 		<div class="form-group">
 		{!! Form::select('lp_id', $lp_clients, null, ['class' => 'form-control']) !!}
 		{!! Form::hidden('owner_id', $owner->id) !!}
 		</div>
-		</div>
-		<div class="col-md-3">
 	{!! Form::submit('Save', ['class' => 'btn btn-primary form-control']) !!}
 		{!! Form::close() !!}
-	</div>
 
-	</div>
 	</div>
 
 </div>

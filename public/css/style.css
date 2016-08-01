@@ -128,11 +128,13 @@ body {
   padding-top:15px;
 }
 
-.new-sprint {
+.new-sprint,
+.new-system-user {
     margin-left:25px;
 }
 
-.new-sprint a {
+.new-sprint a,
+.new-system-user a {
   vertical-align: top;
 }
 
@@ -160,8 +162,17 @@ body {
   width:238px;
 }
 
-.owner-add-member-form {
+.owner-add-member-form,
+.owner-add-owner-form {
   margin-bottom: 0;
+}
+
+.owner-add-owner-form input[type=text] {
+  width:275px;
+}
+
+.delete-owner {
+  margin-left:20px;
 }
 
 /*! jQuery UI - v1.11.4 - 2016-05-18

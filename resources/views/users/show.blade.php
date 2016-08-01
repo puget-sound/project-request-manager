@@ -1,7 +1,7 @@
 @extends('app')
 @include('errors.list')
 @section('title')
-System Users
+System Users <small class="new-system-user"><a class="btn btn-primary btn-sm" href="{{ url('users/create')  }}"><span class='glyphicon glyphicon-plus'></span> New User</a></small>
 @endsection
 @section('content')
 	@include('modals.confirm-delete')
@@ -10,17 +10,12 @@ System Users
 			<div class='input-group'>
 			 	<div class="input-group-addon">Search Users</div><input id="filterUsers" type='text' class='form-control' />
 			</div>
-		</div>
-		<div class='col-md-3'>
-			<a href="{{ url('users/create') }}" class='btn btn-primary' style='width: 100%;'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Add User </a>
-		</div>
-	</div>
 	<table class='table sortable-theme-bootstrap table-striped' data-sortable style='margin-top: 10px;'>
 		<thead>
 			<th>Full Name</th>
 			<th>Username</th>
 			<th>Role</th>
-			<th style='text-align: center;'>Actions</th>
+			<th>Actions</th>
 		</thead>
 		<tbody class='users_searchable'>
 @foreach($users as $user)
@@ -34,12 +29,14 @@ System Users
 					<span class='label label-primary'>User</span>
 				@endif
 			</td>
-			<td style='text-align: center;'>
-				<a href='#' disabled class='btn btn-primary disabled'>View Groups</a>
-				<a href='#' data-toggle="modal" data-target="#deleteModal" data-prmid="{{ $user->id }}" data-prmtype="User" data-prmval="{{ $user->fullname }}" class='btn btn-danger'><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete User</a>
+			<td>
+				<!--<a href='#' disabled class='btn btn-primary disabled'>View Groups</a>-->
+				<a href='#' data-toggle="modal" data-target="#deleteModal" data-prmid="{{ $user->id }}" data-prmtype="User" data-prmval="{{ $user->fullname }}" class='text-danger'><span class="glyphicon glyphicon-trash"></span> Delete</a>
 			</td>
 		</tr>
 @endforeach
 		</tbody>
 	</table>
+</div>
+</div>
 @endsection
