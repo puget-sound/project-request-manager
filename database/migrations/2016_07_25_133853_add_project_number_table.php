@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePasswordResetsTable extends Migration {
+class AddProjectNumberTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,11 +12,10 @@ class CreatePasswordResetsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('password_resets', function(Blueprint $table)
-		{
-			$table->string('email')->index();
-			$table->string('token')->index();
-			$table->timestamp('created_at');
+		//create table to keep project number
+		Schema::create('project_number', function (Blueprint $table) {
+    	$table->increments('id');
+			$table->integer('project_number');
 		});
 	}
 
@@ -27,7 +26,7 @@ class CreatePasswordResetsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('password_resets');
+		//
 	}
 
 }

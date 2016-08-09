@@ -1,11 +1,10 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Project Search
 @endsection
 
 @section('content')
-@include('errors.list')
 
 <div class="row">
   <div class="col-md-5" id="project-search">

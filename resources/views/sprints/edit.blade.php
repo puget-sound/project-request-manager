@@ -1,4 +1,5 @@
 @extends('app')
+@include('errors.list')
 @section('title')
 Edit Sprint
 @endsection
@@ -6,8 +7,6 @@ Edit Sprint
 	<div class="row">
 	  <div class="col-md-6">
 	{!! Form::model($sprint, ['method' => 'PATCH', 'action' => ['SprintsController@update', $sprint->sprintNumber], 'id'=> 'sprintEdit']) !!}
-
-	@include('errors.list')
 	<div class="form-group">
 		{!! Form::label('sprintNumber', 'Sprint Number ') !!}
 		<div class="input-group">

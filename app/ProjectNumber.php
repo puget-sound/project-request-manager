@@ -4,19 +4,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Users extends Model {
+class ProjectNumber extends Model {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'project_number';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['username', 'fullname', 'admin', 'active', 'dev'];
+    protected $fillable = [];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -24,9 +25,4 @@ class Users extends Model {
      * @var array
      */
     protected $hidden = [];
-
-    public function isLP()
-    {
-        return ($this->admin == 1 || $this->dev == 1);
-    }
 }

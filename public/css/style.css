@@ -3,6 +3,14 @@ body {
   margin-bottom: 60px;
 }
 
+.alert {
+  margin-bottom:0px;
+}
+
+.title-right {
+  float:right;
+}
+
 .navbar-fixed-top {
     min-height: 80px;
 }
@@ -26,6 +34,23 @@ body {
 
 .nav .dropdown-toggle .caret {
   margin-left:5px;
+}
+
+#claim-project-number {
+  width:275px;
+  margin-top:-10px;
+}
+
+#claim-project-number .panel-body {
+  padding:10px 15px;
+}
+
+#claim-project-number strong {
+  margin-right:5px;
+}
+
+#claim-project-number p {
+    margin-bottom:0px;
 }
 
 .sq_select_button {
@@ -63,6 +88,16 @@ body {
   color:#999;
 }
 
+.lp-link {
+    border-color:#337ab7;
+    color:#337ab7;
+}
+
+.lp-link:hover {
+  border-color:#285f8f;
+  color:#285f8f;
+}
+
 .label-future {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);
@@ -93,11 +128,13 @@ body {
   padding-top:15px;
 }
 
-.new-sprint {
+.new-sprint,
+.new-system-user {
     margin-left:25px;
 }
 
-.new-sprint a {
+.new-sprint a,
+.new-system-user a {
   vertical-align: top;
 }
 
@@ -123,6 +160,19 @@ body {
 #sprintEdit #sprintStart,
 #sprintEdit #sprintEnd {
   width:238px;
+}
+
+.owner-add-member-form,
+.owner-add-owner-form {
+  margin-bottom: 0;
+}
+
+.owner-add-owner-form input[type=text] {
+  width:275px;
+}
+
+.delete-owner {
+  margin-left:20px;
 }
 
 /*! jQuery UI - v1.11.4 - 2016-05-18

@@ -24,8 +24,12 @@ class ComposerServiceProvider extends ServiceProvider {
               $current_sprint = $sprints[$i]->sprintNumber;
             }
           }
+          $next_project_number = \App\ProjectNumber::all()->last()->project_number;
+          if(strlen($next_project_number) < 4) {
+      			$next_project_number = '0'.$next_project_number;
+      		}
 
-         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint);
+         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint)->with('next_project_number', $next_project_number);
         });
     }
 

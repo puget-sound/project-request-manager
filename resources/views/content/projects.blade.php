@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 	@if (Request::segment(1) == ('projects'))
 		{{ $owner->name }} Projects
@@ -10,12 +10,18 @@
 	@endif
 @endsection
 
+@section('title-right')
+	@if ($user->isLP())<div class="panel panel-default" id="claim-project-number">
+	<div class="panel-body"><p class="claim-project-action"><span class="text-muted">Next project number is</span> <strong>P{{$next_project_number}}</strong> <a href="{{ url('requests/get-project-number') }}" class='btn btn-primary btn-xs'>Claim</a></p>
+	</div>
+</div>@endif
+@endsection
+
 @section('under-title')
-	@if ($user->admin == 1) <p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p> @endif
+	@if ($user->admin == 1)<p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p>@endif
 @endsection
 
 @section('content')
-@include('errors.list')
 	<div class='row'>
 		<div class='col-md-9'>
 			<div class='input-group'>
@@ -127,7 +133,12 @@
     $(document).ready(function() {
     	$( "#search-results-csv" ).on( "click", function() {
   			$('#project-request-results').tableExport({type:'csv', fileName: 'PRM-results', ignoreColumn: [0]});
-		});
+			});
+			$( "#claim-project-number button" ).on( "click", function() {
+  			var num = $('#claim-project-number strong').text();
+				$('#claim-project-number .claim-project-result').slideDown();
+				$('#claim-project-number .claim-project-result input').select();
+			});
     });
 </script>
 @endsection

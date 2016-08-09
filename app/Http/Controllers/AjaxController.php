@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -38,7 +38,7 @@ class AjaxController extends Controller {
 		$status_code = 200;
 		$user_id = Helpers::full_authenticate()->id;
 		$last_check = CheckNotifications::where('notif_check_user_id', '=', $user_id)->pluck('updated_at');
-		
+
 		$project_count = Projects::join('notifications', 'requests.id', '=', 'notifications.notif_project_id')
 		->select('requests.*')
 		->where('notif_user_id', '=', $user_id)
@@ -59,7 +59,7 @@ class AjaxController extends Controller {
 	{
 		$status_code = 200;
 		$getMapRow = UserMappings::where('owner_id', '=', $owner_id)->where('user_id', '=', $user_id)->first();
-		
+
 		if ($getMapRow->edit == 0) {
 			$getMapRow->edit = 1;
 			$getMapRow->save();

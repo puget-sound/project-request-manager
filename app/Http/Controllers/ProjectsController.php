@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use App;
 use App\Projects;
 use App\Owners;
 use App\CheckNotifications;
 use App\Notifications;
 use App\UserMappings;
 use App\Users;
+use App\ProjectNumber;
 use Session;
 use Request;
 use App\Sprints;
@@ -17,6 +19,7 @@ use App\Http\Requests\ReorderRequest;
 use App\Http\Requests\CommentsRequest;
 use App\Http\Requests\NotificationsRequest;
 use App\Comments;
+use App\Classes\LiquidPlannerClass;
 use Cas;
 use Carbon\Carbon;
 
@@ -43,6 +46,10 @@ class ProjectsController extends Controller {
 	public function my_open_projects() {
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
+		$is_owner = UserMappings::where('user_id', '=', $user_id)->first();
+		if($is_owner == '') {
+			return redirect('requests/all');
+		}
 		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
 		->where('user_mappings.user_id', '=', $user_id)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
@@ -60,86 +67,6 @@ class ProjectsController extends Controller {
 		->orderBy('priority')
 		->orderBy('order')
 		->whereNotIn('status', [6, 5])
-		->whereIn('project_owner', $owners)
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
-
-	public function my_completed_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->lists('owner_id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '6')
-		->whereIn('project_owner', $owners)
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
-
-	public function my_deferred_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->lists('owner_id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '5')
-		->whereIn('project_owner', $owners)
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
-
-	public function my_closed_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->lists('owner_id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
 		->whereIn('project_owner', $owners)
 		->get();
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
@@ -169,49 +96,6 @@ class ProjectsController extends Controller {
 		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
 	}
 
-	public function all_completed_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '6')
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
-
-	public function all_deferred_projects() {
-		$user_id = Helpers::full_authenticate()->id;
-		$userdata = Users::findOrFail($user_id);
-		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
-		->where('user_mappings.user_id', '=', $user_id)
-		->where('user_mappings.edit', '=', 1)
-		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
-		->lists('requests.id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
-		->where('status', '=', '5')
-		->get();
-		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
-		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
-	}
 
 	public function logout() {
 		Cas::logout();
@@ -241,33 +125,6 @@ class ProjectsController extends Controller {
 			$project->save();
 		}
 		return redirect("request/" . $project_id)->withSuccess("Successfully reordered projects.");
-	}
-
-
-	public function view_notifications() {
-		$user_id = Helpers::full_authenticate()->id;
-		$get_projects = DB::table('requests')
-		->join('notifications', 'notifications.notif_project_id', '=', 'requests.id')
-		->select(DB::raw('requests.updated_at, requests.id as request_id, requests.request_name, "" as fullname, "P" as flag'))
-		->where('notif_user_id', '=', $user_id)
-		->whereRaw('requests.updated_at > requests.created_at');
-		$comments = DB::table('project_comments')
-		->join('notifications', 'notifications.notif_project_id', '=', 'comment_project_id')
-		->leftJoin('users', 'comment_user_id', '=', 'users.id')
-		->leftJoin('requests', 'comment_project_id', '=', 'requests.id')
-		->select(DB::raw('project_comments.updated_at, requests.id as request_id, requests.request_name, users.fullname, "C" as flag'))
-		->where('notif_user_id', '=', $user_id);
-		$get_notifications = $get_projects->union($comments)->orderBy('updated_at', 'desc')->get();
-		$in_notification_table = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
-		$lastcheck = "";
-		if ($in_notification_table == NULL) {
-			$request['notif_check_user_id'] = $user_id;
-			CheckNotifications::create($request);
-			$lastcheck = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
-		} else {
-			$lastcheck = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
-		}
-		return view('notifications.view', ['notifications' => $get_notifications, 'last_check' => $lastcheck]);
 	}
 
 	public function create() {
@@ -322,7 +179,16 @@ class ProjectsController extends Controller {
 		->whereNotIn('status', [5,6])
 		->first();
 		if ($duplicateOrder == NULL) {
-			Projects::create($request->all());
+			$project = Projects::create($request->all());
+			$project_number_counter = ProjectNumber::all()->last();
+			$project_number = $project_number_counter->project_number;
+			if(strlen($project_number) < 4) {
+				$project_number = '0'.$project_number;
+			}
+			$project->project_number = 'P'.$project_number;
+			$project->save();
+			DB::table('project_number')->whereId($project_number_counter->id)->increment('project_number');
+
 			return redirect('requests')->withSuccess("Successfully created project.");
 		} else {
 			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));
@@ -346,11 +212,92 @@ class ProjectsController extends Controller {
 		->get();
 		$sprints = Sprints::orderBy('sprintNumber', 'desc')->lists('sprintNumber', 'id');
 		if ($projects != NULL) {
+			$lp_workspace = env('LP_WORKSPACE');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'lp_workspace'=> $lp_workspace]);
 		} else {
 			return redirect()->back();
 		}
+	}
+
+	public function send_to_liquidplanner($id) {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$project = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')->where('requests.id', '=', $id)->first();
+		$owners = Owners::where('active', '=', 'Active')->where('lp_id', '!=', '')->lists('name', 'id');
+		asort($owners);
+		$owners = array('' => 'None') + $owners;
+		$email = env('LP_EMAIL');
+		$password = env('LP_PASSWORD');
+
+		$lp = new LiquidPlannerClass($email, $password);
+		$lp->workspace_id = env('LP_WORKSPACE');
+		$members = $lp->members();
+		foreach($members as $member) {
+			if($member->id != '-1' && $member->id != '0')
+    	$lp_owners[$member->id] = $member->user_name;
+		}
+		asort($lp_owners);
+		$lp_parent = Array(
+    env('LP_PARENT') => "EIS Projects In-Progress",
+    env('LP_PS_MNT_PARENT') => "PeopleSoft Maintenance");
+		if ($project != NULL) {
+			Session::flash('url', Request::server('HTTP_REFERER'));
+			return view('content.send', ['project' => $project, 'user' => $userdata, 'owners' => $owners, 'lp_owners' => $lp_owners, 'lp_parent' => $lp_parent]);
+		} else {
+			return redirect()->back();
+		}
+	}
+
+	public function process_send() {
+		$base_url = App::make('url')->to('/');
+		$input = Request::all();
+		if($input['project_owner'] != '') {
+			$client_id = Owners::findOrFail($input['project_owner'])->lp_id;
+		}
+		else {
+			$client_id = '';
+		}
+		$project_id = $input['project_id'];
+		$lp_owner = $input['lp_owner'];
+		$prm_project = Projects::where('id', '=', $project_id)->first();
+		// if project has no project number
+		if($prm_project->project_number == null){
+			// assign new project number
+			$project_number_counter = ProjectNumber::all()->last();
+			$project_number = $project_number_counter->project_number;
+			if(strlen($project_number) < 4) {
+				$project_number = '0'.$project_number;
+			}
+			$prm_project->project_number = 'P'.$project_number;
+			$prm_project->save();
+			DB::table('project_number')->whereId($project_number_counter->id)->increment('project_number');
+		}
+
+		$email = env('LP_EMAIL');
+		$password = env('LP_PASSWORD');
+
+		$lp = new LiquidPlannerClass($email, $password);
+		$lp->workspace_id = env('LP_WORKSPACE');
+
+		$project = array('parent_id' => $input['lp_parent'], 'name'=> $input['request_name'], 'external_reference' => $prm_project->project_number, 'client_id' => $client_id, 'assignments' => array(array('person_id' => $lp_owner)));
+		$result = $lp->create_project($project);
+		$prm_project['lp_id'] = "$result->id";
+		$prm_project->save();
+
+		$link = array( 'description' => 'PRM project', 'item_id' => $result->id, 'url'=>"$base_url/request/".$input['project_id']);
+		$link_result = $lp->create_link($link);
+		return redirect("request/" . $input['project_id'])->withSuccess("Successfully sent project to <a href='https://app.liquidplanner.com/space/$lp->workspace_id/projects/show/$result->id' target='_blank'>LiquidPlanner</a>.");
+	}
+
+	public function get_project_number() {
+		$project = ProjectNumber::all()->last();
+		$project_number = $project->project_number;
+		DB::table('project_number')->whereId($project->id)->increment('project_number');
+		if(strlen($project_number) < 4) {
+			$project_number = '0'.$project_number;
+		}
+		return back()->withSuccess("You just claimed project number <strong>P$project_number</strong>");
 	}
 
 	public function add_comment(CommentsRequest $request) {
@@ -630,5 +577,111 @@ class ProjectsController extends Controller {
 		return view('content.results', ['projects' => $results, 'query' => $query]);
 	}
 
+	/* Are these functions even used? */
 
+	public function my_completed_projects() {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->where('user_mappings.edit', '=', 1)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->lists('owner_id');
+		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		->select('requests.*', 'project_owners.name')
+		->orderBy('priority')
+		->orderBy('order')
+		->where('status', '=', '6')
+		->whereIn('project_owner', $owners)
+		->get();
+		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
+		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
+		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
+	}
+
+	public function my_deferred_projects() {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->where('user_mappings.edit', '=', 1)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->lists('owner_id');
+		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		->select('requests.*', 'project_owners.name')
+		->orderBy('priority')
+		->orderBy('order')
+		->where('status', '=', '5')
+		->whereIn('project_owner', $owners)
+		->get();
+		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
+		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
+		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
+	}
+
+	public function my_closed_projects() {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$edit_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->where('user_mappings.edit', '=', 1)
+		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
+		->lists('requests.id');
+		$owners = Owners::join('user_mappings', 'user_mappings.owner_id', '=', 'project_owners.id')
+		->where('user_mappings.user_id', '=', $user_id)
+		->lists('owner_id');
+		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		->select('requests.*', 'project_owners.name')
+		->orderBy('priority')
+		->orderBy('order')
+		->whereIn('project_owner', $owners)
+		->get();
+		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
+		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
+		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
+	}
+
+	public function view_notifications() {
+		$user_id = Helpers::full_authenticate()->id;
+		$get_projects = DB::table('requests')
+		->join('notifications', 'notifications.notif_project_id', '=', 'requests.id')
+		->select(DB::raw('requests.updated_at, requests.id as request_id, requests.request_name, "" as fullname, "P" as flag'))
+		->where('notif_user_id', '=', $user_id)
+		->whereRaw('requests.updated_at > requests.created_at');
+		$comments = DB::table('project_comments')
+		->join('notifications', 'notifications.notif_project_id', '=', 'comment_project_id')
+		->leftJoin('users', 'comment_user_id', '=', 'users.id')
+		->leftJoin('requests', 'comment_project_id', '=', 'requests.id')
+		->select(DB::raw('project_comments.updated_at, requests.id as request_id, requests.request_name, users.fullname, "C" as flag'))
+		->where('notif_user_id', '=', $user_id);
+		$get_notifications = $get_projects->union($comments)->orderBy('updated_at', 'desc')->get();
+		$in_notification_table = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
+		$lastcheck = "";
+		if ($in_notification_table == NULL) {
+			$request['notif_check_user_id'] = $user_id;
+			CheckNotifications::create($request);
+			$lastcheck = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
+		} else {
+			$lastcheck = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
+		}
+		return view('notifications.view', ['notifications' => $get_notifications, 'last_check' => $lastcheck]);
+	}
 }

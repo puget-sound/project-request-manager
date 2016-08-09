@@ -1,5 +1,5 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Create New Project Request
 @endsection
@@ -8,7 +8,6 @@ Create New Project Request
 
 {!! Form::open(['url' => 'requests']) !!}
 
-	@include('errors.list')
 	@include('content._projectform', ['submitText' => 'Add Project Request', 'disable' => false])
 
 {!! Form::close() !!}

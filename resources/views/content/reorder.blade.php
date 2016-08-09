@@ -1,11 +1,11 @@
 @extends('app')
-
+@include('errors.list')
 @section('title')
 Move {{ $movingProject->request_name }}
 @endsection
 
 @section('content')
-@include('errors.list')
+
 {!! Form::model($relatedProjects, ['method' => 'PATCH', 'action' => ['ProjectsController@reorder_process', $movingProject->id]]) !!}
 <table id='reorder_table' class='table table sortable-theme-bootstrap' data-sortable>
 	<thead>

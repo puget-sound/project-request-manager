@@ -34,7 +34,7 @@ class UsersController extends Controller {
 			if ($fullname == "err") {
 				return redirect()->back()->withErrors(['name' => 'This username did not match Active Directory records. Please Try Again.'])->withInput();
 			} else {
-				$request['fullname'] = $fullname; 
+				$request['fullname'] = $fullname;
 				Users::create($request->all());
 				return redirect('users');
 			}
