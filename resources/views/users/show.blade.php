@@ -25,6 +25,8 @@ System Users <small class="new-system-user"><a class="btn btn-primary btn-sm" hr
 			<td style="vertical-align:middle;">
 				@if($user->admin == 1)
 					<span class='label label-success'>Admin</span>
+				@elseif($user->dev == 1)
+					<span class='label label-info'>Dev</span>
 				@else
 					<span class='label label-primary'>User</span>
 				@endif

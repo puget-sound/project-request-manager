@@ -8,7 +8,7 @@ use Helpers;
 
 class UsersController extends Controller {
 	public function show() {
-		$users = Users::where('active', '!=', 'Inactive')->orderBy('admin', 'desc')->orderBy('fullname', 'asc')->get();
+		$users = Users::where('active', '!=', 'Inactive')->orderBy('admin', 'desc')->orderBy('dev', 'desc')->orderBy('fullname', 'asc')->get();
 		return view('users.show', ['users' => $users]);
 	}
 
