@@ -16,6 +16,17 @@ class UsersController extends Controller {
 		return view('users.create');
 	}
 
+	public function edit($id) {
+		$user = Users::where('id', '=', $id)->first();
+		return view('users.edit', ['user' => $user]);
+	}
+
+	public function update($id, UsersRequest $request) {
+		$user = Users::where('id', '=', $id)->first();
+		$user->update($request->all());
+		return redirect('users/')->withSuccess("Successfully updated $user->fullname.");
+	}
+
 	public function remove($id) {
 		// mark user as 'Inactive' in Users table
 		$select = Users::where('id', '=', $id)->first();

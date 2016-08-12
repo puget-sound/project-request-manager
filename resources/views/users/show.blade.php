@@ -6,7 +6,7 @@ System Users <small class="new-system-user"><a class="btn btn-primary btn-sm" hr
 @section('content')
 	@include('modals.confirm-delete')
 	<div class='row'>
-		<div class='col-md-9'>
+		<div class='col-md-6'>
 			<div class='input-group'>
 			 	<div class="input-group-addon">Search Users</div><input id="filterUsers" type='text' class='form-control' />
 			</div>
@@ -31,9 +31,10 @@ System Users <small class="new-system-user"><a class="btn btn-primary btn-sm" hr
 					<span class='label label-primary'>User</span>
 				@endif
 			</td>
-			<td>
+			<td style="vertical-align:middle;">
 				<!--<a href='#' disabled class='btn btn-primary disabled'>View Groups</a>-->
-				<a href='#' data-toggle="modal" data-target="#deleteModal" data-prmid="{{ $user->id }}" data-prmtype="User" data-prmval="{{ $user->fullname }}" class='text-danger'><span class="glyphicon glyphicon-trash"></span> Delete</a>
+				<small><a href="{{ url('users/' . $user->id . '/edit') }}">edit</a></small>
+				<small><a href='#' data-toggle="modal" data-target="#deleteModal" data-prmid="{{ $user->id }}" data-prmtype="User" data-prmval="{{ $user->fullname }}" class='text-danger pull-right'><span class="glyphicon glyphicon-trash"></span> delete</a></small>
 			</td>
 		</tr>
 @endforeach

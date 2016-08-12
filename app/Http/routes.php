@@ -58,6 +58,8 @@ Route::get('owners/{id}/delete', 'OwnersController@delete');
 Route::get('users', 'UsersController@show');
 Route::get('users/create', 'UsersController@add');
 Route::post('users', 'UsersController@store');
+Route::get('users/{id}/edit', 'UsersController@edit');
+Route::patch('users/{id}', 'UsersController@update');
 Route::get('users/{id}/delete', 'UsersController@remove');
 
 //Sprints Controller
