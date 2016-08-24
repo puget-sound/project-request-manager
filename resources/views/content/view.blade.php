@@ -104,7 +104,7 @@
 @foreach($comments as $comment)
 <div>
 	<p style='margin-bottom: 2px;' class='text-primary'><strong>{{ $comment->fullname }}</strong></p>
-	<small><p class='text-muted' style='margin-bottom: 2px;'>{{ $comment->created_at->diffForHumans() }} @if ($user->admin == 1 || $user->id == $comment->comment_user_id) &nbsp;&nbsp;<a href="{{ url('comment/' . $comment->id . '/delete') }}">remove</a> @endif</p></small>
+	<small><p class='text-muted' style='margin-bottom: 2px;'>{{ $comment->created_at->diffForHumans() }} @if ($user->isAdmin() || $user->id == $comment->comment_user_id) &nbsp;&nbsp;<a href="{{ url('comment/' . $comment->id . '/delete') }}">remove</a> @endif</p></small>
 	<p>{!! $comment->comment !!}</p>
 </div>
 <hr style='margin-top: 10px; margin-bottom: 10px;'>
@@ -126,22 +126,22 @@
    @if ($projects->status == 6 || $projects->status == 5)
   	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
  	@else
- 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->admin == 1)
+ 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())
 		<div href="#" class="list-group-item active">
 			Actions
 		</div>
 		<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>@endif
-	  @if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->admin == 1)<a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
-	  @if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
-	  @if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark As Complete</a>@endif
-	  @if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark As Deferred</a>@endif
+	  @if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())<a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
+	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
+	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark As Complete</a>@endif
+	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark As Deferred</a>@endif
 	  @if ($projects->sprint == "" || $projects->sprint == NULL)
-	  	@if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmid="{{ $projects->id }}" data-prmtype="Assign" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-share-alt'></span>&nbsp;&nbsp;Assign/Reassign to Sprint</a>
+	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmid="{{ $projects->id }}" data-prmtype="Assign" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-share-alt'></span>&nbsp;&nbsp;Assign/Reassign to Sprint</a>
 			@endif
 	  @else
-	  	@if ($user->admin == 1)<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Deassign from Sprint</a>@endif
+	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Deassign from Sprint</a>@endif
 	  @endif
-	  @if ($user->admin == 1)
+	  @if ($user->isAdmin())
 			@if ($projects->lp_id == "")
 			<a class="list-group-item" href="{{ url('request/' . $projects->id . '/send-to-liquidplanner') }}"><span class='glyphicon glyphicon-share'></span>&nbsp;&nbsp;Send to LiquidPlanner</a>
 		@endif

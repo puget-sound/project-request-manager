@@ -28,8 +28,9 @@ class ComposerServiceProvider extends ServiceProvider {
           if(strlen($next_project_number) < 4) {
       			$next_project_number = '0'.$next_project_number;
       		}
+          $base_url = \App::make('url')->to('/');
 
-         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint)->with('next_project_number', $next_project_number);
+         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint)->with('next_project_number', $next_project_number)->with('base_url', $base_url);
         });
     }
 

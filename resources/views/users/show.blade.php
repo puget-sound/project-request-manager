@@ -23,9 +23,9 @@ System Users <small class="new-system-user"><a class="btn btn-primary btn-sm" hr
 			<td style="vertical-align:middle;">{{ $user->fullname }}</td>
 			<td style="vertical-align:middle;">{{ $user->username }}</td>
 			<td style="vertical-align:middle;">
-				@if($user->admin == 1)
+				@if($user->isAdmin())
 					<span class='label label-success'>Admin</span>
-				@elseif($user->dev == 1)
+				@elseif($user->isDev())
 					<span class='label label-info'>Dev</span>
 				@else
 					<span class='label label-primary'>User</span>

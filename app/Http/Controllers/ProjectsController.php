@@ -130,7 +130,7 @@ class ProjectsController extends Controller {
 	public function create() {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
-		if ($user_details->admin == '1') {
+		if ($user_details->isAdmin()) {
 			//get owners to populate project owners
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			return view('content.create', ['owners' => $owners, 'users' => $user_details]);
@@ -143,7 +143,7 @@ class ProjectsController extends Controller {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$project = Projects::where('id', '=', $id)->first();
-		if ($user_details->admin == '1') {
+		if ($user_details->isAdmin()) {
 			//return with message
 			//reorder
 			$reorder_projects = Projects::where('project_owner', '=', $project->project_owner)
@@ -320,7 +320,7 @@ class ProjectsController extends Controller {
 		->where('user_mappings.edit', '=', 1)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
 		->lists('requests.id');
-		if ($user_details->admin == '1' || in_array($id, $my_projects)) {
+		if ($user_details->isAdmin() || in_array($id, $my_projects)) {
 			$project = Projects::findOrFail($id);
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			return view('content.edit', ['project' => $project, 'user_details' => $user_details], compact('owners'));

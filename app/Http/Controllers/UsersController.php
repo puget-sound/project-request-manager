@@ -8,7 +8,7 @@ use Helpers;
 
 class UsersController extends Controller {
 	public function show() {
-		$users = Users::where('active', '!=', 'Inactive')->orderBy('admin', 'desc')->orderBy('dev', 'desc')->orderBy('fullname', 'asc')->get();
+		$users = Users::where('active', '!=', 'Inactive')->orderBy('role', 'desc')->orderBy('fullname', 'asc')->get();
 		return view('users.show', ['users' => $users]);
 	}
 
@@ -47,7 +47,7 @@ class UsersController extends Controller {
 			} else {
 				$request['fullname'] = $fullname;
 				Users::create($request->all());
-				return redirect('users');
+				return redirect('users')->withSuccess("Added $fullname.");
 			}
 		} else {
 			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));

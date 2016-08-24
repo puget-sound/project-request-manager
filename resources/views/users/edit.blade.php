@@ -11,13 +11,10 @@ Edit User
 {!! Form::model($user, ['method' => 'PATCH', 'action' => ['UsersController@update', $user->id], 'id'=> 'userEdit']) !!}
 {!! Form::hidden('username', $user->username) !!}
 	<div class="form-group">
-		{!! Form::label('admin', 'Role') !!}
-		{!! Form::select('admin', ['0' => 'User',  '1' => 'Administrator'], null, ['class' => 'form-control']) !!}
+		{!! Form::label('role', 'Role') !!}
+		{!! Form::select('role', ['0' => 'User', '1' => 'Developer', '2' => 'Administrator'], null, ['class' => 'form-control']) !!}
 	</div>
-	<div class="form-group">
-		{!! Form::label('dev', 'TS Developer') !!}
-		{!! Form::select('dev', ['0' => 'No',  '1' => 'Yes'], null, ['class' => 'form-control']) !!}
-	</div>
+	<br>
 	<div class="form-group">
 		{!! Form::submit('Save User', ['class' => 'btn btn-primary']) !!}
 	</div>

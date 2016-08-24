@@ -91,7 +91,7 @@ $( document ).ready(function() {
 		//Grab the AJAX Data we need via AjaxController
 		$.ajax({
 			context: $(this),
-			url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+			url: base_url + '/request/' + prm_id + '/ajax/status',
 			type: 'POST',
 			success: function(data) {
 				status_code = data.statusCode;
@@ -110,7 +110,7 @@ $( document ).ready(function() {
 		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 		//Set up the modal
-		
+
 		// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 	})
 
@@ -123,7 +123,7 @@ $( document ).ready(function() {
 			//Grab the AJAX Data we need via AjaxController
 			$.ajax({
 				context: $(this),
-				url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+				url: base_url + '/request/' + prm_id + '/ajax/status',
 				type: 'POST',
 				success: function(data) {
 					var modal = $(this);
@@ -137,7 +137,7 @@ $( document ).ready(function() {
 			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 			//Set up the modal
-			
+
 			// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 		})
 
@@ -150,7 +150,7 @@ $( document ).ready(function() {
 			//Grab the AJAX Data we need via AjaxController
 			$.ajax({
 				context: $(this),
-				url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+				url: base_url + '/request/' + prm_id + '/ajax/status',
 				type: 'POST',
 				success: function(data) {
 					var modal = $(this);
@@ -164,7 +164,7 @@ $( document ).ready(function() {
 			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 			//Set up the modal
-			
+
 			// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 		})
 
@@ -178,7 +178,7 @@ $( document ).ready(function() {
 		//Grab the AJAX Data we need via AjaxController
 		$.ajax({
 			context: $(this),
-			url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+			url: base_url + '/request/' + prm_id + '/ajax/status',
 			type: 'POST',
 			success: function(data) {
 				var modal = $(this);
@@ -192,7 +192,7 @@ $( document ).ready(function() {
 		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 		//Set up the modal
-		
+
 		// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 	})
 
@@ -220,7 +220,7 @@ $( document ).ready(function() {
 		$helper.children().each(function(index) {
 		    $(this).width($originals.eq(index).width())
 		});
-		    return $helper;     
+		    return $helper;
 		};
 
 	$('#reorder_table tbody').sortable({
@@ -241,7 +241,7 @@ function renumber_table(tableID) {
 function checkNotifications() {
   		$.ajax({
 	    context: $(this),
-	    url: '//tsprojects.pugetsound.edu/user/ajax/notifications',
+	    url: base_url + '/user/ajax/notifications',
 	    type: 'POST',
 	    success: function(data) {
 	    	if (data.notif_num > 0) {
