@@ -210,11 +210,25 @@ class ProjectsController extends Controller {
 		->where('comment_project_id', '=', $id)
 		->orderBy('created_at', 'asc')
 		->get();
-		$sprints = Sprints::orderBy('sprintNumber', 'desc')->lists('sprintNumber', 'id');
+		$this_sprint = Sprints::where('sprintNumber', '=', $projects->sprint)->first();
+		$this_sprint_id = NULL;
+		if($this_sprint != NULL) {
+			$this_sprint_id = $this_sprint->id;
+		}
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i]->sprintNumber;
+			}
+		}
+		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint)->get()->lists('sprint_info', 'id');
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'lp_workspace'=> $lp_workspace]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace]);
 		} else {
 			return redirect()->back();
 		}

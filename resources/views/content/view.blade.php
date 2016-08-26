@@ -133,13 +133,15 @@
 		<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>@endif
 	  @if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())<a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
-	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark As Complete</a>@endif
-	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark As Deferred</a>@endif
+	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark as Complete</a>@endif
+	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark as Deferred</a>@endif
 	  @if ($projects->sprint == "" || $projects->sprint == NULL)
-	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmid="{{ $projects->id }}" data-prmtype="Assign" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-share-alt'></span>&nbsp;&nbsp;Assign/Reassign to Sprint</a>
+	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Add to"><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Add to Sprint</a>
 			@endif
 	  @else
-	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Deassign from Sprint</a>@endif
+	  	@if ($user->isAdmin())
+				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Change"><span class='glyphicon glyphicon-edit'></span>&nbsp;&nbsp;Change Sprint</a>
+				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Remove from Sprint</a>@endif
 	  @endif
 	  @if ($user->isAdmin())
 			@if ($projects->lp_id == "")
