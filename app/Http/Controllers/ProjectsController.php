@@ -224,7 +224,7 @@ class ProjectsController extends Controller {
 				$current_sprint = $all_sprints[$i]->sprintNumber;
 			}
 		}
-		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint)->get()->lists('sprint_info', 'id');
+		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint - 1)->get()->lists('sprint_info', 'id');
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
 			Session::flash('url', Request::server('HTTP_REFERER'));
