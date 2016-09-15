@@ -48,7 +48,7 @@
                   @endforeach
                 </ul>
             </li>
-            @if (Helpers::full_authenticate()->admin == 1)
+            @if (Helpers::full_authenticate()->isAdmin())
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Administration<span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -83,6 +83,9 @@
 		@yield('content')
 	</div>
 	<!-- Placed at the end of the document so the pages load faster -->
+	<script>
+	var base_url = "{{$base_url}}";
+	</script>
   <script type="text/javascript" src="{{ URL::asset('js/wysihtml5x-toolbar.min.js') }}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table-all.min.js"></script>-->

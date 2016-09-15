@@ -7,7 +7,7 @@ Edit Project Request
 
 	{!! Form::model($project, ['method' => 'PATCH', 'action' => ['ProjectsController@update', $project->id]]) !!}
 
-	@if ($user_details->admin == 1)
+	@if ($user_details->isAdmin())
 		@include('content._projectform', ['submitText' => 'Update Project Request', 'disable' => false])
 	@else
 		@include('content._projectform', ['submitText' => 'Update Project Request', 'disable' => true])

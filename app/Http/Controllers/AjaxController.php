@@ -38,7 +38,10 @@ class AjaxController extends Controller {
 		$status_code = 200;
 		$user_id = Helpers::full_authenticate()->id;
 		$last_check = CheckNotifications::where('notif_check_user_id', '=', $user_id)->pluck('updated_at');
-
+		if($last_check == '') {
+			$response = ['notif_num' => '0'];
+		}
+		else {
 		$project_count = Projects::join('notifications', 'requests.id', '=', 'notifications.notif_project_id')
 		->select('requests.*')
 		->where('notif_user_id', '=', $user_id)
@@ -52,6 +55,7 @@ class AjaxController extends Controller {
 		->get();
 		$numComments = count($comment_count);
 		$response = ['notif_num' => $numProjects + $numComments];
+		}
 		return Response::json($response, $status_code);
 	}
 

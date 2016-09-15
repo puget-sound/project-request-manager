@@ -71,7 +71,7 @@ class SprintsController extends Controller {
 		$project['sprint'] = $sprintNumber;
 		$project['status'] = 3;
 		$project->save();
-		return redirect()->back()->withSuccess("Successfully Assigned " . $project->request_name . " to Sprint " . $sprintNumber);
+		return redirect()->back()->withSuccess("Successfully added to Sprint " . $sprintNumber);
 	}
 
 	public function deassign_project(EmptyRequest $request) {
@@ -81,6 +81,6 @@ class SprintsController extends Controller {
 		$project['status'] = 2;
 		$project['sprint'] = "";
 		$project->save();
-		return redirect()->back()->withSuccess("Successfully Deassigned " . $project->request_name . " from Sprint " . $sprint);
+		return redirect()->back()->withSuccess("Successfully removed from Sprint " . $sprint);
 	}
 }

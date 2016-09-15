@@ -150,7 +150,8 @@ body {
 }
 
 #sprintCreate #sprintNumber,
-#sprintEdit #sprintNumber {
+#sprintEdit #sprintNumber,
+#userEdit select {
     z-index: 0;
     width:175px;
 }

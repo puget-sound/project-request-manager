@@ -130,7 +130,7 @@ class ProjectsController extends Controller {
 	public function create() {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
-		if ($user_details->admin == '1') {
+		if ($user_details->isAdmin()) {
 			//get owners to populate project owners
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			return view('content.create', ['owners' => $owners, 'users' => $user_details]);
@@ -143,7 +143,7 @@ class ProjectsController extends Controller {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$project = Projects::where('id', '=', $id)->first();
-		if ($user_details->admin == '1') {
+		if ($user_details->isAdmin()) {
 			//return with message
 			//reorder
 			$reorder_projects = Projects::where('project_owner', '=', $project->project_owner)
@@ -210,11 +210,25 @@ class ProjectsController extends Controller {
 		->where('comment_project_id', '=', $id)
 		->orderBy('created_at', 'asc')
 		->get();
-		$sprints = Sprints::orderBy('sprintNumber', 'desc')->lists('sprintNumber', 'id');
+		$this_sprint = Sprints::where('sprintNumber', '=', $projects->sprint)->first();
+		$this_sprint_id = NULL;
+		if($this_sprint != NULL) {
+			$this_sprint_id = $this_sprint->id;
+		}
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i]->sprintNumber;
+			}
+		}
+		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint)->get()->lists('sprint_info', 'id');
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'lp_workspace'=> $lp_workspace]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace]);
 		} else {
 			return redirect()->back();
 		}
@@ -320,7 +334,7 @@ class ProjectsController extends Controller {
 		->where('user_mappings.edit', '=', 1)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
 		->lists('requests.id');
-		if ($user_details->admin == '1' || in_array($id, $my_projects)) {
+		if ($user_details->isAdmin() || in_array($id, $my_projects)) {
 			$project = Projects::findOrFail($id);
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			return view('content.edit', ['project' => $project, 'user_details' => $user_details], compact('owners'));

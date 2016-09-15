@@ -14,18 +14,16 @@ Add User
 		{!! Form::text('username', null, ['class' => 'form-control']) !!}
 	</div>
 	<div class="form-group">
-		{!! Form::label('admin', 'Role') !!}
-		{!! Form::select('admin', ['0' => 'User',  '1' => 'Administrator'], null, ['class' => 'form-control']) !!}
+		{!! Form::label('role', 'Role') !!}
+		{!! Form::select('role', ['0' => 'User',  '1' => 'Developer', '2' => 'Adminstrator'], null, ['class' => 'form-control']) !!}
 	</div>
-	<div class="form-group">
-		{!! Form::label('dev', 'TS Developer') !!}
-		{!! Form::select('dev', ['0' => 'No',  '1' => 'Yes'], null, ['class' => 'form-control']) !!}
-	</div>
+	<br>
 	<div class="form-group">
 		{!! Form::submit('Add User', ['class' => 'btn btn-primary form-control']) !!}
 	</div>
 
 {!! Form::close() !!}
+<a href="{{ url('users') }}">Cancel</a>
 </div>
 </div>
 

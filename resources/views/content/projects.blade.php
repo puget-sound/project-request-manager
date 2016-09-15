@@ -18,7 +18,7 @@
 @endsection
 
 @section('under-title')
-	@if ($user->admin == 1)<p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p>@endif
+	@if ($user->isAdmin())<p><a href="{{ url('requests/create') }}" class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Create New Request </a></p>@endif
 @endsection
 
 @section('content')

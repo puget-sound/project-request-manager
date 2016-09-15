@@ -91,14 +91,14 @@ $( document ).ready(function() {
 		//Grab the AJAX Data we need via AjaxController
 		$.ajax({
 			context: $(this),
-			url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+			url: base_url + '/request/' + prm_id + '/ajax/status',
 			type: 'POST',
 			success: function(data) {
 				status_code = data.statusCode;
 				statusXlat = data.statusXlat;
 				var modal = $(this);
 				$('#project_id_hidden').val(prm_id);
-				$('#updateStatusSelect').val(status_code).change();
+				//$('#updateStatusSelect').val(status_code).change();
 				//modal.find('#user-update').attr("href", "request/" + prm_id + "/update/status/");
 				modal.find('.modal-title').text('Update Status: ' + prm_value);
 				modal.find('.modal-body-head').html("<p>Current Status: <strong>" + statusXlat + "</strong></p>");
@@ -107,38 +107,14 @@ $( document ).ready(function() {
 				alert('error');
 			}
 		});
-		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-		//Set up the modal
-		
-		// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 	})
 
 	$('#sprintAssign').on('show.bs.modal', function (event) {
 			//Get all the data
-			var button = $(event.relatedTarget) // Button that triggered the modal
-			var type = button.data('prmtype') // Extract info from data-* attributes
-			var prm_value = button.data('prmval') // Extract info from data-* attributes
-			var prm_id = button.data('prmid')
-			//Grab the AJAX Data we need via AjaxController
-			$.ajax({
-				context: $(this),
-				url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
-				type: 'POST',
-				success: function(data) {
-					var modal = $(this);
-					$('#project_id_assign').val(prm_id);
-					modal.find('.modal-title').text("Assign " + prm_value + " to a Sprint");
-				},
-				error: function(data) {
-					alert('error');
-				}
-			});
-			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-			//Set up the modal
-			
-			// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
+      var button = $(event.relatedTarget);
+      var type = button.data('prmtype'); // Extract info from data-* attributes
+      var modal = $(this);
+      modal.find('.modal-title').text(type + ' Sprint');
 		})
 
 	$('#sprintDeassign').on('show.bs.modal', function (event) {
@@ -150,12 +126,11 @@ $( document ).ready(function() {
 			//Grab the AJAX Data we need via AjaxController
 			$.ajax({
 				context: $(this),
-				url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+				url: base_url + '/request/' + prm_id + '/ajax/status',
 				type: 'POST',
 				success: function(data) {
 					var modal = $(this);
 					$('#project_id_deassign').val(prm_id);
-					modal.find('.modal-title').text("Deassign " + prm_value + " from Sprint");
 				},
 				error: function(data) {
 					alert('error');
@@ -164,7 +139,7 @@ $( document ).ready(function() {
 			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 			//Set up the modal
-			
+
 			// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 		})
 
@@ -178,7 +153,7 @@ $( document ).ready(function() {
 		//Grab the AJAX Data we need via AjaxController
 		$.ajax({
 			context: $(this),
-			url: '//tsprojects.pugetsound.edu/request/' + prm_id + '/ajax/status',
+			url: base_url + '/request/' + prm_id + '/ajax/status',
 			type: 'POST',
 			success: function(data) {
 				var modal = $(this);
@@ -192,7 +167,7 @@ $( document ).ready(function() {
 		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 		//Set up the modal
-		
+
 		// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 	})
 
@@ -220,7 +195,7 @@ $( document ).ready(function() {
 		$helper.children().each(function(index) {
 		    $(this).width($originals.eq(index).width())
 		});
-		    return $helper;     
+		    return $helper;
 		};
 
 	$('#reorder_table tbody').sortable({
@@ -241,7 +216,7 @@ function renumber_table(tableID) {
 function checkNotifications() {
   		$.ajax({
 	    context: $(this),
-	    url: '//tsprojects.pugetsound.edu/user/ajax/notifications',
+	    url: base_url + '/user/ajax/notifications',
 	    type: 'POST',
 	    success: function(data) {
 	    	if (data.notif_num > 0) {
