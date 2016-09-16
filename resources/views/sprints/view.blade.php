@@ -7,7 +7,7 @@
 	{{ $sprint->sprintStart->format('F j, Y') }} - {{ $sprint->sprintEnd->format('F j, Y') }}
 @endsection
 @section('content')
-	@include('modals.project-actions', ['sprints' => $sprints])
+	@include('modals.project-actions-complete')
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>
 
