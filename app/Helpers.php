@@ -5,7 +5,7 @@ use App\Users;
 use App\CheckNotifications;
 
 class Helpers {
-	
+
 	public static function getFullName($username) {
 		return ldapGetFullName($username);
 	}
@@ -51,7 +51,7 @@ class Helpers {
 
 function ldapGetFullName($username) {
 		$ldapAuthName = 'cn=LDAP Authenticator,cn=Users,dc=pugetsound,dc=edu';
-		$ldappass = 'Sspr609z';
+		$ldappass = env('LDAP_PASS');
 		$ldapconn = ldap_connect("dm-1.pugetsound.edu dm-5.pugetsound.edu dm-2.pugetsound.edu dm-6.pugetsound.edu")
 		    or die("Could not connect to LDAP server.");
 		$ldapbind = ldap_bind($ldapconn, $ldapAuthName, $ldappass);
