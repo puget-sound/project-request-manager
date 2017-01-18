@@ -8,7 +8,7 @@ Manage {{ $owner->name }}
 <div class='clearfix'>
 	<div class="panel panel-default">
 	  <div class="panel-body">
-			{!! Form::open(array('url' => 'owners/', 'class'=>'form-inline owner-add-member-form')) !!}
+			{!! Form::open(array('url' => 'owners/' . $owner->id . '/manage', 'class'=>'form-inline owner-add-member-form')) !!}
 			{!! Form::hidden('owner_id', $owner->id) !!}
 			<div class="form-group">
 			{!! Form::label('user_id', 'Add Member') !!}
