@@ -8,7 +8,7 @@
 	@if ($query['sterm'] != "")
 	<h4>Searched for "{{ $query['sterm'] }}"</h4>
 	@endif
-	<p>Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['status'] }}</strong>, Include Completed Projects: <strong>{{ $query['completed'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
+	<p>Project Number: <strong>{{ $query['number'] }}</strong>, Project Owner: <strong>{{ $query['owner'] }}</strong>, Status: <strong>{{ $query['status'] }}</strong>, Include Completed Projects: <strong>{{ $query['completed'] }}</strong>, Project Priority: <strong>{{ $query['priority'] }}</strong>, ERP Category: <strong>{{ $query['ip'] }}</strong>, Project in Cascade: <strong>{{ $query['cascade'] }}</strong></p>
 	<p class="text-muted">
 	@if (count($projects) == 1)
 	Returned <strong>{{ count($projects) }}</strong> result.
@@ -23,6 +23,7 @@
 	<hr>
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;' id="project-request-results">
 		<thead>
+		<th></th>
 		<th>Project Name</th>
 		<th>Project Owner</th>
 		<th>Priority</th>
@@ -36,6 +37,7 @@
 		<tbody class="projects_searchable">
 			@foreach($projects as $project)
 			<tr {{--@if ($project->inst_priority == 1) class='warning' @endif--}}>
+				<td style="vertical-align:middle;" class="view-project-date">{{ $project->project_number }}</td>
 				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
 				<td style="vertical-align:middle;">{{ $project->name }}</td>
 				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')label label-danger"> High @endif @if($project->priority == '1')label label-warning"> Medium @endif @if($project->priority == '2')label label-primary"> Low @endif</span></td>

@@ -13,6 +13,10 @@ Project Search
 	{!! Form::label('sq_n', 'Project Name ') !!}
 	{!! Form::text('sq_n', null, ['class' => 'form-control']) !!}
 	</div>
+  <div class="form-group">
+	{!! Form::label('sq_nb', 'Project Number ') !!}
+	{!! Form::text('sq_nb', null, ['class' => 'form-control']) !!}
+	</div>
 
 	<div class="form-group">
 	{!! Form::label('sq_o', 'Owner ') !!}

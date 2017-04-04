@@ -22,7 +22,7 @@
 			@foreach($projects as $project)
 			<tr>
 				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
-				<td style="vertical-align:middle;">{{ $project->name }}</td>
+				<td style="vertical-align:middle;"><a href="{{ url('projects/' . $project->project_owner )}}">{{ $project->name }}</a></td>
 				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')label label-danger"> High @endif @if($project->priority == '1')label label-warning"> Medium @endif @if($project->priority == '2')label label-primary"> Low @endif</span></td>
 				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
 				<td style="vertical-align: middle;">

@@ -28,7 +28,7 @@
 	{!! Form::label('priority', 'Priority/Order ') !!}
 	<div class="form-inline">
 	{!! Form::select('priority', ['High', 'Medium', 'Low'], null, ['class' => 'form-control']) !!}
-	{!! Form::text('order', null, ['class' => 'form-control', 'placeholder' => '1']) !!}
+	{!! Form::text('order', null, ['class' => 'form-control', 'id' => 'priorityOrder', 'placeholder' => '1']) !!}
 	</div>
 </div>
 <div class="col-md-4 form-group">
