@@ -154,3 +154,28 @@
 </div>
 </div>
 @endsection
+@section('extra-scripts')
+	<script type="text/javascript">
+	    /*$(document).ready(function() {
+				$.getJSON("http://signoff.app/php/submitNewRequest.php?callback=?", {
+					author: "acain",
+					typeOfWork: "ticket",
+					ticketNumber: "93939",
+					projectId: "",
+					soundNetLink: "",
+					lpProjectLink: "",
+					sprint: "",
+					projectName: "Black pens",
+					appDesignerProjects: "",
+					plsqlObjects: "",
+					otherObjects: "",
+					projectOwner: "Pen department",
+					summaryWorkCompleted: "official black pen trial",
+					testingType: "text",
+					requestUsers: "acain"
+				}, function(data) {
+					console.log(data);
+				});
+	    });*/
+	</script>
+@endsection

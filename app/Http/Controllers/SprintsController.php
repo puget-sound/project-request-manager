@@ -66,12 +66,20 @@ class SprintsController extends Controller {
 	public function assign_project(EmptyRequest $request) {
 		$id = $request['project_id'];
 		$sprint = $request['sprint'];
+		$assign_type = $request['sprint_assign_type'];
+		$this_sprint = $request['this_sprint_id'];
 		$sprintNumber = Sprints::where('id', '=', $sprint)->pluck('sprintNumber');
+		$thisSprintNumber = Sprints::where('id', '=', $this_sprint)->pluck('sprintNumber');
 		$project = Projects::where('id', '=', $id)->first();
 		$project['sprint'] = $sprintNumber;
 		$project['status'] = 3;
 		$project->save();
-		return redirect()->back()->withSuccess("Successfully added to Sprint " . $sprintNumber);
+		if($assign_type == 'Addto') {
+			return redirect()->back()->withSuccess("Successfully added to <a href='/sprint/" . $sprintNumber . "'>Sprint " . $sprintNumber . "</a>");
+		}
+		else {
+			return redirect()->back()->withSuccess("Successfully changed from <a href='/sprint/" . $thisSprintNumber . "'>Sprint " . $thisSprintNumber . "</a> to <a href='/sprint/" . $sprintNumber . "'>Sprint " . $sprintNumber . "</a>");
+		}
 	}
 
 	public function deassign_project(EmptyRequest $request) {
