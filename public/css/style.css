@@ -103,14 +103,18 @@ body {
   background-color: rgb(234, 246, 234);
 }
 
-.current-sprint {
+.current-sprint,
+.current-sprint a {
   background-color: rgb(92, 184, 92);
   color:#fff;
+  text-decoration: none;
 }
 
-.future-sprint {
+.future-sprint,
+.future-sprint a {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);
+  text-decoration: none;
 }
 
 .sprints-list .table > tbody > tr > td {

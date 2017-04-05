@@ -15,7 +15,7 @@
 	<div class="row">
 		<div class="col-md-8">
 <!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
-<h4 class='view-project-name'>{{ $projects->name }}</h4>
+<h4 class='view-project-name'><a href="{{ url('projects/' . $projects->project_owner )}}">{{ $projects->name }}</a></h4>
 <h4>
 	@if ($projects->status == "")
 	<span class='label label-default'>Unknown</span>
@@ -80,8 +80,10 @@
 	@if ($projects->sprint > $current_sprint)
 	<div class="future-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
 	@endif
+	<a href="{{ url('sprint/' . $projects->sprint)}}">
 		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->sprint }}</p>
 		<p style='font-size: 10px; width: 70px; text-align: center;'>SPRINT</p>
+	</a>
 	</div>
 	@endif
 </div>
@@ -151,4 +153,29 @@
   @endif
 </div>
 </div>
+@endsection
+@section('extra-scripts')
+	<script type="text/javascript">
+	    /*$(document).ready(function() {
+				$.getJSON("http://signoff.app/php/submitNewRequest.php?callback=?", {
+					author: "acain",
+					typeOfWork: "ticket",
+					ticketNumber: "93939",
+					projectId: "",
+					soundNetLink: "",
+					lpProjectLink: "",
+					sprint: "",
+					projectName: "Black pens",
+					appDesignerProjects: "",
+					plsqlObjects: "",
+					otherObjects: "",
+					projectOwner: "Pen department",
+					summaryWorkCompleted: "official black pen trial",
+					testingType: "text",
+					requestUsers: "acain"
+				}, function(data) {
+					console.log(data);
+				});
+	    });*/
+	</script>
 @endsection

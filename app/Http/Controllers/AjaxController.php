@@ -104,4 +104,15 @@ class AjaxController extends Controller {
 		return Response::json($response, $status_code);
 	}
 
+	public function getNextPriorityOrder($owner_id, $priority) {
+		$status_code = 200;
+		$priorityOrder = 1;
+		$nextPriority = Projects::where('priority', '=', $priority)->where('project_owner', '=', $owner_id)->whereNotIn('status', [6, 5])->orderBy('order', 'DESC')->first();
+		if($nextPriority) {
+			$priorityOrder = $nextPriority->order + $priorityOrder;
+		}
+		$response = ['priorityOrder' => $priorityOrder];
+		return Response::json($response, $status_code);
+	}
+
 }

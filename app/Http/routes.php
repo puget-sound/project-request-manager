@@ -52,6 +52,7 @@ Route::get('owners/{id}/edit-lp-id', 'OwnersController@edit_lp_id');
 Route::get('owners/{owner_id}/manage/unmap/{user_id}', 'OwnersController@unmap_user');
 Route::post('owners/{owner_id}/manage/editMap/{user_id}', 'AjaxController@grant_edit_for_owner');
 Route::get('owners/{id}/delete', 'OwnersController@delete');
+Route::get('owners/{owner_id}/manage/nextOrder/{priority}', 'AjaxController@getNextPriorityOrder');
 
 
 //Users Controller

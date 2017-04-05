@@ -130,10 +130,11 @@ class ProjectsController extends Controller {
 	public function create() {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
+		$first_owner = Owners::orderBy('id', 'ASC')->first()->id;
 		if ($user_details->isAdmin()) {
 			//get owners to populate project owners
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
-			return view('content.create', ['owners' => $owners, 'users' => $user_details]);
+			return view('content.create', ['owners' => $owners, 'users' => $user_details, 'first_owner' => $first_owner]);
 		} else {
 			return redirect('requests')->withErrors(['no' => 'You are not authorized for this function.']);
 		}
@@ -468,6 +469,13 @@ class ProjectsController extends Controller {
 			$input['sq_n'] = "%";
 			$query['sterm'] = "";
 		}
+		if (!isset($input['sq_nb']) || $input['sq_nb'] == "") {
+			$input['sq_nb'] = "%";
+			$query['number'] = "";
+		}
+		else {
+				$query['number'] = $input['sq_nb'];
+		}
 		if (!isset($input['sq_s']) || $input['sq_s'] == "" || $input['sq_s'][0] == "") {
 			$input['sq_s'] = "";
 			$query['status'] = "Any";
@@ -556,6 +564,7 @@ class ProjectsController extends Controller {
 		}
 		$statement = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')
 		->where('request_name', 'LIKE', '%' . $input['sq_n'] . '%')
+		->where('project_number', 'LIKE', '%' . $input['sq_nb'] . '%')
 		//->where('priority', 'LIKE', $input['sq_p'])
 		->where('cascade_flag', 'LIKE', '%' . $input['sq_c'] . '%')
 		->orderBy('priority', 'asc')

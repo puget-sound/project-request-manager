@@ -60,6 +60,8 @@
         <div class="modal-body-head"></div>
         {!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@assign_project']]) !!}
         {!! Form::hidden('project_id', $projects->id, ['id' => 'project_id_assign']) !!}
+        {!! Form::hidden('this_sprint_id', $this_sprint_id) !!}
+        {!! Form::hidden('sprint_assign_type', $this_sprint_id, ['id' => 'sprint-assign-type']) !!}
         <div class="input-group">
         <span class="input-group-addon" id="basic-addon1">Sprint</span>
         {!! Form::select('sprint', $sprints, $this_sprint_id, ['class' => 'form-control']) !!}

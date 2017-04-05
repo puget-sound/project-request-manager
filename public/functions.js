@@ -112,9 +112,10 @@ $( document ).ready(function() {
 	$('#sprintAssign').on('show.bs.modal', function (event) {
 			//Get all the data
       var button = $(event.relatedTarget);
-      var type = button.data('prmtype'); // Extract info from data-* attributes
+      var assign_type = button.data('prmtype'); // Extract info from data-* attributes
       var modal = $(this);
-      modal.find('.modal-title').text(type + ' Sprint');
+      modal.find('.modal-title').text(assign_type + ' Sprint');
+      modal.find('#sprint-assign-type').val(assign_type.replace(" ", ""));
 		})
 
 	$('#sprintDeassign').on('show.bs.modal', function (event) {
