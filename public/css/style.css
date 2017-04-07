@@ -98,6 +98,33 @@ body {
   color:#285f8f;
 }
 
+#signoffRequestsContainer h6 small {
+    display:none;
+}
+
+#signoffRequests p {
+  margin: 0 0 6px;
+}
+
+#signoffRequests .hiddenRequest {
+  display:none;
+}
+
+.signoff-status {
+    display:inline-block;
+    float:right;
+}
+
+.get-signoff-link {
+    display:inline-block;
+    float:right;
+    margin-left:6px;
+}
+
+#signoffRequests input {
+  margin-top:2px;
+}
+
 .label-future {
   color: rgb(92, 184, 92);
   background-color: rgb(234, 246, 234);

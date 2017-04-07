@@ -228,8 +228,9 @@ class ProjectsController extends Controller {
 		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint - 1)->get()->lists('sprint_info', 'id');
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
+			$signoff_api_key = env('SIGNOFF_API_KEY');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key]);
 		} else {
 			return redirect()->back();
 		}

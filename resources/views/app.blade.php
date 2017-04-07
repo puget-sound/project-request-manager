@@ -10,6 +10,7 @@
     <meta name="_token" content="{{ csrf_token() }}">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ URL::asset('css/bootstrap-multiselect.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('css/bootstrap-select.min.css') }}"/>
     <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
 		<!-- Latest compiled and minified JavaScript -->
 		<style>
@@ -94,6 +95,7 @@
   <script type="text/javascript" src="{{ URL::asset('js/sortable.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('js/handlebars.runtime.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('js/bootstrap3-wysihtml5.min.js') }}"></script>
+	<script type="text/javascript" src="{{ URL::asset('js/bootstrap-select.min.js') }}"></script>
   <script type="text/javascript" src="{{ URL::asset('functions.js') }}"></script>
 
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
