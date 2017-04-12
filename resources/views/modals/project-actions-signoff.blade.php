@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="projectNumber" class="col-sm-4 control-label">LP Task Link</label>
+              <label for="lpProjectLink" class="col-sm-4 control-label">LP Task Link</label>
               <div class="col-sm-8">
                 <input style="width: 300px;"type="text" class="form-control" id="lpProjectLink" placeholder="Paste LiquidPlanner Link here">
               </div>
@@ -87,8 +87,8 @@
           <div class="col-sm-8">
             <select id='projectOwnerSelect' class="selectpicker" title="Please Select One..." data-live-search="true">
               <option data-hidden="true" value='1'></option>
-              @foreach ($menu_owners as $owner)
-                <option value="{{ $owner->name }}">{{ $owner->name }}</option>
+              @foreach ($signoff_owners as $owner)
+                <option value="{{ $owner->ownerName }}">{{ $owner->ownerName }}</option>
               @endforeach
             </select>
           </div>

@@ -211,6 +211,14 @@ class ProjectsController extends Controller {
 		->where('comment_project_id', '=', $id)
 		->orderBy('created_at', 'asc')
 		->get();
+		$url = 'http://signoff.pugetsound.edu/php/loadProjectOwners.php';
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch,CURLOPT_HTTPHEADER,array('Accept: application/json'));
+		$contents = curl_exec($ch);
+		curl_close ($ch);
+		$signoffOwners = json_decode($contents);
 		$this_sprint = Sprints::where('sprintNumber', '=', $projects->sprint)->first();
 		$this_sprint_id = NULL;
 		if($this_sprint != NULL) {
@@ -230,7 +238,7 @@ class ProjectsController extends Controller {
 			$lp_workspace = env('LP_WORKSPACE');
 			$signoff_api_key = env('SIGNOFF_API_KEY');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners]);
 		} else {
 			return redirect()->back();
 		}

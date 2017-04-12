@@ -3,7 +3,7 @@
 @section('title')
 {{ $projects->request_name }}
 @endsection
-@section('under-title')
+@section('under-title'){{$projects->signoff_owner}}
 <p class="view-project-date">@if($projects->project_number) {{'#'.$projects->project_number}}@endif added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
 @endsection
 
@@ -188,7 +188,7 @@
 		$("#plsqlObjects").val("");
 		$("#otherObjects").val("");
 		$(".request-representative").val("");
-		$("#projectOwnerSelect").val("{{$projects->name}}");
+		$("#projectOwnerSelect").val("{{$projects->signoff_owner}}");
 		$("#projectOwnerSelect").selectpicker("refresh");
 		$("#summaryWorkCompleted").val("");
 		$("#testingTypeSelect").val(1);
@@ -248,7 +248,7 @@
 	}
 	function getRequests(isNew) {
 		var html = "";
-		$.getJSON("http://signoff.app/php/getRequestsByProjectId.php?callback=?", {
+		$.getJSON("http://signoff.pugetsound.edu/php/getRequestsByProjectId.php?callback=?", {
 			projectId: "{{$projects->project_number}}",
 			apiToken: "{{$signoff_api_key}}",
 		}, function(data) {
@@ -281,7 +281,7 @@
 					var t = val.requestDate.split(/[- :]/);
 					var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
 					var requestDate = (d.getMonth() + 1)  + "/" + d.getDate() + "/" + d.getFullYear();
-         html += "<p class='text-muted" + requestClass + "'><small>" + requestDate + " to " + "<a href='http://signoff.app/view.php?requestId=" + val.requestId + "' target='_blank'>" + val.reqFullName.replace(/\+/g , " ") + "</a><a href='#' class='get-signoff-link'>get link</a></small> " + val.status + "<input class='form-control input-sm' type='text' value='http://signoff.app/respond.php?requestId=" + val.requestId + "' style='display:none;'></p>";
+         html += "<p class='text-muted" + requestClass + "'><small>" + requestDate + " to " + "<a href='http://signoff.pugetsound.edu/view.php?requestId=" + val.requestId + "' target='_blank'>" + val.reqFullName.replace(/\+/g , " ") + "</a><a href='#' class='get-signoff-link'>get link</a></small> " + val.status + "<input class='form-control input-sm' type='text' value='http://signoff.pugetsound.edu/respond.php?requestId=" + val.requestId + "' style='display:none;'></p>";
     });
 				$('#signoffRequests').html(html);
 				if(isNew) {
@@ -295,7 +295,7 @@
 	function submitNewRequest() {
 		if (validateRequest()) {
 			var users = $("input[id='requestUsers[]']").map(function(){return $(this).val();}).get();
-			$.getJSON("http://signoff.app/php/submitNewRequest.php?callback=?", {
+			$.getJSON("http://signoff.pugetsound.edu/php/submitNewRequest.php?callback=?", {
 				apiToken: "{{$signoff_api_key}}",
 				author: "{{$user->username}}",
 				typeOfWork: $("#typeOfWork").val(),
