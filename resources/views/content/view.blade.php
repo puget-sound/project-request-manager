@@ -3,7 +3,7 @@
 @section('title')
 {{ $projects->request_name }}
 @endsection
-@section('under-title'){{$projects->signoff_owner}}
+@section('under-title')
 <p class="view-project-date">@if($projects->project_number) {{'#'.$projects->project_number}}@endif added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
 @endsection
 
