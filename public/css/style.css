@@ -119,6 +119,11 @@ body {
     display:inline-block;
     float:right;
     margin-left:6px;
+    color:#555;
+}
+
+.get-signoff-link:hover {
+    color:#333;
 }
 
 #signoffRequests input {

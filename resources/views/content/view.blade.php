@@ -281,7 +281,7 @@
 					var t = val.requestDate.split(/[- :]/);
 					var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
 					var requestDate = (d.getMonth() + 1)  + "/" + d.getDate() + "/" + d.getFullYear();
-         html += "<p class='text-muted" + requestClass + "'><small>" + requestDate + " to " + "<a href='http://signoff.pugetsound.edu/view.php?requestId=" + val.requestId + "' target='_blank'>" + val.reqFullName.replace(/\+/g , " ") + "</a><a href='#' class='get-signoff-link'>get link</a></small> " + val.status + "<input class='form-control input-sm' type='text' value='http://signoff.pugetsound.edu/respond.php?requestId=" + val.requestId + "' style='display:none;'></p>";
+         html += "<p class='text-muted" + requestClass + "'><small>" + requestDate + " to " + "<a href='http://signoff.pugetsound.edu/view.php?requestId=" + val.requestId + "' target='_blank'>" + val.reqFullName.replace(/\+/g , " ") + "</a><a href='#' class='get-signoff-link'><span class='glyphicon glyphicon-link'></span> get link</a></small> " + val.status + "<input class='form-control input-sm' type='text' value='http://signoff.pugetsound.edu/respond.php?requestId=" + val.requestId + "' style='display:none;'></p>";
     });
 				$('#signoffRequests').html(html);
 				if(isNew) {
