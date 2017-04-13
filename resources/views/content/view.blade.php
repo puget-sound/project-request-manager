@@ -10,10 +10,11 @@
 @section('content')
 @include('modals.project-actions', ['sprints' => $sprints])
 @include('modals.project-actions-delete', ['sprints' => $sprints, 'project' => $projects])
+@include('modals.project-actions-signoff', ['project' => $projects])
 <div class="row">
 <div class="col-md-9">
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-md-6">
 <!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
 <h4 class='view-project-name'><a href="{{ url('projects/' . $projects->project_owner )}}">{{ $projects->name }}</a></h4>
 <h4>
@@ -88,9 +89,15 @@
 	@endif
 </div>
 </div>
-<div class="col-md-3 col-md-offset-1">
+<div class="col-md-5 col-md-offset-1">
 	@if ($projects->lp_id != "" && $user->isLP())
-	<p><a class="btn btn-default lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
+	<p class="text-right"><a class="btn btn-default btn-sm lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
+@endif
+@if ($user->isLP())
+	<div id="signoffRequestsContainer">
+		<h6>Sign-off Requests <small><a href="#">more/less</a></small></h6>
+		<div id="signoffRequests"></div>
+	</div>
 @endif
 </div>
 </div>
@@ -128,12 +135,14 @@
    @if ($projects->status == 6 || $projects->status == 5)
   	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
  	@else
- 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())
+ 	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin() || $user->isDev())
 		<div href="#" class="list-group-item active">
 			Actions
 		</div>
-		<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>@endif
-	  @if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())<a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
+		@endif
+		@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin())
+		<a href="{{ url('request/' . $projects->id . '/edit') }}" class="list-group-item"><span class='glyphicon glyphicon-pencil'></span>&nbsp;&nbsp;Edit Details</a>
+	  <a href="{{ url('request/' . $projects->id . '/reorder') }}" class="list-group-item"><span class='glyphicon glyphicon-sort'></span>&nbsp;&nbsp;Reorder Project</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark as Complete</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark as Deferred</a>@endif
@@ -145,10 +154,11 @@
 				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Change"><span class='glyphicon glyphicon-edit'></span>&nbsp;&nbsp;Change Sprint</a>
 				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Remove from Sprint</a>@endif
 	  @endif
-	  @if ($user->isAdmin())
-			@if ($projects->lp_id == "")
+	  @if ($user->isAdmin() && $projects->lp_id == "")
 			<a class="list-group-item" href="{{ url('request/' . $projects->id . '/send-to-liquidplanner') }}"><span class='glyphicon glyphicon-share'></span>&nbsp;&nbsp;Send to LiquidPlanner</a>
 		@endif
+		@if ($user->isLP())<a href="#" class="list-group-item" data-toggle="modal" data-target="#newRequestModal" data-prmid="{{ $projects->id }}" data-prmtype="Signoff" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;Create Signoff Request</a>@endif
+			@if ($user->isAdmin())
 			<a href="#" class="list-group-item" data-toggle="modal" data-target="#deleteProject" data-prmtype="Delete" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete Project</a> @endif
   @endif
 </div>
@@ -156,26 +166,15 @@
 @endsection
 @section('extra-scripts')
 	<script type="text/javascript">
-	    /*$(document).ready(function() {
-				$.getJSON("http://signoff.app/php/submitNewRequest.php?callback=?", {
-					author: "acain",
-					typeOfWork: "ticket",
-					ticketNumber: "93939",
-					projectId: "",
-					soundNetLink: "",
-					lpProjectLink: "",
-					sprint: "",
-					projectName: "Black pens",
-					appDesignerProjects: "",
-					plsqlObjects: "",
-					otherObjects: "",
-					projectOwner: "Pen department",
-					summaryWorkCompleted: "official black pen trial",
-					testingType: "text",
-					requestUsers: "acain"
-				}, function(data) {
-					console.log(data);
-				});
-	    });*/
+	var project_number = "{{$projects->project_number}}",
+	lp_workspace = "{{$lp_workspace}}",
+	lp_id = "{{$projects->lp_id}}",
+	sprint = "{{$projects->sprint}}",
+	project_name = "{{$projects->request_name}}",
+	signoff_owner = "{{$projects->signoff_owner}}",
+	signoff_api_key = "{{$signoff_api_key}}",
+	signoff_base_url = "{{$signoff_base_url}}",
+	author = "{{$user->username}}";
 	</script>
+	<script type="text/javascript" src="{{ URL::asset('js/signoff.js') }}"></script>
 @endsection
