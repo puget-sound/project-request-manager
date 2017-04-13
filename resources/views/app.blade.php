@@ -20,6 +20,7 @@
       }
     }
     </style>
+		<link rel="icon" href="{{ URL::asset('images/grey-favicon.png') }}" type="image/png">
 	</head>
 
 	<body style="padding-top: 80px;">
