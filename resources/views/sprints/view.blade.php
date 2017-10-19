@@ -59,7 +59,11 @@
 					  @if ($project->status == "6" || $project->status == "5")
 					  <a class="btn btn-sm btn-default" disabled href="#"><span class='glyphicon glyphicon-lock'></span>&nbsp;&nbsp;Locked Project</a>
 					  @else
-					  <a href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark complete</a>
+							@if ($project->sprints()->orderBy('sprints_id', 'DESC')->first()->sprintNumber > $sprint->sprintNumber)
+								<a class="btn btn-sm btn-default" disabled href="#">multiple sprints</a>
+							@else
+					  		<a href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark complete</a>
+							@endif
 					  @endif
 				</td>
 			</tr>

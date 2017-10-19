@@ -114,7 +114,7 @@ $( document ).ready(function() {
       var button = $(event.relatedTarget);
       var assign_type = button.data('prmtype'); // Extract info from data-* attributes
       var modal = $(this);
-      modal.find('.modal-title').text(assign_type + ' Sprint');
+      modal.find('.modal-title').text(assign_type + ' Sprint(s)');
       modal.find('#sprint-assign-type').val(assign_type.replace(" ", ""));
 		})
 

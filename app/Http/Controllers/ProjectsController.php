@@ -219,11 +219,19 @@ class ProjectsController extends Controller {
 		$contents = curl_exec($ch);
 		curl_close ($ch);
 		$signoffOwners = json_decode($contents);
-		$this_sprint = Sprints::where('sprintNumber', '=', $projects->sprint)->first();
+		/*$this_sprint = Sprints::where('sprintNumber', '=', $projects->sprint)->first();
 		$this_sprint_id = NULL;
 		if($this_sprint != NULL) {
 			$this_sprint_id = $this_sprint->id;
+		}*/
+		$these_sprints = [];
+		$these_sprints_display = [];
+		foreach ($projects->sprints()->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+    	array_push($these_sprints, $this_sprint->id);
+			array_push($these_sprints_display, $this_sprint->sprintNumber);
 		}
+		$this_sprint_id = implode($these_sprints, ',');
+		$this_sprint_numbers = implode($these_sprints_display, ', ');
 		$all_sprints = \App\Sprints::get();
 		$current_sprint = '';
 		$today = Carbon::today();
@@ -234,12 +242,24 @@ class ProjectsController extends Controller {
 			}
 		}
 		$sprints = Sprints::orderBy('sprintNumber', 'asc')->where('sprintNumber', '>=', $current_sprint - 1)->get()->lists('sprint_info', 'id');
+		$hours = "";
+		if($projects['lp_id'] != "") {
+			$email = env('LP_EMAIL');
+			$password = env('LP_PASSWORD');
+
+			$lp = new LiquidPlannerClass($email, $password);
+			$lp->workspace_id = env('LP_WORKSPACE');
+			$lp->project_id = $projects['lp_id'];
+			$lp_project = $lp->project();
+			$hours = $lp_project->work;
+			$lp_timesheet_entries = $lp->timesheet_entries();
+		}
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
 			$signoff_api_key = env('SIGNOFF_API_KEY');
 			$signoff_base_url = env('SIGNOFF_BASE_URL');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'these_sprints' => $these_sprints, 'this_sprint_numbers' => $this_sprint_numbers, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url, 'total_hours' => $hours, 'sprint_loop' => $these_sprints_display]);
 		} else {
 			return redirect()->back();
 		}

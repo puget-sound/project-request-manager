@@ -31,6 +31,12 @@ class Sprints extends Model {
         return ['sprintStart', 'sprintEnd'];
     }
 
+    public function projects()
+    {
+      return $this->belongsToMany('App\Projects')
+      ->withTimestamps();
+    }
+
     public function getSprintInfoAttribute()
     {
       return $this->sprintNumber . ' &nbsp;&nbsp;' . $this->sprintStart->format('F j, Y') . ' - ' . $this->sprintEnd->format('F j, Y') . '';

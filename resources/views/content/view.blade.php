@@ -14,7 +14,7 @@
 <div class="row">
 <div class="col-md-9">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-7">
 <!--<h3 style='margin-top: 10px;'>{{ $projects->request_name }}</h3>-->
 <h4 class='view-project-name'><a href="{{ url('projects/' . $projects->project_owner )}}">{{ $projects->name }}</a></h4>
 <h4>
@@ -50,7 +50,7 @@
 	@endif
 </h4>
 
-<div style='width: 250px; height: 55px; background-color: white;'>
+<div style='height: 55px; background-color: white;'>
 	<div style='float: left; width: 100px; border-radius: 5px; height: 55px; margin-right: 5px; background-color:
 	@if ($projects->priority == 0)
 		#d9534f
@@ -74,22 +74,33 @@
 		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; color: white; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->order }}</p>
 		<p style='font-size: 10px; width: 70px; text-align: center; color: white;'>ORDER</p>
 	</div>
-	@if ($projects->sprint != NULL)
-	@if ($projects->sprint == $current_sprint || $projects->sprint < $current_sprint)
-	<div class="current-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
+	@if ($projects->sprints->count() > 0)
+	@if ($projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber <= $current_sprint)
+	<div class="current-sprint" style='float: left; min-width:70px; max-width: 312px; border-radius: 5px; min-height: 55px;'>
 	@endif
-	@if ($projects->sprint > $current_sprint)
-	<div class="future-sprint" style='float: left; width: 70px; border-radius: 5px; height: 55px;'>
+	@if ($projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint)
+	<div class="future-sprint" style='float: left; min-width:70px; max-width: 312px; border-radius: 5px; min-height: 55px;'>
 	@endif
-	<a href="{{ url('sprint/' . $projects->sprint)}}">
-		<p style='font-size: 20px; width: 70px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px;'>{{ $projects->sprint }}</p>
-		<p style='font-size: 10px; width: 70px; text-align: center;'>SPRINT</p>
-	</a>
+	<!--<a href="{{ url('sprint/' . $projects->sprint)}}">-->
+		<p style='font-size: 20px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px; padding:0 8px;'>
+			@foreach ($sprint_loop as $key => $value)
+    @if( count( $sprint_loop ) != $key + 1 )
+        <a href="{{ url('sprint/' . $value)}}">{{ $value }}</a>,
+     @else
+        <a href="{{ url('sprint/' . $value)}}">{{ $value }}</a>
+    @endif
+@endforeach
+	</p>
+		<p style='font-size: 10px; text-align: center; margin:0;'>
+			@if( count( $sprint_loop ) > 1 )SPRINTS
+			@else SPRINT
+			@endif</p>
+	<!--</a>-->
 	</div>
 	@endif
 </div>
 </div>
-<div class="col-md-5 col-md-offset-1">
+<div class="col-md-5">
 	@if ($projects->lp_id != "" && $user->isLP())
 	<p class="text-right"><a class="btn btn-default btn-sm lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
 @endif
@@ -146,13 +157,13 @@
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#updateStatus" data-prmid="{{ $projects->id }}" data-prmtype="Update" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-refresh'></span>&nbsp;&nbsp;Update Status</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $projects->id }}" data-prmtype="Complete" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark as Complete</a>@endif
 	  @if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#markDeferred" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove'></span>&nbsp;&nbsp;Mark as Deferred</a>@endif
-	  @if ($projects->sprint == "" || $projects->sprint == NULL)
-	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Add to"><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Add to Sprint</a>
+	  @if ($projects->sprints->count() == 0)
+	  	@if ($user->isAdmin())<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Add to"><span class='glyphicon glyphicon-plus'></span>&nbsp;&nbsp;Add to Sprint(s)</a>
 			@endif
 	  @else
 	  	@if ($user->isAdmin())
-				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Change"><span class='glyphicon glyphicon-edit'></span>&nbsp;&nbsp;Change Sprint</a>
-				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Remove from Sprint</a>@endif
+				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintAssign" data-prmtype="Change"><span class='glyphicon glyphicon-edit'></span>&nbsp;&nbsp;Change Sprint(s)</a>
+				<a class="list-group-item" href="#" data-toggle="modal" data-target="#sprintDeassign" data-prmid="{{ $projects->id }}" data-prmtype="Deferred" data-prmval="{{ $projects->request_name }}"><span class='glyphicon glyphicon-remove-sign'></span>&nbsp;&nbsp;Remove from Sprint(s)</a>@endif
 	  @endif
 	  @if ($user->isAdmin() && $projects->lp_id == "")
 			<a class="list-group-item" href="{{ url('request/' . $projects->id . '/send-to-liquidplanner') }}"><span class='glyphicon glyphicon-share'></span>&nbsp;&nbsp;Send to LiquidPlanner</a>
@@ -169,7 +180,7 @@
 	var project_number = "{{$projects->project_number}}",
 	lp_workspace = "{{$lp_workspace}}",
 	lp_id = "{{$projects->lp_id}}",
-	sprint = "{{$projects->sprint}}",
+	sprints = "{{$this_sprint_numbers}}",
 	project_name = "{{$projects->request_name}}",
 	signoff_owner = "{{$projects->signoff_owner}}",
 	signoff_api_key = "{{$signoff_api_key}}",
@@ -177,4 +188,30 @@
 	author = "{{$user->username}}";
 	</script>
 	<script type="text/javascript" src="{{ URL::asset('js/signoff.js') }}"></script>
+	<script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#sprint_multiple').multiselect({
+            buttonText: function(options, select) {
+            	if (options.length === 0) {
+                    return (select).data('label');
+                }
+                else {
+                     var labels = [];
+                     options.each(function() {
+                         if ($(this).attr('label') !== undefined) {
+                             labels.push($(this).attr('label'));
+                         }
+                         else {
+                            labels.push($(this).html().split(' &nbsp;&nbsp;')[0]);
+                         }
+                     });
+                     return labels.join(', ') + '';
+                 }
+            },
+            maxHeight: 205,
+            buttonClass: 'btn btn-default sq_select_button multiple_sprint_select',
+        });
+    });
+  </script>
 @endsection

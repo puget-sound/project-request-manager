@@ -14,9 +14,23 @@ class SprintsController extends Controller {
 		$sprints = Sprints::orderBy('sprintNumber', 'ASC')->get();
 		$details_sprints = array();
 		foreach ($sprints as $sprint) {
-			$sprintTotal = count(Projects::where('sprint', '=', $sprint->sprintNumber)->get());
+			$sprintTotal = 0;
+			$sprintComplete = 0;
+			foreach($sprint->projects()->get() as $sprintProject) {
+				$hasFutureSprint = false;
+				foreach($sprintProject->sprints()->get() as $projectSprint){
+					if($projectSprint->sprintNumber > $sprint->sprintNumber) {
+						$hasFutureSprint = true;
+					}
+				}
+				if(!$hasFutureSprint) {
+					$sprintTotal++;
+					if($sprintProject->status == "6") {
+						$sprintComplete++;
+					}
+				}
+			}
 			$sprint->sprintTotal = $sprintTotal;
-			$sprintComplete = count(Projects::where('sprint', '=', $sprint->sprintNumber)->where('status', '=', '6')->get());
 			$sprint->sprintComplete = $sprintComplete;
 			if ($sprintTotal > 0) {
 			$sprint['completed'] = round(($sprintComplete / $sprintTotal) * 100);
@@ -43,9 +57,8 @@ class SprintsController extends Controller {
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
 		$sprints = Sprints::get();
 		$sprintNumber = $sprint['sprintNumber'];
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		$projects = $sprint->projects()->join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
 		->select('requests.*', 'project_owners.name')
-		->where('sprint', '=', $sprintNumber)
 		->orderBy('priority')
 		->orderBy('order')
 		->get();
@@ -65,30 +78,50 @@ class SprintsController extends Controller {
 
 	public function assign_project(EmptyRequest $request) {
 		$id = $request['project_id'];
+		$project = Projects::where('id', '=', $id)->first();
 		$sprint = $request['sprint'];
 		$assign_type = $request['sprint_assign_type'];
-		$this_sprint = $request['this_sprint_id'];
-		$sprintNumber = Sprints::where('id', '=', $sprint)->pluck('sprintNumber');
-		$thisSprintNumber = Sprints::where('id', '=', $this_sprint)->pluck('sprintNumber');
-		$project = Projects::where('id', '=', $id)->first();
-		$project['sprint'] = $sprintNumber;
+		$from_sprints_ids = explode(",", $request['this_sprint_ids']);
+		// remove all sprint assignments
+		$project->sprints()->detach();
+		$project->sprints()->attach($sprint);
 		$project['status'] = 3;
 		$project->save();
+		$assigned_sprints = $project->sprints()->orderBy('sprints_id', 'ASC')->get();
+		$to_sprints_message = "";
+		foreach ($assigned_sprints as $this_sprint) {
+			$to_sprints_message .= "<a href='/sprint/" . $this_sprint->sprintNumber . "'>Sprint " . $this_sprint->sprintNumber . "</a>";
+			if($this_sprint != $assigned_sprints->last()) {
+					$to_sprints_message .= ", ";
+			}
+		}
+		$from_sprints_message = "";
+		$from_sprints = Sprints::findMany($from_sprints_ids);
+		foreach ($from_sprints as $this_from_sprint) {
+			$from_sprints_message .= "<a href='/sprint/" . $this_from_sprint->sprintNumber . "'>Sprint " . $this_from_sprint->sprintNumber . "</a>";
+			if($this_from_sprint != $from_sprints->last()) {
+					$from_sprints_message .= ", ";
+			}
+		}
 		if($assign_type == 'Addto') {
-			return redirect()->back()->withSuccess("Successfully added to <a href='/sprint/" . $sprintNumber . "'>Sprint " . $sprintNumber . "</a>");
+			return redirect()->back()->withSuccess("Successfully added to $to_sprints_message");
 		}
 		else {
-			return redirect()->back()->withSuccess("Successfully changed from <a href='/sprint/" . $thisSprintNumber . "'>Sprint " . $thisSprintNumber . "</a> to <a href='/sprint/" . $sprintNumber . "'>Sprint " . $sprintNumber . "</a>");
+			return redirect()->back()->withSuccess("Successfully changed from $from_sprints_message to $to_sprints_message");
 		}
 	}
 
 	public function deassign_project(EmptyRequest $request) {
 		$id = $request['project_id'];
 		$project = Projects::where('id', '=', $id)->first();
-		$sprint = $project->sprint;
+		$these_sprints_display = [];
+		foreach ($project->sprints()->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+			array_push($these_sprints_display, $this_sprint->sprintNumber);
+		}
+		$this_sprint_numbers = implode($these_sprints_display, ', ');
 		$project['status'] = 2;
-		$project['sprint'] = "";
+		$project->sprints()->detach();
 		$project->save();
-		return redirect()->back()->withSuccess("Successfully removed from Sprint " . $sprint);
+		return redirect()->back()->withSuccess("Successfully removed from Sprint(s) " . $this_sprint_numbers);
 	}
 }

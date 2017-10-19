@@ -58,6 +58,15 @@ body {
   text-align: left;
 }
 
+.multiple_sprint_select {
+  width:330px;
+}
+
+.multiple_sprint_select span {
+  width:290px;
+  display:inline-block;
+}
+
 #project-search .multiselect-selected-text {
   width:215px;
   display:inline-block;
