@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 @extends('app')
 @include('errors.list')
 @section('title')
@@ -8,6 +9,7 @@
 @endsection
 @section('content')
 	@include('modals.project-actions-complete')
+	@include('modals.project-actions-sprints')
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>
 
@@ -60,10 +62,17 @@
 					  <a class="btn btn-sm btn-default" disabled href="#"><span class='glyphicon glyphicon-lock'></span>&nbsp;&nbsp;Locked Project</a>
 					  @else
 							@if ($project->sprints()->orderBy('sprints_id', 'DESC')->first()->sprintNumber > $sprint->sprintNumber)
-								<a class="btn btn-sm btn-default" disabled href="#">multiple sprints</a>
+								<a class="btn btn-sm btn-default" disabled href="#" id="sprints-list">Sprints {{$project->sprints_display}}</a>
 							@else
-					  		<a href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark complete</a>
+								<div class="btn-group">
+									<a role="button" class="btn btn-xs btn-default" href="#" data-toggle="modal" data-target="#markComplete" data-prmid="{{ $project->id }}" data-prmtype="Complete" data-prmval="{{ $project->request_name }}"><span class='glyphicon glyphicon-ok'></span>&nbsp;&nbsp;Mark complete</a><button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
+									<ul class="dropdown-menu" role="menu">
+										<li><a href="#" data-toggle="modal" data-target="#sprintExtend" data-prmid="{{ $project->id }}" data-prmval="{{ $project->request_name }}"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Extend to next sprint</a></li>
+										<li><a href="#" data-toggle="modal" data-target="#sprintMove" data-prmid="{{ $project->id }}" data-prmval="{{ $project->request_name }}"><span class="glyphicon glyphicon-arrow-right"></span>&nbsp;&nbsp;Move to next sprint</a></li>
+									</ul>
+								</div>
 							@endif
+
 					  @endif
 				</td>
 			</tr>

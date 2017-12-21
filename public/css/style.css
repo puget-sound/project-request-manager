@@ -187,6 +187,12 @@ body {
   /*display:none;*/
 }
 
+#sprints-list {
+  width:130px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 #view-past-sprints {
   margin-top:35px;
   display:block;

@@ -137,11 +137,6 @@ $( document ).ready(function() {
 					alert('error');
 				}
 			});
-			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-			//Set up the modal
-
-			// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 		})
 
 
@@ -165,12 +160,27 @@ $( document ).ready(function() {
 				alert('error');
 			}
 		});
-		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-		//Set up the modal
-
-		// modal.find('.modal-body').html("Are you sure you want to remove <strong>" + prm_value + "</strong> from the Project Request Manager? <br><br> <small class='text-muted'>THIS ACTION IS PERMANENT. DATA WILL NOT BE RECOVERED. (okay, that's a lie, it's still in the DB somewhere...)</small>");
 	})
+
+  $('#sprintExtend').on('show.bs.modal', function (event) {
+    //Get all the data
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var modal = $(this);
+    var prm_id = button.data('prmid');
+    var prm_value = button.data('prmval');
+    $('#project_id_extend').val(prm_id);
+    modal.find('.modal-title').text('Extend Project: ' + prm_value);
+  })
+
+  $('#sprintMove').on('show.bs.modal', function (event) {
+    //Get all the data
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var modal = $(this);
+    var prm_id = button.data('prmid');
+    var prm_value = button.data('prmval');
+    $('#project_id_move').val(prm_id);
+    modal.find('.modal-title').text('Move Project: ' + prm_value);
+  })
 
 
 	$('#filterField').on('keyup', function() {

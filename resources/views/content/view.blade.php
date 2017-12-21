@@ -83,6 +83,7 @@
 	@endif
 	<!--<a href="{{ url('sprint/' . $projects->sprint)}}">-->
 		<p style='font-size: 20px; text-align: center; font-weight: bold; margin-top: 5px; margin-bottom: 0px; padding:0 8px;'>
+		@if ($user->isAdmin())
 			@foreach ($sprint_loop as $key => $value)
     @if( count( $sprint_loop ) != $key + 1 )
         <a href="{{ url('sprint/' . $value)}}">{{ $value }}</a>,
@@ -90,6 +91,9 @@
         <a href="{{ url('sprint/' . $value)}}">{{ $value }}</a>
     @endif
 @endforeach
+@else
+	{{$sprint_display_only}}
+@endif
 	</p>
 		<p style='font-size: 10px; text-align: center; margin:0;'>
 			@if( count( $sprint_loop ) > 1 )SPRINTS

@@ -55,14 +55,20 @@ class SprintsController extends Controller {
 
 	public function view($sprintNumber) {
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
-		$sprints = Sprints::get();
 		$sprintNumber = $sprint['sprintNumber'];
 		$projects = $sprint->projects()->join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
 		->select('requests.*', 'project_owners.name')
 		->orderBy('priority')
 		->orderBy('order')
 		->get();
-		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprints' => $sprints]);
+		foreach ($projects as $this_project) {
+		  $these_sprints_display = [];
+		foreach ($this_project->sprints()->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+		  array_push($these_sprints_display, $this_sprint->sprintNumber);
+		}
+		$this_project->sprints_display = implode($these_sprints_display, ', ');
+		}
+		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint]);
 	}
 
 	public function edit($sprintNumber) {
@@ -109,6 +115,35 @@ class SprintsController extends Controller {
 		else {
 			return redirect()->back()->withSuccess("Successfully changed from $from_sprints_message to $to_sprints_message");
 		}
+	}
+
+	public function extend_project(EmptyRequest $request) {
+		$id = $request['project_id'];
+		$sprint_id = $request['sprint_id'];
+		$sprint = Sprints::where('id', '=', $sprint_id)->first();
+		$project = Projects::where('id', '=', $id)->first();
+		$next_sprint_id = (int)$sprint_id + 1;
+		$next_sprint = Sprints::where('id', '=', $next_sprint_id)->first();
+		if (! $project->sprints->contains($next_sprint->id)) {
+			$project->sprints()->attach($next_sprint_id);
+			$project->save();
+		}
+
+		return redirect()->back()->withSuccess("Successfully extended '" . $project->request_name . "' into Sprint " . $next_sprint->sprintNumber);
+	}
+
+	public function move_project(EmptyRequest $request) {
+		$id = $request['project_id'];
+		$sprint_id = $request['sprint_id'];
+		$sprint = Sprints::where('id', '=', $sprint_id)->first();
+		$project = Projects::where('id', '=', $id)->first();
+		$next_sprint_id = (int)$sprint_id + 1;
+		$next_sprint = Sprints::where('id', '=', $next_sprint_id)->first();
+		$project->sprints()->detach();
+		$project->sprints()->attach($next_sprint_id);
+		$project->save();
+
+		return redirect()->back()->withSuccess("Successfully moved '" . $project->request_name . "' to Sprint " . $next_sprint->sprintNumber);
 	}
 
 	public function deassign_project(EmptyRequest $request) {

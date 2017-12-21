@@ -38,6 +38,28 @@ class ProjectsController extends Controller {
 		->orderBy('priority')
 		->orderBy('order')
 		->get();
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i]->sprintNumber;
+			}
+		}
+		foreach ($projects as $this_project) {
+		  $these_sprints_display = [];
+			$this_project->is_future_sprint = false;
+			foreach ($this_project->sprints()->where('sprintNumber', '>=', $current_sprint)->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+		  	array_push($these_sprints_display, $this_sprint->sprintNumber);
+			}
+			$this_project->sprints_display = implode($these_sprints_display, ', ');
+			if($this_project->status == "3" && $this_project->sprints()->count() > 0) {
+				if($this_project->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint) {
+					$this_project->is_future_sprint = true;
+				}
+			}
+		}
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
 		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
 		return view('content.projects', ['projects' => $projects, 'owner' => $owner, 'user' => $userdata, 'notifications' => $notifications]);
@@ -69,6 +91,28 @@ class ProjectsController extends Controller {
 		->whereNotIn('status', [6, 5])
 		->whereIn('project_owner', $owners)
 		->get();
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i]->sprintNumber;
+			}
+		}
+		foreach ($projects as $this_project) {
+		  $these_sprints_display = [];
+			$this_project->is_future_sprint = false;
+			foreach ($this_project->sprints()->where('sprintNumber', '>=', $current_sprint)->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+		  	array_push($these_sprints_display, $this_sprint->sprintNumber);
+			}
+			$this_project->sprints_display = implode($these_sprints_display, ', ');
+			if($this_project->status == "3" && $this_project->sprints()->count() > 0) {
+				if($this_project->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint) {
+					$this_project->is_future_sprint = true;
+				}
+			}
+		}
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
 		//$projects = Projects::where('id', '=', 1)->orderBy('priority')->orderBy('order')->get();
 		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
@@ -92,6 +136,28 @@ class ProjectsController extends Controller {
 		->orderBy('order')
 		->whereNotIn('status', [6, 5])
 		->get();
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i]->sprintNumber;
+			}
+		}
+		foreach ($projects as $this_project) {
+		  $these_sprints_display = [];
+			$this_project->is_future_sprint = false;
+			foreach ($this_project->sprints()->where('sprintNumber', '>=', $current_sprint)->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
+		  	array_push($these_sprints_display, $this_sprint->sprintNumber);
+			}
+			$this_project->sprints_display = implode($these_sprints_display, ', ');
+			if($this_project->status == "3" && $this_project->sprints()->count() > 0) {
+				if($this_project->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint) {
+					$this_project->is_future_sprint = true;
+				}
+			}
+		}
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
 		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
 	}
@@ -259,7 +325,7 @@ class ProjectsController extends Controller {
 			$signoff_api_key = env('SIGNOFF_API_KEY');
 			$signoff_base_url = env('SIGNOFF_BASE_URL');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'these_sprints' => $these_sprints, 'this_sprint_numbers' => $this_sprint_numbers, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url, 'total_hours' => $hours, 'sprint_loop' => $these_sprints_display]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'these_sprints' => $these_sprints, 'this_sprint_numbers' => $this_sprint_numbers, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url, 'total_hours' => $hours, 'sprint_loop' => $these_sprints_display, 'sprint_display_only' => $this_sprint_numbers]);
 		} else {
 			return redirect()->back();
 		}

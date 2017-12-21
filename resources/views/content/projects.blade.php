@@ -99,11 +99,11 @@
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
-					@if (($project->status == "3" && $project->sprint == $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
-					<span class='label label-success'>Scheduled {{$project->sprint}}</span>
+					@if ($project->status == "3" && !$project->is_future_sprint)
+					<span class='label label-success'>Scheduled {{$project->sprints_display}}</span>
 					@endif
-					@if ($project->status == "3" && $project->sprint > $current_sprint)
-					<span class='label label-success label-future'>Scheduled {{$project->sprint}}</span>
+					@if ($project->status == "3" && $project->is_future_sprint)
+					<span class='label label-success label-future'>Scheduled {{$project->sprints_display}}</span>
 					@endif
 					@if ($project->status == "4")
 					<span class='label label-danger'>Oracle</span>
