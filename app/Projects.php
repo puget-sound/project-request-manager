@@ -29,4 +29,10 @@ class Projects extends Model {
      *
      * @var array
      */
+
+     public function sprints()
+     {
+       return $this->belongsToMany('App\Sprints')
+      ->withTimestamps();
+     }
 }

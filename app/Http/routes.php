@@ -72,7 +72,11 @@ Route::get('sprints/create', 'SprintsController@create');
 Route::post('sprints', 'SprintsController@store');
 Route::patch('sprints/assign_project', 'SprintsController@assign_project');
 Route::patch('sprints/deassign_project', 'SprintsController@deassign_project');
+Route::patch('sprints/extend_project', 'SprintsController@extend_project');
+Route::patch('sprints/move_project', 'SprintsController@move_project');
 
+//Analytics Controller
+Route::get('analytics', 'AnalyticsController@analytics');
 
 //AJAX Controller (misc requests)
 Route::post('request/{request_id}/ajax/status', 'AjaxController@getCurrentRequestStatus');

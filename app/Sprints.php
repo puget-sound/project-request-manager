@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Sprints extends Model {
     /**
@@ -29,6 +30,12 @@ class Sprints extends Model {
     public function getDates()
     {
         return ['sprintStart', 'sprintEnd'];
+    }
+
+    public function projects()
+    {
+      return $this->belongsToMany('App\Projects')
+      ->withTimestamps();
     }
 
     public function getSprintInfoAttribute()

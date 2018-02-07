@@ -13,4 +13,5 @@ Edit Project Request
 		@include('content._projectform', ['submitText' => 'Update Project Request', 'disable' => true])
 	@endif
 {!! Form::close() !!}
+<a href='{{ url('request') }}/{{ $project->id }}'>Cancel</a>
 @endsection

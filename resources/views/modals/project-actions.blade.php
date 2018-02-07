@@ -54,17 +54,18 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Add to Sprint</h4>
+        <h4 class="modal-title">Add to Sprint(s)</h4>
       </div>
       <div class="modal-body">
         <div class="modal-body-head"></div>
         {!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@assign_project']]) !!}
         {!! Form::hidden('project_id', $projects->id, ['id' => 'project_id_assign']) !!}
-        {!! Form::hidden('this_sprint_id', $this_sprint_id) !!}
+        {!! Form::hidden('this_sprint_ids', $this_sprint_id) !!}
         {!! Form::hidden('sprint_assign_type', $this_sprint_id, ['id' => 'sprint-assign-type']) !!}
-        <div class="input-group">
-        <span class="input-group-addon" id="basic-addon1">Sprint</span>
-        {!! Form::select('sprint', $sprints, $this_sprint_id, ['class' => 'form-control']) !!}
+        <div class="form-group">
+          {!! Form::label('sprint_multiple', 'Sprint(s)') !!}
+          <br>
+          {!! Form::select('sprint[]', $sprints, $these_sprints, ['class' => 'form-control', 'multiple'=> 'multiple', 'id'=>'sprint_multiple', 'data-label'=> 'Choose sprint(s)']) !!}
         </div>
       </div>
       <div class="modal-footer">
@@ -82,13 +83,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Remove from Sprint</h4>
+        <h4 class="modal-title">Remove from Sprint(s)</h4>
       </div>
       <div class="modal-body">
         <div class="modal-body-head"></div>
         {!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@deassign_project']]) !!}
         {!! Form::hidden('project_id', null, ['id' => 'project_id_deassign']) !!}
-        Are you sure you want to remove this project from Sprint {{$projects->sprint}}?
+        Are you sure you want to remove this project from Sprint(s) {{$this_sprint_numbers}}?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -27,7 +27,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 					<td style="vertical-align:middle;">
 					<span class="label label-success">Active</span>
 					</td>
-					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
+					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }}%</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td><small class="pull-right sprint-item-edit"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/edit') }}">edit</a></small></td>
@@ -45,7 +45,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 					<td style="vertical-align:middle;">
 					<span class="label label-success label-future">Future</span>
 					</td>
-					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
+					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }}%</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td><small class="pull-right sprint-item-edit"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/edit') }}">edit</a></small></td>
@@ -73,7 +73,7 @@ Manage Sprints <small class="new-sprint"><a class="btn btn-primary btn-sm" href=
 					<td style="vertical-align:middle;">
 					<span class="label label-default">Past</span>
 					</td>
-					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }} %</td>
+					<td style="vertical-align:middle; text-align: middle;">&nbsp;&nbsp;&nbsp;&nbsp;{{ $sprint->completed }}%</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 				</tr>

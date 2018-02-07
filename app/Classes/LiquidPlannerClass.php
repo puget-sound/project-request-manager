@@ -44,6 +44,14 @@ class LiquidPlannerClass {
     return $this->get("/workspaces/{$this->workspace_id}/clients");
   }
 
+	public function project() {
+    return $this->get("/workspaces/{$this->workspace_id}/projects/{$this->project_id}");
+  }
+
+	public function timesheet_entries() {
+    return $this->get("/workspaces/{$this->workspace_id}/timesheet_entries?project_id={$this->project_id}&end_date=2017-09-06");
+  }
+
 	public function create_client($data) {
     return $this->post("/workspaces/{$this->workspace_id}/clients", array("client"=>$data));
   }

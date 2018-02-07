@@ -14,7 +14,7 @@ function clearRequestForm() {
   if(lp_id != "") {
     $("#lpProjectLink").val("https://app.liquidplanner.com/space/" + lp_workspace + "/projects/show/" + lp_id);
   }
-  $("#sprintNumber").val(sprint);
+  $("#sprintNumber").val(sprints);
   $("#projectName").val(project_name);
   $("#appDesignerProjects").val("");
   $("#plsqlObjects").val("");
