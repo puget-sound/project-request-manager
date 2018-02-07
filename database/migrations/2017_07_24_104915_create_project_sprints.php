@@ -26,7 +26,7 @@ class CreateProjectSprints extends Migration {
 	      //      ->on('sprints')->onDelete('cascade');
 
 				$table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'))->nullable();
-				$table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'))->nullable();
+				$table->timestamp('updated_at')->nullable();
 			});
 
 			// Get projects with sprint
