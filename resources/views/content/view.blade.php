@@ -30,10 +30,10 @@
 	@if ($projects->status == "2")
 	<span class='label label-info'>Ready</span>
 	@endif
-	@if ($projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber <= $current_sprint)
+	@if ($projects->status == "3" && $projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber <= $current_sprint)
 	<span class='label label-success'>Scheduled</span>
 	@endif
-	@if ($projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint)
+	@if ($projects->status == "3" && $projects->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint)
 	<span class='label label-success label-future'>Scheduled</span>
 	@endif
 	@if ($projects->status == "4")
