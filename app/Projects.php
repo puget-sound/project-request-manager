@@ -33,7 +33,7 @@ class Projects extends Model {
      public function sprints()
      {
        return $this->belongsToMany('App\Sprints')
-      ->withTimestamps();
+      ->withTimestamps()->withPivot('project_sprint_phase_id', 'project_sprint_status_id');
      }
 
      public function erp_report_category()

@@ -51,6 +51,7 @@
                   @endforeach
                 </ul>
             </li>
+						<li><a href="{{ url('view-sprints') }}"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;Sprints</a></li>
             @if (Helpers::full_authenticate()->isAdmin())
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Administration<span class="caret"></span></a>

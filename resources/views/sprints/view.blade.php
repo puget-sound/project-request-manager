@@ -6,27 +6,49 @@
 @endsection
 @section('under-title')
 	{{ $sprint->sprintStart->format('F j, Y') }} - {{ $sprint->sprintEnd->format('F j, Y') }}
+	<h5>{{$projects->count()}} Projects</h5>
 @endsection
 @section('content')
 	@include('modals.project-actions-complete')
 	@include('modals.project-actions-sprints')
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>
-
 		<th>Project Name</th>
+		<th></th>
 		<th>Project Owner</th>
-		<th>Priority</th>
-		<th>Order</th>
+		<th>Sprint Phase</th>
+		<th>Sprint Status</th>
 		<th>Status</th>
 		<th data-sortable="false">Actions</th>
 		</thead>
 		<tbody class="projects_searchable">
-			@foreach($projects as $project)
+			@foreach($categories as $category)
+				@if($projects->where('erp_report_category_id', $category->id)->count() > 0)
+				<tr><td colspan="7" class="table-section-header">{{$category->name}} Projects</td></tr>
+			@endif
+			@foreach($projects->sortBy('phaseName') as $project)
+				@if($project->erp_report_category_id == $category->id)
 			<tr>
+
 				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
-				<td style="vertical-align:middle;"><a href="{{ url('projects/' . $project->project_owner )}}">{{ $project->name }}</a></td>
-				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')label label-danger"> High @endif @if($project->priority == '1')label label-warning"> Medium @endif @if($project->priority == '2')label label-primary"> Low @endif</span></td>
-				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
+				<td style="vertical-align:middle;">
+					@if($project->hide_from_reports == "1")<span class='glyphicon glyphicon-eye-close text-muted'></span>
+					@endif
+					</td>
+				<td style="vertical-align:middle;"><a href="{{ url('projects/' . $project->project_owner )}}">{{ $project->project_owner_name }}</a></td>
+				<td>
+					{!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@set_project_phase_status'], 'id' => 'phaseStatusForm' . $project->id]) !!}
+	        {!! Form::hidden('project_id', $project->id, ['id' => 'project_id_hidden']) !!}
+					{!! Form::hidden('sprint_id', $sprint->id, ['id' => 'sprint_id_hidden']) !!}
+	        {!! Form::select('phase_id', array_merge(['0' => 'Please Select'], $sprint_phases), $project->pivot->project_sprint_phase_id, ['class' => 'form-control input-sm', 'id' => 'updatePhaseSelect-' . $project->id]) !!}
+				</td>
+				<td>
+					{!! Form::select('status_id', array_merge(['0' => 'Please Select'], $sprint_statuses), $project->pivot->project_sprint_status_id, ['class' => 'form-control input-sm', 'id' => 'updateStatusSelect-' . $project->id]) !!}
+					{!! Form::close() !!}
+				</td>
+				<!--<td style="vertical-align: middle;">{!! Form::submit('save', ['class' => 'btn btn-link btn-xs pull-right']) !!}
+
+				</td>-->
 				<td style="vertical-align: middle;">
 					@if ($project->status == "")
 					<span class='label label-default'>Unknown</span>
@@ -40,10 +62,10 @@
 					@if ($project->status == "2")
 					<span class='label label-info'>Ready</span>
 					@endif
-					@if (($project->status == "3" && $project->sprint == $current_sprint) || ($project->status == "3" && $project->sprint < $current_sprint))
+					@if ($project->status == "3" && $project->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber <= $current_sprint)
 					<span class='label label-success'>Scheduled</span>
 					@endif
-					@if ($project->status == "3" && $project->sprint > $current_sprint)
+					@if ($project->status == "3" && $project->sprints()->orderBy('sprints_id', 'ASC')->first()->sprintNumber > $current_sprint)
 					<span class='label label-success label-future'>Scheduled</span>
 					@endif
 					@if ($project->status == "4")
@@ -76,8 +98,24 @@
 					  @endif
 				</td>
 			</tr>
+		@endif
+	@endforeach
 			@endforeach
 		</tbody>
 	</table>
 
+@endsection
+@section('extra-scripts')
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("select[id^='updatePhaseSelect']").on('change', function() {
+			var projectId = $(this).attr("id").split("-")[1];
+			$("#phaseStatusForm" + projectId).submit();
+		});
+		$("select[id^='updateStatusSelect']").on('change', function() {
+			var projectId = $(this).attr("id").split("-")[1];
+			$("#phaseStatusForm" + projectId).submit();
+		});
+	});
+</script>
 @endsection

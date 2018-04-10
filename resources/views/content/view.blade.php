@@ -124,6 +124,14 @@
 @if ($projects->ts_request_month != NULL && $projects->ts_request_year != NULL) <p><strong>TS Scheduled:</strong> <span class='text-success'>{{ $projects->ts_request_month }} {{ $projects->ts_request_year }}</span></p> @endif
 <h4 style='margin-top: 30px;'>Project Description</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 <p>{!! nl2br($projects->project_desc) !!}</p>
+@if ($user->isAdmin())
+	<h4 style='margin-top: 30px;'>ERP Reporting</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+	@if($projects->hide_from_reports == "1")
+		<p><span class="label label-danger">Hide from ERP Reports</span></p>
+	@endif
+	<p>{!! nl2br($projects->brief_description) !!}</p>
+	<p><strong>ERP Reporting Category:</strong> {{$projects->erp_report_category->name}}</p>
+@endif
 <h4 style='margin-top: 30px;'>Notes, Comments, and History</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 @foreach($comments as $comment)
 <div>

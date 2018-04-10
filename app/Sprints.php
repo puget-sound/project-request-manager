@@ -35,7 +35,7 @@ class Sprints extends Model {
     public function projects()
     {
       return $this->belongsToMany('App\Projects')
-      ->withTimestamps();
+      ->withTimestamps()->withPivot('project_sprint_phase_id', 'project_sprint_status_id');
     }
 
     public function getSprintInfoAttribute()
