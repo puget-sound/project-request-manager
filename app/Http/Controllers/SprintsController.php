@@ -22,7 +22,19 @@ class SprintsController extends Controller {
 	public function show_to_all() {
 		$details_sprints = array();
 		$details_sprints = SprintsController::fetch_display_sprints();
-		return view('sprints.show-to-all', ['sprints' => $details_sprints]);
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i];
+			}
+		}
+		$current_sprint_end = new Carbon($current_sprint->sprintEnd);
+
+    $days_to_sprint_end = $current_sprint_end->diffInDays($today);
+		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end]);
 	}
 
 	public function create() {
@@ -83,7 +95,7 @@ class SprintsController extends Controller {
 	public function accomplishments($sprintNumber) {
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
 		$sprintNumber = $sprint['sprintNumber'];
-		$sprintProjects = $sprint->projects()->where('hide_from_reports', '=', '0')->get();
+		$sprintProjects = $sprint->projects()->where('hide_from_reports', '=', '0')->wherePivot('project_sprint_status_id','!=','null')->get();
 		foreach($sprintProjects as $sprintProject) {
 			$sprintStatus = ProjectSprintStatus::where('id', '=', $sprintProject->pivot->project_sprint_status_id)->first();
 			$owner = Owners::where('id', '=', $sprintProject->project_owner)->first();

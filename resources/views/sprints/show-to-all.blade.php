@@ -29,7 +29,11 @@ View Sprints
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/project-schedule')}}">Project Schedule</a></td>
-					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a></td>
+					<td style="vertical-align:middle;">
+						@if($days_to_sprint_end <= 7)
+							<a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a>
+						@endif
+					</td>
 				</tr>
 			@endif
 				@endforeach
@@ -46,7 +50,7 @@ View Sprints
 					<td style="vertical-align:middle;">{{ $sprint->sprintStart->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/project-schedule')}}">Project Schedule</a></td>
-					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a></td>
+					<td style="vertical-align:middle;"></td>
 				</tr>
 			@endif
 				@endforeach
