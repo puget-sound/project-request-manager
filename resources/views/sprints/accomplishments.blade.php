@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 @extends('app')
+@section('head-title')
+	Accomplishments
+@endsection
 @include('errors.list')
 @section('title')
 	Sprint {{ $sprint->sprintNumber }} Accomplishments

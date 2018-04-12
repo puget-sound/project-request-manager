@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Project Request Manager</title>
+		<title>@yield('head-title', 'Project Request Manager')</title>
+
 		<!-- Latest compiled and minified CSS -->
 
     <link rel="stylesheet" href="{{ URL::asset('css/sortable-theme-bootstrap.css') }}">

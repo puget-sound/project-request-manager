@@ -130,7 +130,11 @@
 		<p><span class="label label-danger">Hide from ERP Reports</span></p>
 	@endif
 	<p>{!! nl2br($projects->brief_description) !!}</p>
-	<p><strong>ERP Reporting Category:</strong> {{$projects->erp_report_category->name}}</p>
+	<p><strong>ERP Reporting Category:</strong>
+		@if($projects->erp_report_category) {{$projects->erp_report_category->name}}
+		@else
+			General
+		@endif</p>
 @endif
 <h4 style='margin-top: 30px;'>Notes, Comments, and History</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 @foreach($comments as $comment)

@@ -163,20 +163,23 @@ body {
 }
 
 .sprints-list .table > tbody > tr > td.sprint-header,
-.table > tbody > tr > td.table-section-header {
+.table > tbody > tr.table-section-header {
   color:#555;
   text-transform:uppercase;
   padding:35px 8px 15px 8px;
   border-top:none;
 }
 
-.sprints-list .table > tbody > tr > td.sprint-header.sprint-header-active, .table > tbody > tr > td.sprint-header.sprint-header-past,
-.table > tbody > tr > td.table-section-header {
+.sprints-list .table > tbody > tr > td.sprint-header.sprint-header-active, .table > tbody > tr > td.sprint-header.sprint-header-past{
   padding-top:15px;
 }
 
-.table > tbody > tr > td.table-section-header {
-  border-top:1px solid #e0e0e0;
+.table > tbody > tr.table-section-header {
+  background-color:#ccc;
+}
+
+.table > tbody > tr.table-section-header td {
+  padding:8px;
 }
 
 table[data-sortable].sortable-theme-bootstrap.table-large-text {
