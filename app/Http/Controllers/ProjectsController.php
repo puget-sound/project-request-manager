@@ -530,6 +530,9 @@ class ProjectsController extends Controller {
 		->get();
 		//mark complete
 		$project['status'] = 6;
+		// set project's last sprint status to 'complete'
+		$last_sprint = $project->sprints()->latest()->first();
+		$project->sprints()->updateExistingPivot($last_sprint['id'], ['project_sprint_status_id' => 1]);
 		$project->save();
 		//move everything else up if there's something to move up
 		if (count($reorder_projects) > 0) {
