@@ -17,10 +17,11 @@ View Sprints
 			</thead>
 			<tbody>
 				<tr>
-					<td colspan="5" class="sprint-header sprint-header-active">Active sprint</td>
+					<td colspan="5" class="sprint-header sprint-header-active">{{$current_sprint_header}}
+					</td>
 				</tr>
 				@foreach ($sprints as $sprint)
-					@if($sprint->sprintNumber == $current_sprint)
+					@if($sprint->sprintNumber == $current_sprint || ($sprint->sprintNumber == $current_sprint - 1 && $show_last_sprint == "true"))
 				<tr class="sprint-list-item">
 					<td style="vertical-align:middle;"><strong>Sprint {{ $sprint->sprintNumber }}</strong></td>
 					<td style="vertical-align:middle;">
@@ -30,7 +31,7 @@ View Sprints
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/project-schedule')}}">Project Schedule</a></td>
 					<td style="vertical-align:middle;">
-						@if($days_to_sprint_end <= 7)
+						@if($days_to_sprint_end <= 7 || $sprint->sprintNumber == $current_sprint - 1)
 							<a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a>
 						@endif
 					</td>

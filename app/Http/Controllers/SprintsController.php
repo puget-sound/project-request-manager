@@ -26,15 +26,28 @@ class SprintsController extends Controller {
 		$current_sprint = '';
 		$today = Carbon::today();
 
+		// calculate current sprint
 		for ($i = 0; $i < count($all_sprints); $i++) {
 			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
 				$current_sprint = $all_sprints[$i];
 			}
 		}
+		// calculate days until the current sprint ends
 		$current_sprint_end = new Carbon($current_sprint->sprintEnd);
-
     $days_to_sprint_end = $current_sprint_end->diffInDays($today);
-		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end]);
+
+		// calculate days since previous sprint ended
+		$just_ended_sprint = Sprints::where('id', '=', $current_sprint['id'] - 1)->first();
+		$just_ended_sprint_end = new Carbon($just_ended_sprint->sprintEnd);
+		$days_since_sprint_ended = $just_ended_sprint_end->diffInDays($today);
+		$show_last_sprint = "false";
+		$current_sprint_header = "current sprint";
+		if ($days_since_sprint_ended <= 7) {
+			$show_last_sprint = "true";
+			$current_sprint_header = "current sprints";
+		}
+
+		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end, 'show_last_sprint' => $show_last_sprint, 'current_sprint_header' => $current_sprint_header]);
 	}
 
 	public function create() {
