@@ -122,21 +122,22 @@
 @if ($projects->project_size != "")<p><strong>Project Size:</strong> {{ $projects->project_size }}</p> @endif
 @if ($projects->client_request_month != NULL && $projects->client_request_year != NULL) <p><strong>Requested Completion:</strong> {{ $projects->client_request_month }} {{ $projects->client_request_year }}</p> @endif
 @if ($projects->ts_request_month != NULL && $projects->ts_request_year != NULL) <p><strong>TS Scheduled:</strong> <span class='text-success'>{{ $projects->ts_request_month }} {{ $projects->ts_request_year }}</span></p> @endif
-<h4 style='margin-top: 30px;'>Project Description</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+<h4 style='margin-top: 30px;'>Brief Description</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+	<p>{!! nl2br($projects->brief_description) !!}</p>
+<h4 style='margin-top: 30px;'>Notes</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 <p>{!! nl2br($projects->project_desc) !!}</p>
 @if ($user->isAdmin())
-	<h4 style='margin-top: 30px;'>ERP Reporting</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+	<br>
 	@if($projects->hide_from_reports == "1")
 		<p><span class="label label-danger">Hide from ERP Reports</span></p>
 	@endif
-	<p>{!! nl2br($projects->brief_description) !!}</p>
 	<p><strong>ERP Reporting Category:</strong>
 		@if($projects->erp_report_category) {{$projects->erp_report_category->name}}
 		@else
 			General
 		@endif</p>
 @endif
-<h4 style='margin-top: 30px;'>Notes, Comments, and History</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+<h4 style='margin-top: 30px;'>Comments and History</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 @foreach($comments as $comment)
 <div>
 	<p style='margin-bottom: 2px;' class='text-primary'><strong>{{ $comment->fullname }}</strong></p>
