@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Owners;
 use App\Projects;
 use App\Sprints;
+use App\ProjectSprintPhase;
+use App\ProjectSprintStatus;
+use App\ERPReportCategory;
 use Helpers;
 use App\Http\Requests\SprintsRequest;
 use App\Http\Requests\EmptyRequest;
@@ -11,37 +14,40 @@ use Carbon\Carbon;
 
 class SprintsController extends Controller {
 	public function show() {
-		$sprints = Sprints::orderBy('sprintNumber', 'ASC')->get();
 		$details_sprints = array();
-		foreach ($sprints as $sprint) {
-			$sprintTotal = 0;
-			$sprintComplete = 0;
-			foreach($sprint->projects()->get() as $sprintProject) {
-				$hasFutureSprint = false;
-				foreach($sprintProject->sprints()->get() as $projectSprint){
-					if($projectSprint->sprintNumber > $sprint->sprintNumber) {
-						$hasFutureSprint = true;
-					}
-				}
-				if(!$hasFutureSprint) {
-					$sprintTotal++;
-					if($sprintProject->status == "6") {
-						$sprintComplete++;
-					}
-				}
-			}
-			$sprint->sprintTotal = $sprintTotal;
-			$sprint->sprintComplete = $sprintComplete;
-			if ($sprintTotal > 0) {
-			$sprint['completed'] = round(($sprintComplete / $sprintTotal) * 100);
-			}
-			else {
-				$sprint['completed'] = 0;
-			}
-			$details_sprints[] = $sprint;
-		}
+		$details_sprints = SprintsController::fetch_display_sprints();
 		return view('sprints.show', ['sprints' => $details_sprints]);
-		//return view('users.show', ['users' => $users]);
+	}
+
+	public function show_to_all() {
+		$details_sprints = array();
+		$details_sprints = SprintsController::fetch_display_sprints();
+		$all_sprints = \App\Sprints::get();
+		$current_sprint = '';
+		$today = Carbon::today();
+
+		// calculate current sprint
+		for ($i = 0; $i < count($all_sprints); $i++) {
+			if ($today >= $all_sprints[$i]->sprintStart && ($today <= $all_sprints[$i]->sprintEnd || $today < $all_sprints[$i+1]->sprintStart)){
+				$current_sprint = $all_sprints[$i];
+			}
+		}
+		// calculate days until the current sprint ends
+		$current_sprint_end = new Carbon($current_sprint->sprintEnd);
+    $days_to_sprint_end = $current_sprint_end->diffInDays($today);
+
+		// calculate days since previous sprint ended
+		$just_ended_sprint = Sprints::where('id', '=', $current_sprint['id'] - 1)->first();
+		$just_ended_sprint_end = new Carbon($just_ended_sprint->sprintEnd);
+		$days_since_sprint_ended = $just_ended_sprint_end->diffInDays($today);
+		$show_last_sprint = "false";
+		$current_sprint_header = "current sprint";
+		if ($days_since_sprint_ended <= 7) {
+			$show_last_sprint = "true";
+			$current_sprint_header = "current sprints";
+		}
+
+		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end, 'show_last_sprint' => $show_last_sprint, 'current_sprint_header' => $current_sprint_header]);
 	}
 
 	public function create() {
@@ -56,10 +62,11 @@ class SprintsController extends Controller {
 	public function view($sprintNumber) {
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
 		$sprintNumber = $sprint['sprintNumber'];
-		$projects = $sprint->projects()->join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->orderBy('priority')
-		->orderBy('order')
+		$sprint_phases = ProjectSprintPhase::orderBy('id', 'asc')->get()->lists('name', 'id');
+		$sprint_statuses = ProjectSprintStatus::orderBy('id', 'asc')->get()->lists('name', 'id');
+		$projects = $sprint->projects()->leftJoin('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		->select('requests.*', 'project_owners.name as project_owner_name')
+		->orderBy('request_name')
 		->get();
 		foreach ($projects as $this_project) {
 		  $these_sprints_display = [];
@@ -67,8 +74,61 @@ class SprintsController extends Controller {
 		  array_push($these_sprints_display, $this_sprint->sprintNumber);
 		}
 		$this_project->sprints_display = implode($these_sprints_display, ', ');
+		// assign the 'General' category if none is assigned
+		if(!$this_project->erp_report_category_id) {
+			$this_project->erp_report_category_id = 1;
 		}
-		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint]);
+		}
+		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
+		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprint_phases' => $sprint_phases, 'sprint_statuses' => $sprint_statuses, 'categories' => $categories]);
+	}
+
+	public function project_schedule($sprintNumber) {
+		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
+		$sprintNumber = $sprint['sprintNumber'];
+		/*$projects = $sprint->projects()->leftJoin('project_owners', 'requests.project_owner', '=', 'project_owners.id')
+		->select('requests.*','project_owners.name as project_owner_name')
+		->orderBy('erp_report_category_id')
+		->get();*/
+		$sprintProjects = $sprint->projects()->where('hide_from_reports', '=', '0')->get();
+		foreach($sprintProjects as $sprintProject) {
+			$phase = ProjectSprintPhase::where('id', '=', $sprintProject->pivot->project_sprint_phase_id)->first();
+			$owner = Owners::where('id', '=', $sprintProject->project_owner)->first();
+			$sprintProject->project_owner_name = $owner->name;
+			if($phase)
+				$sprintProject->phaseName = $phase->name;
+			else {
+				$sprintProject->phaseName = '';
+			}
+			// assign the 'General' category if none is assigned
+			if(!$sprintProject->erp_report_category_id) {
+				$sprintProject->erp_report_category_id = 1;
+			}
+		}
+		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
+		return view('sprints.schedule', ['sprint' => $sprint, 'sprintProjects' => $sprintProjects, 'categories' => $categories]);
+	}
+
+	public function accomplishments($sprintNumber) {
+		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
+		$sprintNumber = $sprint['sprintNumber'];
+		$sprintProjects = $sprint->projects()->where('hide_from_reports', '=', '0')->wherePivot('project_sprint_status_id','!=','null')->get();
+		foreach($sprintProjects as $sprintProject) {
+			$sprintStatus = ProjectSprintStatus::where('id', '=', $sprintProject->pivot->project_sprint_status_id)->first();
+			$owner = Owners::where('id', '=', $sprintProject->project_owner)->first();
+			$sprintProject->project_owner_name = $owner->name;
+			if($sprintStatus)
+				$sprintProject->sprintStatus = $sprintStatus->name;
+			else {
+				$sprintProject->sprintStatus = '';
+			}
+			// assign the 'General' category if none is assigned
+			if(!$sprintProject->erp_report_category_id) {
+				$sprintProject->erp_report_category_id = 1;
+			}
+		}
+		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
+		return view('sprints.accomplishments', ['sprint' => $sprint, 'sprintProjects' => $sprintProjects, 'categories' => $categories]);
 	}
 
 	public function edit($sprintNumber) {
@@ -91,8 +151,6 @@ class SprintsController extends Controller {
 		// remove all sprint assignments
 		$project->sprints()->detach();
 		$project->sprints()->attach($sprint);
-		$project['status'] = 3;
-		$project->save();
 		$assigned_sprints = $project->sprints()->orderBy('sprints_id', 'ASC')->get();
 		$to_sprints_message = "";
 		foreach ($assigned_sprints as $this_sprint) {
@@ -101,6 +159,14 @@ class SprintsController extends Controller {
 					$to_sprints_message .= ", ";
 			}
 		}
+		if(count($sprint) < 1) {
+			$project['status'] = 2;
+			$to_sprints_message = "<em>No Sprint</em>";
+		}
+		else {
+			$project['status'] = 3;
+		}
+		$project->save();
 		$from_sprints_message = "";
 		$from_sprints = Sprints::findMany($from_sprints_ids);
 		foreach ($from_sprints as $this_from_sprint) {
@@ -158,5 +224,50 @@ class SprintsController extends Controller {
 		$project->sprints()->detach();
 		$project->save();
 		return redirect()->back()->withSuccess("Successfully removed from Sprint(s) " . $this_sprint_numbers);
+	}
+	public function set_project_phase_status(EmptyRequest $request) {
+		$project_id = $request['project_id'];
+		$sprint_id = $request['sprint_id'];
+		$phase_id = $request['phase_id'];
+		$this_phase = ProjectSprintPhase::where('id', '=', $phase_id)->first();
+		$status_id = $request['status_id'];
+		$sprint = Sprints::where('id', '=', $sprint_id)->first();
+		$sprint->projects()->detach($project_id);
+		$sprint->projects()->attach($project_id, ['project_sprint_phase_id' => $phase_id, 'project_sprint_status_id' => $status_id]);
+		$project = Projects::where('id', '=', $project_id)->first();
+		return redirect()->back()->withSuccess("Successfully set phase and status for <strong>" . $project->request_name . "</strong>");
+	}
+
+	public function fetch_display_sprints() {
+		$sprints = Sprints::orderBy('sprintNumber', 'ASC')->get();
+		$details_sprints = array();
+		foreach ($sprints as $sprint) {
+			$sprintTotal = 0;
+			$sprintComplete = 0;
+			foreach($sprint->projects()->get() as $sprintProject) {
+				$hasFutureSprint = false;
+				foreach($sprintProject->sprints()->get() as $projectSprint){
+					if($projectSprint->sprintNumber > $sprint->sprintNumber) {
+						$hasFutureSprint = true;
+					}
+				}
+				if(!$hasFutureSprint) {
+					$sprintTotal++;
+					if($sprintProject->status == "6") {
+						$sprintComplete++;
+					}
+				}
+			}
+			$sprint->sprintTotal = $sprintTotal;
+			$sprint->sprintComplete = $sprintComplete;
+			if ($sprintTotal > 0) {
+			$sprint['completed'] = round(($sprintComplete / $sprintTotal) * 100);
+			}
+			else {
+				$sprint['completed'] = 0;
+			}
+			$details_sprints[] = $sprint;
+		}
+		return $details_sprints;
 	}
 }

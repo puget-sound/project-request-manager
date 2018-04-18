@@ -9,6 +9,7 @@ use App\Notifications;
 use App\UserMappings;
 use App\Users;
 use App\ProjectNumber;
+use App\ERPReportCategory;
 use Session;
 use Request;
 use App\Sprints;
@@ -200,7 +201,8 @@ class ProjectsController extends Controller {
 		if ($user_details->isAdmin()) {
 			//get owners to populate project owners
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
-			return view('content.create', ['owners' => $owners, 'users' => $user_details, 'first_owner' => $first_owner]);
+			$erp_report_categories = ERPReportCategory::all()->lists('name', 'id');
+			return view('content.create', ['owners' => $owners, 'users' => $user_details, 'first_owner' => $first_owner, 'erp_report_categories' => $erp_report_categories]);
 		} else {
 			return redirect('requests')->withErrors(['no' => 'You are not authorized for this function.']);
 		}
@@ -434,7 +436,8 @@ class ProjectsController extends Controller {
 		if ($user_details->isAdmin() || in_array($id, $my_projects)) {
 			$project = Projects::findOrFail($id);
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
-			return view('content.edit', ['project' => $project, 'user_details' => $user_details], compact('owners'));
+			$erp_report_categories = ERPReportCategory::all()->lists('name', 'id');
+			return view('content.edit', ['project' => $project, 'user_details' => $user_details, 'erp_report_categories' => $erp_report_categories], compact('owners'));
 		} else {
 			return redirect()->back()->withErrors(['noauth' => 'You are not authorized for this function.']);
 		}
@@ -527,6 +530,9 @@ class ProjectsController extends Controller {
 		->get();
 		//mark complete
 		$project['status'] = 6;
+		// set project's last sprint status to 'complete'
+		$last_sprint = $project->sprints()->latest()->first();
+		$project->sprints()->updateExistingPivot($last_sprint['id'], ['project_sprint_status_id' => 1]);
 		$project->save();
 		//move everything else up if there's something to move up
 		if (count($reorder_projects) > 0) {
@@ -550,6 +556,13 @@ class ProjectsController extends Controller {
 	public function update($id, ProjectsRequest $request) {
 		$project = Projects::findOrFail($id);
 		$project->update($request->all());
+		$hide_from_reports = $request->input('hide_from_reports');
+		if ($hide_from_reports === null ) {
+    	$project->hide_from_reports = 0;
+		} else {
+    	$project->hide_from_reports = 1;
+		}
+		$project->save();
 		return redirect('request/' . $id)->withSuccess("Successfully updated Project.");
 	}
 

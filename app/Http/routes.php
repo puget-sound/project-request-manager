@@ -65,7 +65,10 @@ Route::get('users/{id}/delete', 'UsersController@remove');
 
 //Sprints Controller
 Route::get('sprints', 'SprintsController@show');
+Route::get('view-sprints', 'SprintsController@show_to_all');
 Route::get('sprint/{id}', 'SprintsController@view');
+Route::get('sprint/{id}/project-schedule', 'SprintsController@project_schedule');
+Route::get('sprint/{id}/accomplishments', 'SprintsController@accomplishments');
 Route::get('sprint/{id}/edit', 'SprintsController@edit');
 Route::patch('sprint/{id}', 'SprintsController@update');
 Route::get('sprints/create', 'SprintsController@create');
@@ -74,6 +77,7 @@ Route::patch('sprints/assign_project', 'SprintsController@assign_project');
 Route::patch('sprints/deassign_project', 'SprintsController@deassign_project');
 Route::patch('sprints/extend_project', 'SprintsController@extend_project');
 Route::patch('sprints/move_project', 'SprintsController@move_project');
+Route::patch('sprints/set_project_phase_status', 'SprintsController@set_project_phase_status');
 
 //Analytics Controller
 Route::get('analytics', 'AnalyticsController@analytics');
