@@ -118,13 +118,13 @@
 </div>
 <h4 style='margin-top: 40px;'>Project Details</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 @if ($projects->stakeholders != "")<p><strong>Other Stakeholders:</strong> {{ $projects->stakeholders }}</p> @endif
-<p><strong>Project in Cascade:</strong> @if ($projects->cascade_flag == 'N') No @else Yes @endif</p>
+<!--<p><strong>Project in Cascade:</strong> @if ($projects->cascade_flag == 'N') No @else Yes @endif</p>-->
 @if ($projects->project_size != "")<p><strong>Project Size:</strong> {{ $projects->project_size }}</p> @endif
 @if ($projects->client_request_month != NULL && $projects->client_request_year != NULL) <p><strong>Requested Completion:</strong> {{ $projects->client_request_month }} {{ $projects->client_request_year }}</p> @endif
 @if ($projects->ts_request_month != NULL && $projects->ts_request_year != NULL) <p><strong>TS Scheduled:</strong> <span class='text-success'>{{ $projects->ts_request_month }} {{ $projects->ts_request_year }}</span></p> @endif
-<h4 style='margin-top: 30px;'>Brief Description</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+<h4 style='margin-top: 30px;'>Brief Description <small>(will be used on ERP reports)</small></h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 	<p>{!! nl2br($projects->brief_description) !!}</p>
-<h4 style='margin-top: 30px;'>Notes</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
+<h4 style='margin-top: 30px;'>Project Notes</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
 <p>{!! nl2br($projects->project_desc) !!}</p>
 @if ($user->isAdmin())
 	<br>
