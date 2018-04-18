@@ -101,7 +101,7 @@ class SprintsController extends Controller {
 				$sprintProject->phaseName = '';
 			}
 			// assign the 'General' category if none is assigned
-			if(!$sprintProject->erp_report_category_id || $sprintProject->erp_report_category_id == 0) {
+			if(!$sprintProject->erp_report_category_id || $sprintProject->erp_report_category_id == 0 || $sprintProject->erp_report_category_id == NULL) {
 				$sprintProject->erp_report_category_id = 1;
 			}
 		}
