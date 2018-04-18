@@ -74,6 +74,10 @@ class SprintsController extends Controller {
 		  array_push($these_sprints_display, $this_sprint->sprintNumber);
 		}
 		$this_project->sprints_display = implode($these_sprints_display, ', ');
+		// assign the 'General' category if none is assigned
+		if(!$this_project->erp_report_category_id) {
+			$this_project->erp_report_category_id = 1;
+		}
 		}
 		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
 		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprint_phases' => $sprint_phases, 'sprint_statuses' => $sprint_statuses, 'categories' => $categories]);

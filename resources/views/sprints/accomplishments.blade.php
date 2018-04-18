@@ -24,7 +24,7 @@
 		<tbody class="projects_searchable">
 			@foreach($categories as $category)
 				@if($sprintProjects->where('erp_report_category_id', $category->id)->count() > 0)
-				<tr><td colspan="4" class="table-section-header">{{$category->name}} Projects</td></tr>
+				<tr class="table-section-header"><td colspan="4">{{$category->name}} Projects</td></tr>
 			@endif
 			@foreach($sprintProjects as $project)
 				@if($project->erp_report_category_id == $category->id)
