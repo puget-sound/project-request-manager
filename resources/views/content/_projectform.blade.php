@@ -10,7 +10,7 @@
 </div>
 <div class="row">
 	<div class="col-md-10 form-group">
-	{!! Form::label('brief_description', 'Brief Description') !!}
+	{!! Form::label('brief_description', 'Brief Description (will be used on ERP reports)') !!}
 	{!! Form::textarea('brief_description', null, ['class' => 'form-control', 'rows' => '3']) !!}
 </div>
 </div>
