@@ -13,7 +13,7 @@
 @section('content')
 	@include('modals.project-actions-complete')
 	@include('modals.project-actions-sprints')
-	<table class="table sortable-theme-bootstrap table-hover table-large-text" data-sortable style='margin-top: 10px;'>
+	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>
 
 		<th>Project</th>
