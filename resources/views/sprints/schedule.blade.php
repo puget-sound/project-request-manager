@@ -13,13 +13,13 @@
 @section('content')
 	@include('modals.project-actions-complete')
 	@include('modals.project-actions-sprints')
-	<table class="table sortable-theme-bootstrap table-hover table-large-text" data-sortable style='margin-top: 10px;'>
+	<table class="table sortable-theme-bootstrap table-hover" data-sortable style='margin-top: 10px;'>
 		<thead>
 
 		<th>Project</th>
 		<th>Description</th>
 		<th>Owner</th>
-		<th>Status</th>
+		<th>Phase</th>
 		</thead>
 		<tbody class="projects_searchable">
 			@foreach($categories as $category)
