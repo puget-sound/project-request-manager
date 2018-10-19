@@ -35,6 +35,9 @@ View Sprints
 							<a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a>
 						@endif
 					</td>
+					@if($user->isDev() || $user->isAdmin())
+						<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/planning')}}">Sprint Assignments</a></td>
+					@endif
 				</tr>
 			@endif
 				@endforeach
@@ -52,6 +55,9 @@ View Sprints
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/project-schedule')}}">Project Schedule</a></td>
 					<td style="vertical-align:middle;"></td>
+					@if($user->isDev() || $user->isAdmin())
+						<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/planning')}}">Sprint Assignments</a></td>
+					@endif
 				</tr>
 			@endif
 				@endforeach
@@ -66,7 +72,7 @@ View Sprints
 				<tr>
 					<td colspan="5" class="sprint-header sprint-header-past">Past sprints</td>
 				</tr>
-				@foreach ($sprints as $sprint)
+				@foreach (collect($sprints)->sortByDesc('sprintNumber') as $sprint)
 					@if($sprint->sprintNumber < $current_sprint)
 				<tr>
 					<td style="vertical-align:middle;"><strong>Sprint {{ $sprint->sprintNumber }}</strong></td>
@@ -77,6 +83,9 @@ View Sprints
 					<td style="vertical-align:middle;">{{ $sprint->sprintEnd->format('F j, Y') }}</td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/project-schedule')}}">Project Schedule</a></td>
 					<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/accomplishments')}}">Accomplishments</a></td>
+					@if($user->isDev() || $user->isAdmin())
+						<td style="vertical-align:middle;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/planning')}}">Sprint Assignments</a></td>
+					@endif
 				</tr>
 			@endif
 				@endforeach

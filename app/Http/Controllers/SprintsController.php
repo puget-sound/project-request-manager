@@ -7,10 +7,18 @@ use App\Sprints;
 use App\ProjectSprintPhase;
 use App\ProjectSprintStatus;
 use App\ERPReportCategory;
+use App\Users;
 use Helpers;
 use App\Http\Requests\SprintsRequest;
 use App\Http\Requests\EmptyRequest;
+use App\Http\Requests\AssignmentRequest;
+use App\Http\Requests\ReassignmentRequest;
+use App\Http\Requests\PriorityRequest;
 use Carbon\Carbon;
+use App\SprintProjectRole;
+use App\SprintProjectRoleAssignment;
+
+
 
 class SprintsController extends Controller {
 	public function show() {
@@ -20,6 +28,8 @@ class SprintsController extends Controller {
 	}
 
 	public function show_to_all() {
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
 		$details_sprints = array();
 		$details_sprints = SprintsController::fetch_display_sprints();
 		$all_sprints = \App\Sprints::get();
@@ -47,7 +57,7 @@ class SprintsController extends Controller {
 			$current_sprint_header = "current sprints";
 		}
 
-		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end, 'show_last_sprint' => $show_last_sprint, 'current_sprint_header' => $current_sprint_header]);
+		return view('sprints.show-to-all', ['sprints' => $details_sprints, 'days_to_sprint_end' => $days_to_sprint_end, 'show_last_sprint' => $show_last_sprint, 'current_sprint_header' => $current_sprint_header, 'user' => $userdata]);
 	}
 
 	public function create() {
@@ -269,5 +279,55 @@ class SprintsController extends Controller {
 			$details_sprints[] = $sprint;
 		}
 		return $details_sprints;
+	}
+
+	public function planning($sprintNumber){
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
+		$sprintid = $sprint->id;
+		$assignments = SprintProjectRoleAssignment::where('sprint_id', '=', $sprintid)->get();
+		$projects = $sprint->projects()->where('hide_from_reports', '=', '0')->get();
+
+		
+		$developers = Users::orderBy('fullname', 'asc')->where('active', '=', 'Active')->where('role', '=', '1')->orWhere('role', '=', '2')->where('active', '=', 'Active')->get()->lists('fullname', 'id');
+		$roles = SprintProjectRole::all();
+		
+
+		return view('sprints.planning', ['sprint' => $sprint, 'projects' => $projects, 'developers' => $developers,
+			'roles' => $roles, 'assignments' => $assignments, 'sprintid' => $sprintid, 'user' => $userdata]);
+	}
+
+	public function assignrole(ReassignmentRequest $request)
+	{	
+		$assignment = SprintProjectRoleAssignment::find($request->assignment_id);
+		$assignment->sprint_id = $request->sprint_id;
+		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
+		$assignment->projects_id = $request->projects_id;
+		$assignment->user_id = $request->user_id;
+		$assignment->save();
+		return redirect()->back();
+	}
+
+	public function createassignment(AssignmentRequest $request)
+	{	
+
+		$assignment = new SprintProjectRoleAssignment();
+		$assignment->sprint_id = $request->sprint_id;
+		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
+		$assignment->projects_id = $request->projects_id;
+		$assignment->user_id = $request->user_id;
+		$assignment->save();
+		return redirect()->back();
+	}
+
+	public function changeassignmentpriority(PriorityRequest $request)
+	{
+		$assignment = SprintProjectRoleAssignment::find($request->assignment_id);
+		echo $request->priority;
+		echo $request->assignment_id;
+		$assignment->priority = $request->priority;
+		$assignment->save();
+		return redirect()->back();
 	}
 }

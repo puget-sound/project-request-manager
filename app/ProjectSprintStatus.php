@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectSprintStatus extends Model {
+    public $timestamps = false;
     /**
      * The database table used by the model.
      *
@@ -17,7 +18,7 @@ class ProjectSprintStatus extends Model {
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['name'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -26,3 +27,4 @@ class ProjectSprintStatus extends Model {
      */
     protected $hidden = [];
 }
+?>

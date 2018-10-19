@@ -4,7 +4,7 @@
 {{ $projects->request_name }}
 @endsection
 @section('under-title')
-<p class="view-project-date">@if($projects->project_number) {{'#'.$projects->project_number}}@endif added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
+<p class="view-project-date">@if($projects->project_number && $projects->project_number != "P0---") {{'#'.$projects->project_number}}@endif added <strong>{{$projects->created_at->format('F j, Y')}}</strong></p>
 @endsection
 
 @section('content')
@@ -108,12 +108,12 @@
 	@if ($projects->lp_id != "" && $user->isLP())
 	<p class="text-right"><a class="btn btn-default btn-sm lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
 @endif
-@if ($user->isLP())
+
 	<div id="signoffRequestsContainer">
 		<h6>Sign-off Requests <small><a href="#">more/less</a></small></h6>
 		<div id="signoffRequests"></div>
 	</div>
-@endif
+
 </div>
 </div>
 <h4 style='margin-top: 40px;'>Project Details</h4><hr style='margin-top: 10px; margin-bottom: 10px;'>
@@ -161,7 +161,17 @@
 
 <div class="col-md-3 list-group">
    @if ($projects->status == 6 || $projects->status == 5)
-  	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
+   	  @if($user->isAdmin())
+   	  		{!! Form::open(['url' => 'requests/unlock']) !!}
+   	  		{!! Form::hidden('request_id', $projects->id) !!}
+   	  		{!! Form::submit("Unlock", ['class' => 'btn btn-primary']) !!}
+   	  		{!! Form::close() !!}
+   	  @else
+   	  
+	  	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
+
+  	  @endif
+
  	@else
  	@if (in_array($projects->id, json_decode(json_encode($my_projects), true)) || $user->isAdmin() || $user->isDev())
 		<div href="#" class="list-group-item active">

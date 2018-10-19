@@ -41,6 +41,7 @@ Route::get('logout', 'ProjectsController@logout');
 Route::get('notifications', 'ProjectsController@view_notifications');
 Route::patch('requests/update_status', 'ProjectsController@update_status');
 Route::patch('requests/mark_complete', 'ProjectsController@mark_complete');
+Route::post('requests/unlock', 'ProjectsController@unlock');
 
 
 //Owner Controller
@@ -78,13 +79,29 @@ Route::patch('sprints/deassign_project', 'SprintsController@deassign_project');
 Route::patch('sprints/extend_project', 'SprintsController@extend_project');
 Route::patch('sprints/move_project', 'SprintsController@move_project');
 Route::patch('sprints/set_project_phase_status', 'SprintsController@set_project_phase_status');
+Route::get('sprint/{id}/planning', 'SprintsController@planning');
+Route::patch('sprint/{id}/planning', 'SprintsController@assignrole');
+Route::post('sprints/createassignment', 'SprintsController@createassignment');
+Route::patch('sprints/assignpriority', 'SprintsController@changeassignmentpriority');
+
 
 //Analytics Controller
 Route::get('analytics', 'AnalyticsController@analytics');
 
+//Settings Controller
+Route::get('settings', 'SettingsController@settings');
+Route::post('addsprintphase', 'SettingsController@add_sprint_phase');
+Route::post('addsprintstatus', 'SettingsController@add_sprint_status');
+Route::post('adderpcategory', 'SettingsController@add_erp_category');
+Route::post('addsprintprojectrole', 'SettingsController@add_sprint_project_role');
+Route::post('deletesprintstatus', 'SettingsController@delete_sprint_status');
+Route::post('deletesprintprojectrole', 'SettingsController@delete_sprint_project_role');
+Route::post('deleteerpreportcategory', 'SettingsController@delete_erp_report_category');
+Route::post('deletesprintphase', 'SettingsController@delete_sprint_phase');
+
 //AJAX Controller (misc requests)
 Route::post('request/{request_id}/ajax/status', 'AjaxController@getCurrentRequestStatus');
-Route::post('user/ajax/notifications', 'AjaxController@getNewNotificationCount');
+Route::patch('user/ajax/notifications', 'AjaxController@getNewNotificationCount');
 
 //Redirect to Signoff
 Route::get('signoff', function () { return redirect()->away('http://signoff.pugetsound.edu');});

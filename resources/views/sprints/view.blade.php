@@ -34,16 +34,16 @@
 				<td style="vertical-align:middle;">
 					@if($project->hide_from_reports == "1")<span class='glyphicon glyphicon-eye-close text-muted'></span>
 					@endif
-					</td>
+				</td>
 				<td style="vertical-align:middle;"><a href="{{ url('projects/' . $project->project_owner )}}">{{ $project->project_owner_name }}</a></td>
 				<td>
 					{!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@set_project_phase_status'], 'id' => 'phaseStatusForm' . $project->id]) !!}
-	        {!! Form::hidden('project_id', $project->id, ['id' => 'project_id_hidden']) !!}
-					{!! Form::hidden('sprint_id', $sprint->id, ['id' => 'sprint_id_hidden']) !!}
-	        {!! Form::select('phase_id', array_merge(['0' => 'Please Select'], $sprint_phases), $project->pivot->project_sprint_phase_id, ['class' => 'form-control input-sm', 'id' => 'updatePhaseSelect-' . $project->id]) !!}
+	        			{!! Form::hidden('project_id', $project->id, ['id' => 'project_id_hidden']) !!}
+						{!! Form::hidden('sprint_id', $sprint->id, ['id' => 'sprint_id_hidden']) !!}
+	        			{!! Form::select('phase_id', array_merge(['0' => 'Please Select'], $sprint_phases), $project->pivot->project_sprint_phase_id, ['class' => 'form-control input-sm', 'id' => 'updatePhaseSelect-' . $project->id]) !!}
 				</td>
 				<td>
-					{!! Form::select('status_id', array_merge(['0' => 'Please Select'], $sprint_statuses), $project->pivot->project_sprint_status_id, ['class' => 'form-control input-sm', 'id' => 'updateStatusSelect-' . $project->id]) !!}
+						{!! Form::select('status_id', array_merge(['0' => 'Please Select'], $sprint_statuses), $project->pivot->project_sprint_status_id, ['class' => 'form-control input-sm', 'id' => 'updateStatusSelect-' . $project->id]) !!}
 					{!! Form::close() !!}
 				</td>
 				<!--<td style="vertical-align: middle;">{!! Form::submit('save', ['class' => 'btn btn-link btn-xs pull-right']) !!}
