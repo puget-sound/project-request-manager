@@ -3,6 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Users;
+use App\Sprints;
+use App\SprintProjectRole;
+use App\SprintProjectRoleAssignment;
 
 class Users extends Model {
     /**
@@ -38,5 +42,10 @@ class Users extends Model {
     public function isLP()
     {
         return ($this->role == 1 || $this->role == 2);
+    }
+
+    public function sprintProjectRoleAssignments()
+    {
+        return $this->hasMany('App\SprintProjectRoleAssignment');
     }
 }

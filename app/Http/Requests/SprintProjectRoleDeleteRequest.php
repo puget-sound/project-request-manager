@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Requests;
 
-class SprintsRequest extends Request {
+class SprintProjectRoleDeleteRequest extends Request {
 
  public function authorize()
  {
@@ -14,7 +14,7 @@ class SprintsRequest extends Request {
  public function rules()
  {
   return [
-   'sprintNumber' => 'required|integer',
+   'role_id' => 'required|integer',
   ];
  }
 

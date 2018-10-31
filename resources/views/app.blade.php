@@ -60,6 +60,7 @@
                 <li><a href="{{ url('sprints') }}"><span class="glyphicon glyphicon-flash"></span>&nbsp;&nbsp;Sprint Management</a></li>
                 <li><a href="{{ url('owners') }}"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;&nbsp;Project Owners</a></li>
                 <li><a href="{{ url('users') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;System Users</a></li>
+                <li><a href="{{ url('settings') }}"><span class="glyphicon glyphicon-wrench"></span>&nbsp;&nbsp;System Settings</a></li>
               </ul>
             </li>
             @endif

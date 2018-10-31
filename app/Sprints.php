@@ -42,4 +42,9 @@ class Sprints extends Model {
     {
       return $this->sprintNumber . ' &nbsp;&nbsp;' . $this->sprintStart->format('F j, Y') . ' - ' . $this->sprintEnd->format('F j, Y') . '';
     }
+
+    public function role_assignments()
+    {
+        return $this->belongsToMany('app\sprintprojectroleassignment');
+    }
 }

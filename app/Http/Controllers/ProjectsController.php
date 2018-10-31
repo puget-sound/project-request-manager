@@ -19,10 +19,12 @@ use App\Http\Requests\ProjectsRequest;
 use App\Http\Requests\ReorderRequest;
 use App\Http\Requests\CommentsRequest;
 use App\Http\Requests\NotificationsRequest;
+use App\Http\Requests\UnlockProjectRequest;
 use App\Comments;
 use App\Classes\LiquidPlannerClass;
 use Cas;
 use Carbon\Carbon;
+
 
 
 class ProjectsController extends Controller {
@@ -32,9 +34,7 @@ class ProjectsController extends Controller {
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$owner = Owners::where('id', '=', $owner_id)->first();
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')
-		->select('requests.*', 'project_owners.name')
-		->where('project_owner', '=', $owner_id)
+		$projects = Projects::where('project_owner', '=', $owner_id)
 		->whereNotIn('status', [6, 5])
 		->orderBy('priority')
 		->orderBy('order')
@@ -815,5 +815,12 @@ class ProjectsController extends Controller {
 			$lastcheck = CheckNotifications::where('notif_check_user_id', '=', $user_id)->first();
 		}
 		return view('notifications.view', ['notifications' => $get_notifications, 'last_check' => $lastcheck]);
+	}
+
+	public function unlock(UnlockProjectRequest $request){
+		$project = Projects::find($request->request_id);
+		$project->status = 1;
+		$project->save();
+		return redirect()->back()->withSuccess('Unlocked Project');
 	}
 }

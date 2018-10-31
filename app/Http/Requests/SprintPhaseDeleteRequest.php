@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Requests;
 
-class SprintsRequest extends Request {
+class SprintPhaseDeleteRequest extends Request {
 
  public function authorize()
  {
@@ -14,7 +14,7 @@ class SprintsRequest extends Request {
  public function rules()
  {
   return [
-   'sprintNumber' => 'required|integer',
+   'phase_id' => 'required|integer',
   ];
  }
 
