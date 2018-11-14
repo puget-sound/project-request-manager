@@ -78,7 +78,7 @@
 					<span class='label label-default'>Completed</span>
 					@endif
 				</td>
-				<td style="vertical-align:middle;">
+				<td style="vertical-align:middle;" class="sprint-column-small">
 					  <!--<a href='{{ url('request') }}/{{ $project->id }}' class="btn btn-sm btn-primary"><span class='glyphicon glyphicon-eye-open'></span>&nbsp;&nbsp;View</a>-->
 					  @if ($project->status == "6" || $project->status == "5")
 					  <a class="btn btn-sm btn-default" disabled href="#"><span class='glyphicon glyphicon-lock'></span>&nbsp;&nbsp;Locked Project</a>
@@ -108,14 +108,32 @@
 @section('extra-scripts')
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("select[id^='updatePhaseSelect']").on('change', function() {
+		$("select[id^='updatePhaseSelect'], select[id^='updateStatusSelect']").on('change', function() {
 			var projectId = $(this).attr("id").split("-")[1];
-			$("#phaseStatusForm" + projectId).submit();
+			var updateForm = $("#phaseStatusForm" + projectId);
+			var statusData = $(updateForm).serialize();
+
+			var updateURL = $(updateForm).attr("action");
+			console.log(statusData, updateURL);
+			$.ajax({
+    		url: updateURL,
+    		type: 'POST',
+    		data: statusData,
+				success: function( resp ) {
+    			$(updateForm).parent('td').parent('tr').css('background', '#dff0d8').delay(800).queue(function (next) {
+    				$(this).css('background', 'transparent');
+    				next();
+  				});;
+  			}
+			});
+			//$("#phaseStatusForm" + projectId).submit();
 		});
-		$("select[id^='updateStatusSelect']").on('change', function() {
+		/*$("select[id^='updateStatusSelect']").on('change', function() {
 			var projectId = $(this).attr("id").split("-")[1];
+			var statusData = $("#phaseStatusForm" + projectId).serialize();
+			console.log(statusData);
 			$("#phaseStatusForm" + projectId).submit();
-		});
+		});*/
 	});
 </script>
 @endsection

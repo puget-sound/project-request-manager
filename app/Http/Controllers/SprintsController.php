@@ -17,7 +17,7 @@ use App\Http\Requests\PriorityRequest;
 use Carbon\Carbon;
 use App\SprintProjectRole;
 use App\SprintProjectRoleAssignment;
-
+use Response;
 
 
 class SprintsController extends Controller {
@@ -236,6 +236,7 @@ class SprintsController extends Controller {
 		return redirect()->back()->withSuccess("Successfully removed from Sprint(s) " . $this_sprint_numbers);
 	}
 	public function set_project_phase_status(EmptyRequest $request) {
+		$status_code = 200;
 		$project_id = $request['project_id'];
 		$sprint_id = $request['sprint_id'];
 		$phase_id = $request['phase_id'];
@@ -245,7 +246,9 @@ class SprintsController extends Controller {
 		$sprint->projects()->detach($project_id);
 		$sprint->projects()->attach($project_id, ['project_sprint_phase_id' => $phase_id, 'project_sprint_status_id' => $status_id]);
 		$project = Projects::where('id', '=', $project_id)->first();
-		return redirect()->back()->withSuccess("Successfully set phase and status for <strong>" . $project->request_name . "</strong>");
+		$response = ['phase_id' => $phase_id];
+		return Response::json($response, $status_code);
+		//return redirect()->back()->withSuccess("Successfully set phase and status for <strong>" . $project->request_name . "</strong>");
 	}
 
 	public function fetch_display_sprints() {
@@ -287,47 +290,57 @@ class SprintsController extends Controller {
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
 		$sprintid = $sprint->id;
 		$assignments = SprintProjectRoleAssignment::where('sprint_id', '=', $sprintid)->get();
-		$projects = $sprint->projects()->where('hide_from_reports', '=', '0')->get();
+		$projects = $sprint->projects()->get();
 
-		
+
 		$developers = Users::orderBy('fullname', 'asc')->where('active', '=', 'Active')->where('role', '=', '1')->orWhere('role', '=', '2')->where('active', '=', 'Active')->get()->lists('fullname', 'id');
 		$roles = SprintProjectRole::all();
-		
+
 
 		return view('sprints.planning', ['sprint' => $sprint, 'projects' => $projects, 'developers' => $developers,
 			'roles' => $roles, 'assignments' => $assignments, 'sprintid' => $sprintid, 'user' => $userdata]);
 	}
 
 	public function assignrole(ReassignmentRequest $request)
-	{	
+	{
+		$status_code = 200;
 		$assignment = SprintProjectRoleAssignment::find($request->assignment_id);
 		$assignment->sprint_id = $request->sprint_id;
 		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
 		$assignment->projects_id = $request->projects_id;
 		$assignment->user_id = $request->user_id;
 		$assignment->save();
-		return redirect()->back();
+		$response = ['assignment' => 'go', 'planning_response' => 'assign_role'];
+		return Response::json($response, $status_code);
 	}
 
 	public function createassignment(AssignmentRequest $request)
-	{	
+	{
 
+		$status_code = 200;
 		$assignment = new SprintProjectRoleAssignment();
 		$assignment->sprint_id = $request->sprint_id;
 		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
 		$assignment->projects_id = $request->projects_id;
 		$assignment->user_id = $request->user_id;
+		$assignment_w_priority = SprintProjectRoleAssignment::where('projects_id', '=', $request->projects_id)->where('sprint_id', '=', $request->sprint_id)->first();
+		if($assignment_w_priority) {
+			$assignment->priority = $assignment_w_priority->priority;
+		}
 		$assignment->save();
-		return redirect()->back();
+		$response = ['assignment_id' => $assignment->id, 'planning_response' => 'new_assignment', 'role_id' => $assignment->sprint_project_role_id];
+		return Response::json($response, $status_code);
 	}
 
 	public function changeassignmentpriority(PriorityRequest $request)
 	{
-		$assignment = SprintProjectRoleAssignment::find($request->assignment_id);
-		echo $request->priority;
-		echo $request->assignment_id;
-		$assignment->priority = $request->priority;
-		$assignment->save();
-		return redirect()->back();
+		$status_code = 200;
+		$assignments = SprintProjectRoleAssignment::where('projects_id', '=', $request->projects_id)->where('sprint_id', '=', $request->sprint_id)->get();
+		foreach ($assignments as $this_assignment) {
+			$this_assignment->priority = $request->priority;
+			$this_assignment->save();
+		}
+		$response = ['assignment' => 'go', 'planning_response' => 'priority'];
+		return Response::json($response, $status_code);
 	}
 }

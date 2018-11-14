@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Requests;
 
@@ -10,11 +10,13 @@ class PriorityRequest extends Request {
 	{
 	  return true;
 	}
- 
+
 	public function rules()
 	{
 		return [
-		'assignment_id' => 'required',
+		//'assignment_id' => 'required',
+		'projects_id' => 'required',
+		'sprint_id' => 'required',
 	    'priority' => 'required'
 	  ];
 	}

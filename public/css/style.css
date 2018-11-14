@@ -162,6 +162,11 @@ body {
   width:20%;
 }
 
+.sprints-list .table > tbody > tr > td.sprint-column-small,
+td.sprint-column-small {
+  width:15%;
+}
+
 .sprints-list .table > tbody > tr > td.sprint-header,
 .table > tbody > tr.table-section-header {
   color:#555;
@@ -172,6 +177,14 @@ body {
 
 .sprints-list .table > tbody > tr > td.sprint-header.sprint-header-active, .table > tbody > tr > td.sprint-header.sprint-header-past{
   padding-top:15px;
+}
+
+td.assignmentPriority {
+    width:90px;
+}
+
+.newAssignmentPriority form {
+  display:none;
 }
 
 .table > tbody > tr.table-section-header {
