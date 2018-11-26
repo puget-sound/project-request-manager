@@ -25,7 +25,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				@if($project->project_number != 6)
 					<tr>
 						<td style="vertical-align:middle;">{{$project->project_number}}</td>
-					    <td style="vertical-align:middle;">{{$project->request_name}}</td>
+					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
 					    @if($user->isAdmin())
 						    @if($project->checkroleassignment(1, $sprint->id)->first())
 						    	<td class="assignmentPriority">
