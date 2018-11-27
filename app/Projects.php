@@ -54,7 +54,7 @@ class Projects extends Model {
 
      public function checkroleassignment($roleid, $sprintid)
      {
-        return $this->sprintprojectroleassignments()->where('sprint_project_role_id', "=", $roleid)->where('sprint_id', '=', $sprintid);
+        return $this->sprintprojectroleassignments()->where('sprint_project_role_id', "=", $roleid)->where('sprint_id', '=', $sprintid)->where('user_id', '!=', "0");
      }
 }
 ?>

@@ -25,7 +25,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				@if($project->project_number != 6)
 					<tr>
 						<td style="vertical-align:middle;">{{$project->project_number}}</td>
-					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
+					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 90, $end = '...') }}</a></td>
 					    @if($user->isAdmin())
 						    @if($project->checkroleassignment(1, $sprint->id)->first())
 						    	<td class="assignmentPriority">
@@ -63,7 +63,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 											{!! Form::hidden('sprint_project_role_id', $role->id)!!}
 											{!! Form::hidden('projects_id', $project->id)!!}
 											{!! Form::hidden('sprint_id', $sprint->id)!!}
-											{!! Form::select('user_id', $developers, $project->checkroleassignment($role->id, $sprint->id)->first()->user()->get()->first()->id, ['class' => 'form-control input-sm changeAssignmentSelect']) !!}
+											{!! Form::select('user_id', ['0' => 'not assigned'] + $developers, $project->checkroleassignment($role->id, $sprint->id)->first()->user()->get()->first()->id, ['class' => 'form-control input-sm changeAssignmentSelect']) !!}
 										{!! Form::close() !!}
 				    			@else
 				    					{{$project->checkroleassignment($role->id, $sprint->id)->first()->user()->get()->first()->fullname}}
@@ -76,11 +76,11 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 										{!! Form::hidden('projects_id', $project->id)!!}
 										{!! Form::hidden('sprint_id', $sprint->id)!!}
 										{!! Form::hidden('sprint_project_role_id', $role->id)!!}
-										{!! Form::select('user_id', ['0' => 'Select'] + $developers, null, ['class' => 'form-control input-sm newAssignmentSelect']) !!}
+										{!! Form::select('user_id', ['0' => 'not assigned'] + $developers, null, ['class' => 'form-control input-sm newAssignmentSelect']) !!}
 									{!! Form::close() !!}
 									</td>
 								@else
-				    				<td>
+				    				<td data-value="ZZZ">
 
 				    				</td>
 				    			@endif
@@ -98,6 +98,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 	$(document).ready(function() {
 		$( "thead th:nth-child(4)" ).trigger('click');
 		var assignRoleURL = "{{route('assignrole')}}";
+		var createAssignmentURL = "{{route('createassignment')}}";
 		$(".newAssignmentSelect, .changeAssignmentSelect, .changePrioritySelect").on('change', function() {
 			var newAssignmentName = $(this).find("option:selected").text();
 			var newAssignmentForm = $(this).parent('form');
@@ -119,6 +120,11 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 					}
 					if(resp.planning_response === "new_assignment") {
 						$(newAssignmentForm).attr('action', assignRoleURL).attr('method', 'PATCH').append('<input name="_method" type="hidden" value="PATCH">').append('<input name="assignment_id" type="hidden" value="' + resp.assignment_id + '">');
+					}
+					if(resp.planning_response === 'deleted_assignment') {
+						$(newAssignmentForm).attr('action', createAssignmentURL);
+						$(newAssignmentForm).find('input[name="_method"]').remove();
+						$(newAssignmentForm).find('input[name="assignment_id"]').remove();
 					}
   			}
 				});

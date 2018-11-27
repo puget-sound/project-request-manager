@@ -81,7 +81,8 @@ Route::patch('sprints/move_project', 'SprintsController@move_project');
 Route::patch('sprints/set_project_phase_status', 'SprintsController@set_project_phase_status');
 Route::get('sprint/{id}/planning', 'SprintsController@planning');
 Route::patch('sprints/assignrole', array('as' => 'assignrole', 'uses' => 'SprintsController@assignrole'));
-Route::post('sprints/createassignment', 'SprintsController@createassignment');
+Route::post('sprints/createassignment', array('as' => 'createassignment', 'uses' => 'SprintsController@createassignment'));
+//Route::post('sprints/createassignment', 'SprintsController@createassignment');
 Route::patch('sprints/assignpriority', 'SprintsController@changeassignmentpriority');
 
 

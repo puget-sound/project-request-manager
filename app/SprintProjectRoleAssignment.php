@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Users;
 use App\Sprints;
 use App\SprintProjectRole;
@@ -23,6 +24,8 @@ class SprintProjectRoleAssignment extends Model {
      * @var array
      */
     protected $fillable = ['projects_id, sprint_id, sprint_project_role_id, user_id'];
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes excluded from the model's JSON form.
