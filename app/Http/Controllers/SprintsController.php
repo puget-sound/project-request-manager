@@ -291,7 +291,14 @@ class SprintsController extends Controller {
 		$sprintid = $sprint->id;
 		$assignments = SprintProjectRoleAssignment::where('sprint_id', '=', $sprintid)->get();
 		$projects = $sprint->projects()->get();
-
+		foreach($projects as $sprintProject) {
+			$phase = ProjectSprintPhase::where('id', '=', $sprintProject->pivot->project_sprint_phase_id)->first();
+			if($phase)
+				$sprintProject->phaseName = $phase->name;
+			else {
+				$sprintProject->phaseName = '';
+			}
+		}
 
 		$developers = Users::orderBy('fullname', 'asc')->where('active', '=', 'Active')->where('role', '=', '1')->orWhere('role', '=', '2')->where('active', '=', 'Active')->get()->lists('fullname', 'id');
 		$roles = SprintProjectRole::all();

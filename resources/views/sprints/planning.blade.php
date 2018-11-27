@@ -11,12 +11,13 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true">
 		<thead>
 			<tr>
-				<th data-sortable="true" scope="col">Project Number</th>
+				<th data-sortable="true" scope="col" style="width:75px;">Project #</th>
 				<th scope="col">Project Name</th>
 				<th scope="col">Priority</th>
 				@foreach($roles as $role)
 					<th scope="col">{{$role->name}}</th>
 				@endforeach
+				<th>Phase</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +26,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				@if($project->project_number != 6)
 					<tr>
 						<td style="vertical-align:middle;">{{$project->project_number}}</td>
-					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 90, $end = '...') }}</a></td>
+					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 80, $end = '...') }}</a></td>
 					    @if($user->isAdmin())
 						    @if($project->checkroleassignment(1, $sprint->id)->first())
 						    	<td class="assignmentPriority">
@@ -86,6 +87,9 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				    			@endif
 					    	@endif
 					    @endforeach
+							<td>
+								{{$project->phaseName}}
+							</td>
 				    </tr>
 		    	@endif
 			@endforeach
