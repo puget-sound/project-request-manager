@@ -291,7 +291,14 @@ class SprintsController extends Controller {
 		$sprintid = $sprint->id;
 		$assignments = SprintProjectRoleAssignment::where('sprint_id', '=', $sprintid)->get();
 		$projects = $sprint->projects()->get();
-
+		foreach($projects as $sprintProject) {
+			$phase = ProjectSprintPhase::where('id', '=', $sprintProject->pivot->project_sprint_phase_id)->first();
+			if($phase)
+				$sprintProject->phaseName = $phase->name;
+			else {
+				$sprintProject->phaseName = '';
+			}
+		}
 
 		$developers = Users::orderBy('fullname', 'asc')->where('active', '=', 'Active')->where('role', '=', '1')->orWhere('role', '=', '2')->where('active', '=', 'Active')->get()->lists('fullname', 'id');
 		$roles = SprintProjectRole::all();
@@ -304,13 +311,20 @@ class SprintsController extends Controller {
 	public function assignrole(ReassignmentRequest $request)
 	{
 		$status_code = 200;
+		$planning_response = "assign_role";
 		$assignment = SprintProjectRoleAssignment::find($request->assignment_id);
-		$assignment->sprint_id = $request->sprint_id;
-		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
-		$assignment->projects_id = $request->projects_id;
-		$assignment->user_id = $request->user_id;
-		$assignment->save();
-		$response = ['assignment' => 'go', 'planning_response' => 'assign_role'];
+		if($request->user_id === '0') {
+			$assignment->delete();
+			$planning_response = "deleted_assignment";
+		}
+		else {
+			$assignment->sprint_id = $request->sprint_id;
+			$assignment->sprint_project_role_id = $request->sprint_project_role_id;
+			$assignment->projects_id = $request->projects_id;
+			$assignment->user_id = $request->user_id;
+			$assignment->save();
+		}
+		$response = ['assignment' => 'go', 'planning_response' => $planning_response];
 		return Response::json($response, $status_code);
 	}
 
@@ -318,6 +332,7 @@ class SprintsController extends Controller {
 	{
 
 		$status_code = 200;
+		$planning_response = "new_assignment";
 		$assignment = new SprintProjectRoleAssignment();
 		$assignment->sprint_id = $request->sprint_id;
 		$assignment->sprint_project_role_id = $request->sprint_project_role_id;
@@ -328,7 +343,7 @@ class SprintsController extends Controller {
 			$assignment->priority = $assignment_w_priority->priority;
 		}
 		$assignment->save();
-		$response = ['assignment_id' => $assignment->id, 'planning_response' => 'new_assignment', 'role_id' => $assignment->sprint_project_role_id];
+		$response = ['assignment_id' => $assignment->id, 'planning_response' => $planning_response, 'role_id' => $assignment->sprint_project_role_id];
 		return Response::json($response, $status_code);
 	}
 
