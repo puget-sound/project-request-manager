@@ -4,6 +4,14 @@
 Sprint Planning - Sprint {{$sprint->sprintNumber}}
 @endsection
 
+@section('title-right')
+<div class="checkbox">
+ <label>
+	 <input type="checkbox" id="upOnlyAssigned" @if($user->isDev())checked="true" @endif> Show my assignments only
+ </label>
+</div>
+@endsection
+
 @section('content')
 	@if(!$user->isAdmin() && !$user->isDev())
 		<p>You are not authorized to view this page. If you believe this is in error, please contact your system administrator.</p>
@@ -16,17 +24,18 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				<th>Phase</th>
 				<th scope="col">Priority</th>
 				@foreach($roles as $role)
-					<th scope="col">{{$role->name}}</th>
+					<th scope="col" @if($role->id == 1)class="up-sort-this" @endif>{{$role->name}}</th>
 				@endforeach
 			</tr>
 		</thead>
-		<tbody>
+		<tbody @if($user->id == 88)class="up-theme-purple" @endif>
 
 			@foreach($projects as $project)
 				@if($project->project_number != 6)
-					<tr>
+					<tr @if($project->check_user_assignments($user->id, $sprint->id)->first())class="up-assigned-row" @endif>
 						<td style="vertical-align:middle;">{{$project->project_number}}</td>
-					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 45, $end = '...') }}</a></td>
+					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 45, $end = '...') }}</a>
+							</td>
 							<td style="vertical-align:middle;">
 								<small class="text-muted">{{$project->phaseName}}</small>
 							</td>
@@ -43,7 +52,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 						    	<td class="newAssignmentPriority assignmentPriority" style="vertical-align:middle;">{!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@changeassignmentpriority']]) !!}
 										{!! Form::hidden('projects_id', $project->id)!!}
 										{!! Form::hidden('sprint_id', $sprint->id)!!}
-										{!! Form::select('priority', [0, 1, 2, 3], null, ['class' => 'form-control input-sm changePrioritySelect']) !!}
+										{!! Form::select('priority', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], null, ['class' => 'form-control input-sm changePrioritySelect']) !!}
 								{!! Form::close() !!}</td>
 						    @endif
 
@@ -60,7 +69,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 					    @foreach($roles as $role)
 
 					    	@if($project->checkroleassignment($role->id, $sprint->id)->first())
-									<td data-value="{{$project->checkroleassignment($role->id, $sprint->id)->first()->user()->get()->first()->fullname}}" style="vertical-align:middle;min-width:120px;">
+									<td data-value="{{$project->checkroleassignment($role->id, $sprint->id)->first()->user()->get()->first()->fullname}}" style="vertical-align:middle;min-width:120px;" @if($project->is_user_assigned($user->id, $sprint->id, $role->id)->first())class="up-assigned-role" @endif>
 						    	@if($user->isAdmin())
 				    					{!! Form::open(['method' => 'PATCH', 'action' => ['SprintsController@assignrole'], 'class' => 'changeAssignmentForm']) !!}
 				    						{!! Form::hidden('assignment_id', $project->checkroleassignment($role->id, $sprint->id)->first()->id)!!}
@@ -100,7 +109,11 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 @section('extra-scripts')
 <script type="text/javascript">
 	$(document).ready(function() {
-		$( "thead th:nth-child(5)" ).trigger('click');
+		hideShowAssignments()
+		setTimeout(function(){ $('th.up-sort-this').click()}, 100);
+		$("#upOnlyAssigned").on('change', function() {
+			hideShowAssignments()
+		});
 		var assignRoleURL = "{{route('assignrole')}}";
 		var createAssignmentURL = "{{route('createassignment')}}";
 		$(".newAssignmentSelect, .changeAssignmentSelect, .changePrioritySelect").on('change', function() {
@@ -134,5 +147,15 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				});
 		});
 	});
+
+	function hideShowAssignments() {
+		if($("#upOnlyAssigned").is(':checked')) {
+			$("tbody tr").hide();
+			$("tbody tr.up-assigned-row").show();
+		}
+		else {
+			$("tbody tr").show();
+		}
+	}
 </script>
 @endsection
