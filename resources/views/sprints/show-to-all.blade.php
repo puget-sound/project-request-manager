@@ -14,10 +14,11 @@ View Sprints
 				<th data-sortable="false">End</th>
 				<th></th>
 				<th></th>
+				<th></th>
 			</thead>
 			<tbody>
 				<tr>
-					<td colspan="5" class="sprint-header sprint-header-active">{{$current_sprint_header}}
+					<td colspan="7" class="sprint-header sprint-header-active">{{$current_sprint_header}}
 					</td>
 				</tr>
 				@foreach ($sprints as $sprint)
