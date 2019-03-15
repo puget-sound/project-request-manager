@@ -36,7 +36,7 @@
 	</div>
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true" style='margin-top: 10px;' id="project-request-results">
 		<thead>
-		<th></th>
+		<th>#</th>
 		<th data-sortable="true">Project Name</th>
 		@if (Request::segment(1) != ('projects'))
 		<th data-sortable="true">Project Owner</th>

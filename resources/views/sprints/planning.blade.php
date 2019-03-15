@@ -19,7 +19,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true">
 		<thead>
 			<tr>
-				<th data-sortable="true" scope="col" style="width:75px;">Project #</th>
+				<th data-sortable="true" scope="col" style="width:75px;">#</th>
 				<th scope="col">Project Name</th>
 				<th>Phase</th>
 				<th scope="col">Priority</th>
