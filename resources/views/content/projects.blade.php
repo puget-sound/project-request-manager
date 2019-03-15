@@ -36,9 +36,11 @@
 	</div>
 	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true" style='margin-top: 10px;' id="project-request-results">
 		<thead>
-		<th></th>
+		<th>#</th>
 		<th data-sortable="true">Project Name</th>
+		@if (Request::segment(1) != ('projects'))
 		<th data-sortable="true">Project Owner</th>
+		@endif
 		<th data-sortable="true">Priority</th>
 		<th data-sortable="true">Order</th>
 		<th data-sortable="true">ERP Category</th>
@@ -50,15 +52,18 @@
 			@foreach($projects as $project)
 			<tr>
 				<td style="vertical-align: middle;">
-				@if (in_array($project->id, $notifications))
+				<span class="text-muted">{{$project->project_number}}</span>
+				<!--@if (in_array($project->id, $notifications))
 					<a href='{{ url('flag/' . $project->id) }}' style="color: black" class='flag' csrf='{{ csrf_token() }}'><span class="glyphicon glyphicon-flag"></span></a>
 				@else
 					<a href='{{ url('flag/' . $project->id) }}' style="color: #ccc" class='flag' csrf='{{ csrf_token() }}'><span class="glyphicon glyphicon-flag"></span></a>
-				@endif
+				@endif-->
 				<!--<td style="vertical-align:middle;" @if (in_array($project->id, $notifications))data-value=1 @endif >@if (in_array($project->id, $notifications))<span class='glyphicon glyphicon-flag'></span>@endif</td>-->
 				</td>
 				<td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 50, $end = '...') }}</a></td>
+				@if (Request::segment(1) != ('projects'))
 				<td style="vertical-align:middle;">{{ $project->name }}</td>
+				@endif
 				<td style="vertical-align:middle;" data-value="{{$project->priority}}"><span class=" @if($project->priority == '0')label label-danger"> High @endif @if($project->priority == '1')label label-warning"> Medium @endif @if($project->priority == '2')label label-primary"> Low @endif</span></td>
 				<td style="vertical-align:middle;"><strong>{{ $project->order }}</strong></td>
 				<td style="vertical-align:middle;">
