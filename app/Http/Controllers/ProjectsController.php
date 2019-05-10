@@ -319,8 +319,14 @@ class ProjectsController extends Controller {
 			$lp->workspace_id = env('LP_WORKSPACE');
 			$lp->project_id = $projects['lp_id'];
 			$lp_project = $lp->project();
-			$hours = $lp_project->work;
-			$lp_timesheet_entries = $lp->timesheet_entries();
+			//$hours = $lp_project->work;
+			//$lp_timesheet_entries = $lp->timesheet_entries();
+			if($lp_project->type == "Error") {
+				if($lp_project->error == "NotFound") {
+					$projects['lp_id'] = null;
+					$projects->save();
+				}
+			}
 		}
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
