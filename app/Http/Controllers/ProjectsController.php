@@ -255,10 +255,13 @@ class ProjectsController extends Controller {
 				$project_number = '0'.$project_number;
 			}
 			$project->project_number = 'P'.$project_number;
+			// set project status to 'New'
+			$project->status = '7';
 			$project->save();
 			DB::table('project_number')->whereId($project_number_counter->id)->increment('project_number');
 
-			return redirect('requests')->withSuccess("Successfully created project.");
+			//return redirect('requests')->withSuccess("Successfully created project.");
+			return redirect("projects/" . $project->project_owner)->withSuccess("Successfully created project.");
 		} else {
 			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));
 			return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput();
