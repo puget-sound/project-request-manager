@@ -167,7 +167,7 @@
    	  		{!! Form::submit("Unlock", ['class' => 'btn btn-primary']) !!}
    	  		{!! Form::close() !!}
    	  @else
-   	  
+
 	  	  <p style='padding: 5px; padding-top: 20px;' class='text-muted'><span class='glyphicon glyphicon-lock'></span>&nbsp;This project is currently locked due to it's status set as either <strong>Completed</strong> or <strong>Deferred.</strong> To unlock this project, please contact your TS project representative.</p>
 
   	  @endif

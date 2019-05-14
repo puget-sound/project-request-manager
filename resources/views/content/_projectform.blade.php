@@ -70,10 +70,6 @@
 	</div>
 </div>
 	<div class="col-md-4 form-group">
-		{!! Form::label('status', 'Project Status') !!}
-		{!! Form::select('status', ['7'=>'New', '0'=>'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled', '4' => 'Refer to Oracle', '5' => 'Deferred', '6' => 'Completed'], null, ['class' => 'form-control']) !!}
-	</div>
-	<div class="col-md-4 form-group">
 		{!! Form::label('inst_priority', 'ERP Category') !!}
 		{!! Form::select('inst_priority', ['0' => 'Undetermined', '1' => 'Category 1', '2' => 'Category 2', '3' => 'Category 3', '4' => 'Category 4',], null, ['class' => 'form-control']) !!}
 	</div>

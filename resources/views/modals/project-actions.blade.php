@@ -10,7 +10,7 @@
         {!! Form::open(['method' => 'PATCH', 'action' => ['ProjectsController@update_status']]) !!}
         {!! Form::label('status', 'Change Status') !!}
         {!! Form::hidden('project_id', null, ['id' => 'project_id_hidden']) !!}
-        {!! Form::select('status', ['7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '3' => 'Scheduled/In Progress', '4' => 'Refer to Oracle'], $projects->status, ['class' => 'form-control', 'id' => 'updateStatusSelect']) !!}
+        {!! Form::select('status', ['7' => 'New', '0' => 'Needs Review', '1' => 'Pending', '2' => 'Ready to Schedule', '4' => 'Refer to Oracle'], $projects->status, ['class' => 'form-control', 'id' => 'updateStatusSelect']) !!}
         {!! Form::textarea('comment_text', null, ['class' => 'form-control', 'placeholder' => 'Optional Comment', 'style' => 'height: 100px; margin-top: 10px;']) !!}
 
         <p class='text-muted'><small>Looking to mark this project as complete or deferred? Click 'Cancel' and select 'Mark as X' from the 'Actions' menu.</small></p>

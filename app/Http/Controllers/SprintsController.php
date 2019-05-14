@@ -158,9 +158,8 @@ class SprintsController extends Controller {
 		$sprint = $request['sprint'];
 		$assign_type = $request['sprint_assign_type'];
 		$from_sprints_ids = explode(",", $request['this_sprint_ids']);
-		// remove all sprint assignments
-		$project->sprints()->detach();
-		$project->sprints()->attach($sprint);
+		// add/remove any sprints that need to be added/removed
+		$project->sprints()->sync($sprint);
 		$assigned_sprints = $project->sprints()->orderBy('sprints_id', 'ASC')->get();
 		$to_sprints_message = "";
 		foreach ($assigned_sprints as $this_sprint) {

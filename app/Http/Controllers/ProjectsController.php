@@ -255,12 +255,13 @@ class ProjectsController extends Controller {
 				$project_number = '0'.$project_number;
 			}
 			$project->project_number = 'P'.$project_number;
+			// set project status to 'New'
+			$project->status = '7';
 			$project->save();
 			DB::table('project_number')->whereId($project_number_counter->id)->increment('project_number');
 
-			return redirect('requests')->withSuccess("Successfully created project.");
+			return redirect("projects/" . $project->project_owner)->withSuccess("Successfully created project.");
 		} else {
-			//return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput($request->except('order'));
 			return redirect()->back()->withErrors(['order' => 'The combination of Priority and Order you are using already exists. Please try a different order or changing the priority.'])->withInput();
 		}
 	}
@@ -319,8 +320,14 @@ class ProjectsController extends Controller {
 			$lp->workspace_id = env('LP_WORKSPACE');
 			$lp->project_id = $projects['lp_id'];
 			$lp_project = $lp->project();
-			$hours = $lp_project->work;
-			$lp_timesheet_entries = $lp->timesheet_entries();
+			//$hours = $lp_project->work;
+			//$lp_timesheet_entries = $lp->timesheet_entries();
+			if($lp_project->type == "Error") {
+				if($lp_project->error == "NotFound") {
+					$projects['lp_id'] = null;
+					$projects->save();
+				}
+			}
 		}
 		if ($projects != NULL) {
 			$lp_workspace = env('LP_WORKSPACE');
