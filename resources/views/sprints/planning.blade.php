@@ -11,6 +11,9 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
  </label>
 </div>
 @endsection
+@section('under-title')
+	{{ $sprint->sprintStart->format('F j, Y') }} - {{ $sprint->sprintEnd->format('F j, Y') }}
+@endsection
 
 @section('content')
 	@if(!$user->isAdmin() && !$user->isDev())
