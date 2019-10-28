@@ -96,14 +96,37 @@ body {
   color:#999;
 }
 
-.lp-link {
+.lp-link,
+.google-link {
     border-color:#337ab7;
     color:#337ab7;
 }
 
-.lp-link:hover {
+.lp-link:hover,
+.google-link:hover {
   border-color:#285f8f;
   color:#285f8f;
+}
+
+#create-google-folder {
+    display:none;
+}
+
+#google-api-access {
+    margin-bottom: 4px;
+}
+
+a.google-folder:hover {
+  text-decoration: none;
+}
+
+a.google-folder span.glyphicon {
+    margin-left:2px;
+}
+
+.google-link {
+  margin-right:15px;
+  display:none;
 }
 
 #signoffRequestsContainer h6 small {
@@ -707,4 +730,96 @@ td.assignmentPriority {
 	opacity: .3;
 	filter: Alpha(Opacity=30); /* support: IE8 */
 	border-radius: 8px;
+}
+
+ul.simple-pagination {
+	list-style: none;
+}
+
+.simple-pagination {
+	display: block;
+	overflow: hidden;
+	padding: 0 5px 5px 0;
+	margin: 24px 0 0 0;
+}
+
+.simple-pagination ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.simple-pagination li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	float: left;
+}
+span.ellipse.clickable {
+	cursor: pointer;
+}
+
+.ellipse input {
+	width: 3em;
+}
+
+/*------------------------------------*\
+	Light Theme Styles
+\*------------------------------------*/
+.light-theme span {
+	cursor:pointer;
+}
+
+.light-theme a, .light-theme span {
+	float: left;
+	color: #337ab7;
+	font-size:14px;
+	line-height:24px;
+	font-weight: normal;
+	text-align: center;
+	border: 1px solid #ddd;
+	min-width: 14px;
+	padding: 6px 12px;
+  margin-left:-1px;
+}
+
+.light-theme li:first-child a, .light-theme li:first-child span {
+    margin:0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.light-theme li:last-child a, .light-theme li:last-child span {
+    margin:0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.light-theme a:hover, .light-theme li:not(.disabled):not(.active) span:hover {
+	text-decoration: none;
+	background: #FCFCFC;
+}
+
+.light-theme .current {
+  color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.light-theme li.disabled span {
+  color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
+}
+}
+
+.light-theme .ellipse {
+	background: none;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	font-weight: bold;
+	cursor: default;
 }

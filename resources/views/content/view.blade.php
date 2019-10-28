@@ -1,5 +1,6 @@
 @extends('app')
 @include('errors.list')
+@include('settings.google')
 @section('title')
 {{ $projects->request_name }}
 @endsection
@@ -11,6 +12,7 @@
 @include('modals.project-actions', ['sprints' => $sprints])
 @include('modals.project-actions-delete', ['sprints' => $sprints, 'project' => $projects])
 @include('modals.project-actions-signoff', ['project' => $projects])
+@include('modals.project-actions-google', ['project' => $projects])
 <div class="row">
 <div class="col-md-9">
 	<div class="row">
@@ -105,10 +107,11 @@
 </div>
 </div>
 <div class="col-md-5">
+	<p class="text-right pull-right"><a class="btn btn-default btn-sm google-link" href='https://drive.google.com/drive/folders/' target='_blank' role="button">Project Folder</a>
 	@if ($projects->lp_id != "" && $user->isLP())
-	<p class="text-right"><a class="btn btn-default btn-sm lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a></p>
+<a class="btn btn-default btn-sm lp-link" href='https://app.liquidplanner.com/space/{{$lp_workspace}}/projects/show/{{$projects->lp_id}}' target='_blank' role="button">View in LiquidPlanner</a>
 @endif
-
+</p>
 	<div id="signoffRequestsContainer">
 		<h6>Sign-off Requests <small><a href="#">more/less</a></small></h6>
 		<div id="signoffRequests"></div>
@@ -195,6 +198,7 @@
 	  @if ($user->isAdmin() && $projects->lp_id == "")
 			<a class="list-group-item" href="{{ url('request/' . $projects->id . '/send-to-liquidplanner') }}"><span class='glyphicon glyphicon-share'></span>&nbsp;&nbsp;Send to LiquidPlanner</a>
 		@endif
+		@if ($user->isAdmin())<a href="#" id="create-google-folder" class="list-group-item" data-toggle="modal" data-target="#googleDriveModal" data-prmid="{{ $projects->id }}" data-prmtype="Google" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-folder-close"></span>&nbsp;&nbsp;Create Google Drive Folder</a>@endif
 		@if ($user->isLP())<a href="#" class="list-group-item" data-toggle="modal" data-target="#newRequestModal" data-prmid="{{ $projects->id }}" data-prmtype="Signoff" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;&nbsp;Create Signoff Request</a>@endif
 			@if ($user->isAdmin())
 			<a href="#" class="list-group-item" data-toggle="modal" data-target="#deleteProject" data-prmtype="Delete" data-prmval="{{ $projects->request_name }}"><span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete Project</a> @endif
@@ -212,10 +216,22 @@
 	signoff_owner = "{{$projects->signoff_owner}}",
 	signoff_api_key = "{{$signoff_api_key}}",
 	signoff_base_url = "{{$signoff_base_url}}",
-	author = "{{$user->username}}";
+	author = "{{$user->username}}",
+	google_search_type = "single",
+	apiKey = "{{$GAapiKey}}",
+	clientId = "{{$GAclientId}}",
+	google_content = "Project Folder";
 	</script>
 	<script type="text/javascript" src="{{ URL::asset('js/signoff.js') }}"></script>
 	<script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>
+	<!-- only load Google Drive folder if project has project number -->
+	@if ($projects->project_number)
+		<script type="text/javascript" src="{{ URL::asset('js/google-drive.js') }}"></script>
+		<script async defer src="https://apis.google.com/js/api.js"
+				onload="this.onload=function(){};handleClientLoad()"
+				onreadystatechange="if (this.readyState === 'complete') this.onload()">
+		</script>
+	@endif
   <script type="text/javascript">
     $(document).ready(function() {
         $('#sprint_multiple').multiselect({

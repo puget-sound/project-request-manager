@@ -42,9 +42,9 @@ class Projects extends Model {
        return $this->belongsTo('App\ERPReportCategory');
      }
 
-     public function project_owner()
+     public function owner()
      {
-        return $this->belongsTo('app\Owner');
+        return $this->belongsTo('App\Owner');
      }
 
      public function sprintprojectroleassignments()

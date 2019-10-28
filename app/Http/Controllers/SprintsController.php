@@ -90,7 +90,9 @@ class SprintsController extends Controller {
 		}
 		}
 		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
-		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprint_phases' => $sprint_phases, 'sprint_statuses' => $sprint_statuses, 'categories' => $categories]);
+		$user_id = Helpers::full_authenticate()->id;
+		$userdata = Users::findOrFail($user_id);
+		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprint_phases' => $sprint_phases, 'sprint_statuses' => $sprint_statuses, 'categories' => $categories, 'user' => $userdata]);
 	}
 
 	public function project_schedule($sprintNumber) {

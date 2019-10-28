@@ -30,7 +30,10 @@ class ComposerServiceProvider extends ServiceProvider {
       		}
           $base_url = \App::make('url')->to('/');
 
-         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint)->with('next_project_number', $next_project_number)->with('base_url', $base_url);
+          $GAapiKey = env('GOOGLE_DRIVE_KEY');
+          $GAclientId = env('GOOGLE_DRIVE_CLIENT_ID');
+
+         $view->with('menu_owners', \App\Owners::where('active', '=', 'Active')->orderBy('name')->get())->with('current_sprint', $current_sprint)->with('next_project_number', $next_project_number)->with('base_url', $base_url)->with('GAapiKey',$GAapiKey)->with('GAclientId', $GAclientId);
         });
     }
 

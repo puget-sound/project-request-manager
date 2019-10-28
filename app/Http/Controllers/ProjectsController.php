@@ -274,7 +274,7 @@ class ProjectsController extends Controller {
 		->where('user_mappings.edit', '=', 1)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
 		->lists('requests.id');
-		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name', 'project_owners.signoff_owner')->where('requests.id', '=', $id)->first();
+		$projects = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name', 'project_owners.signoff_owner', 'project_owners.google_id')->where('requests.id', '=', $id)->first();
 		$comments = Comments::leftJoin('users', 'comment_user_id', '=', 'users.id')
 		->select('project_comments.*', 'users.fullname')
 		->where('comment_project_id', '=', $id)
@@ -293,6 +293,7 @@ class ProjectsController extends Controller {
 		if($this_sprint != NULL) {
 			$this_sprint_id = $this_sprint->id;
 		}*/
+		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->whereNotNull('google_id')->get();
 		$these_sprints = [];
 		$these_sprints_display = [];
 		foreach ($projects->sprints()->orderBy('sprints_id', 'ASC')->get() as $this_sprint) {
@@ -334,7 +335,7 @@ class ProjectsController extends Controller {
 			$signoff_api_key = env('SIGNOFF_API_KEY');
 			$signoff_base_url = env('SIGNOFF_BASE_URL');
 			Session::flash('url', Request::server('HTTP_REFERER'));
-			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'these_sprints' => $these_sprints, 'this_sprint_numbers' => $this_sprint_numbers, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url, 'total_hours' => $hours, 'sprint_loop' => $these_sprints_display, 'sprint_display_only' => $this_sprint_numbers]);
+			return view('content.view', ['projects' => $projects, 'user' => $userdata, 'my_projects' => $my_projects, 'owners' => $owners, 'comments' => $comments, 'sprints' => $sprints, 'this_sprint_id' => $this_sprint_id, 'these_sprints' => $these_sprints, 'this_sprint_numbers' => $this_sprint_numbers, 'lp_workspace'=> $lp_workspace, 'signoff_api_key'=> $signoff_api_key, 'signoff_owners' =>$signoffOwners, 'signoff_base_url' => $signoff_base_url, 'total_hours' => $hours, 'sprint_loop' => $these_sprints_display, 'sprint_display_only' => $this_sprint_numbers]);
 		} else {
 			return redirect()->back();
 		}
@@ -576,6 +577,19 @@ class ProjectsController extends Controller {
 	public function project_search() {
 		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->get();
 		return view('content.search', ['owners' => $owners]);
+	}
+
+	public function project_folders() {
+		//get user details
+		$user_id = Helpers::full_authenticate()->id;
+		$user_details = Users::where('id', '=', $user_id)->first();
+		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->whereNotNull('google_id')->get();
+
+		if ($user_details->isLP()) {
+			return view('content.folders', ['user_details' => $user_details, 'owners' => $owners]);
+		} else {
+			return redirect()->back()->withErrors(['noauth' => 'You are not authorized for this function.']);
+		}
 	}
 
 	public function process_search() {
