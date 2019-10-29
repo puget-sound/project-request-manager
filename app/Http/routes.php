@@ -15,6 +15,7 @@
 Route::get('/', function() {return redirect('requests');});
 Route::get('projects/search', 'ProjectsController@project_search');
 Route::get('projects/search/results', 'ProjectsController@process_search');
+Route::get('projects/folders', 'ProjectsController@project_folders');
 Route::get('projects/{owner_id}', 'ProjectsController@projects_by_owner');
 Route::get('requests', 'ProjectsController@my_open_projects');
 Route::get('requests/completed', 'ProjectsController@my_completed_projects');
@@ -50,6 +51,7 @@ Route::post('owners', 'OwnersController@store');
 Route::get('owners/{id}/manage', 'OwnersController@view_details');
 Route::post('owners/{id}/manage', 'OwnersController@map_user');
 Route::get('owners/{id}/edit-lp-id', 'OwnersController@edit_lp_id');
+Route::get('owners/{id}/edit-google-id', 'OwnersController@edit_google_id');
 Route::get('owners/{owner_id}/manage/unmap/{user_id}', 'OwnersController@unmap_user');
 Route::post('owners/{owner_id}/manage/editMap/{user_id}', 'AjaxController@grant_edit_for_owner');
 Route::get('owners/{id}/delete', 'OwnersController@delete');

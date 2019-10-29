@@ -1,5 +1,6 @@
 @extends('app')
 @include('errors.list')
+@include('settings.google')
 @section('title')
 Manage {{ $owner->name }}
 @endsection
@@ -42,7 +43,7 @@ Manage {{ $owner->name }}
 </div>
 <hr>
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<h5>LiquidPlanner Client</h5>
 		{!! Form::model($owner, ['method' => 'GET', 'action' => ['OwnersController@edit_lp_id', $owner->id], 'class'=>'form-inline']) !!}
 
@@ -52,8 +53,35 @@ Manage {{ $owner->name }}
 		</div>
 	{!! Form::submit('Save', ['class' => 'btn btn-primary form-control']) !!}
 		{!! Form::close() !!}
+	</div>
+	<div class="col-md-4">
 
+		<h5>Google Drive</h5>
+		{!! Form::open(['method' => 'GET', 'action' => ['OwnersController@edit_google_id', $owner->id], 'class' =>'form-inline']) !!}
+		<div class="form-group">
+		<select id="googleDriveSelect" class="form-control" name="google_id">
+		</select>
+		{!! Form::hidden('owner_id', $owner->id) !!}
+		<button class="btn btn-primary form-control" type="submit">Save</button>
+	</div>
+</form>
 	</div>
 
 </div>
 @endsection
+@section('extra-scripts')
+	<script type="text/javascript">
+	var
+	google_search_type = "parents",
+	apiKey = "{{$GAapiKey}}",
+  clientId = "{{$GAclientId}}"
+	ownerGoogleId = "{{ $owner->google_id }}",
+	google_content = "Google Drives";
+
+	</script>
+	<script type="text/javascript" src="{{ URL::asset('js/google-drive.js') }}"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+				onload="this.onload=function(){};handleClientLoad()"
+				onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+	@endsection

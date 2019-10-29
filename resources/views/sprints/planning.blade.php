@@ -1,5 +1,6 @@
 @extends('app')
 @include('errors.list')
+@include('settings.google')
 @section('title')
 Sprint Planning - Sprint {{$sprint->sprintNumber}}
 @endsection
@@ -19,7 +20,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 	@if(!$user->isAdmin() && !$user->isDev())
 		<p>You are not authorized to view this page. If you believe this is in error, please contact your system administrator.</p>
 	@else
-	<table class="table sortable-theme-bootstrap table-hover" data-sortable data-show-columns="true">
+	<table class="table sortable-theme-bootstrap table-hover google-drive-table" data-sortable data-show-columns="true">
 		<thead>
 			<tr>
 				<th data-sortable="true" scope="col" style="width:75px;">#</th>
@@ -29,6 +30,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				@foreach($roles as $role)
 					<th scope="col" @if($role->id == 1)class="up-sort-this" @endif>{{$role->name}}</th>
 				@endforeach
+        <th scope="col">Folder</th>
 			</tr>
 		</thead>
 		<tbody @if($user->id == 88)class="up-theme-purple" @endif>
@@ -36,7 +38,7 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 			@foreach($projects as $project)
 				@if($project->project_number != 6)
 					<tr @if($project->check_user_assignments($user->id, $sprint->id)->first())class="up-assigned-row" @endif>
-						<td style="vertical-align:middle;">{{$project->project_number}}</td>
+						<td style="vertical-align:middle;" class="google-project-number">{{$project->project_number}}</td>
 					    <td style="vertical-align:middle;"><a href='{{ url('request') }}/{{ $project->id }}'>{{ str_limit($project->request_name, $limit = 45, $end = '...') }}</a>
 							</td>
 							<td style="vertical-align:middle;">
@@ -102,14 +104,29 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
 				    			@endif
 					    	@endif
 					    @endforeach
+              <td style="vertical-align:middle;"><small><a class="google-folder" href="#" style="display:none;" target="_blank">Folder <span class='glyphicon glyphicon-folder-close'></span></a></small></td>
 				    </tr>
 		    	@endif
 			@endforeach
 		</tbody>
 	</table>
+
+
+
 	@endif
 @endsection
 @section('extra-scripts')
+  <script type="text/javascript">
+  var google_search_type = "table",
+  apiKey = "{{$GAapiKey}}",
+  clientId = "{{$GAclientId}}",
+  google_content = "Project Folders";
+  </script>
+  <script type="text/javascript" src="{{ URL::asset('js/google-drive.js') }}"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+				onload="this.onload=function(){};handleClientLoad()"
+				onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		hideShowAssignments()

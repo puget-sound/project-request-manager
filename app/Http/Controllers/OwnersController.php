@@ -64,6 +64,14 @@ class OwnersController extends Controller {
 		return redirect()->back()->withSuccess("LiquidPlanner Client saved.");
 	}
 
+	public function edit_google_id() {
+		$input = Request::all();
+		$owner = Owners::where('id', '=', $input['owner_id'])->first();
+		$owner->google_id = $input['google_id'];
+		$owner->save();
+		return redirect()->back()->withSuccess("Google Drive saved.");
+	}
+
 	public function store(OwnersRequest $request) {
 		//Check to See if duplicate order and priority already exists.
 		$duplicateOwner = Owners::where('name', '=', $request->name)->first();

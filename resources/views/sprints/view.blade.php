@@ -4,10 +4,18 @@
 @section('title')
 	Projects Assigned to Sprint {{ $sprint->sprintNumber }}
 @endsection
+
+@if ($user->isLP())
+@section('title-right')
+<p style="margin-top:10px;"><a href="{{ url('sprint/' . $sprint->sprintNumber . '/planning')}}">Sprint {{ $sprint->sprintNumber}} Assignments</a></p>
+@endsection
+@endif
+
 @section('under-title')
 	{{ $sprint->sprintStart->format('F j, Y') }} - {{ $sprint->sprintEnd->format('F j, Y') }}
 	<h5>{{$projects->count()}} Projects</h5>
 @endsection
+
 @section('content')
 	@include('modals.project-actions-complete')
 	@include('modals.project-actions-sprints')
