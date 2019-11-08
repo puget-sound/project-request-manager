@@ -275,9 +275,10 @@ function addToDriveSelect(fileId, driveId) {
         },
         function(err) {
           console.error("Execute error", err);
-          setTimeout(function() {
-            addToDriveSelect(fileId, driveId);
-          }, 250);
-
+          if(err.result.error.errors[0].reason === "userRateLimitExceeded") {
+            setTimeout(function() {
+              addToDriveSelect(fileId, driveId);
+            }, 250);
+        }
         });
 }
