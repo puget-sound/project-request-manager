@@ -201,6 +201,7 @@ function listParentFolders() {
                     var file = files[i];
 
                     addToDriveSelect(file.id, file.parents[0]);
+
                     //$("#google-project-folders").append("<p class='paginate'><a href='https://drive.google.com/drive/folders/" + file.id + "' target='_blank'>" + file.name + "</p>");
                   }
                 }
@@ -272,5 +273,11 @@ function addToDriveSelect(fileId, driveId) {
               $("#googleDriveSelect").append("<option value='" + fileId + "'>" + driveResponse.result.name + "</option>");
             }
         },
-        function(err) { console.error("Execute error", err); });
+        function(err) {
+          console.error("Execute error", err);
+          setTimeout(function() {
+            addToDriveSelect(fileId, driveId);
+          }, 250);
+
+        });
 }
