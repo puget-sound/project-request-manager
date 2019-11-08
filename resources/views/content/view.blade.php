@@ -1,6 +1,8 @@
 @extends('app')
+@section('top-banner')
 @include('errors.list')
 @include('settings.google')
+@endsection
 @section('title')
 {{ $projects->request_name }}
 @endsection
@@ -221,6 +223,11 @@
 	apiKey = "{{$GAapiKey}}",
 	clientId = "{{$GAclientId}}",
 	google_content = "Project Folder";
+	@if($user->isLP())
+			var google_scope = "admin";
+	@else
+			var google_scope = "readonly";
+	@endif
 	</script>
 	<script type="text/javascript" src="{{ URL::asset('js/signoff.js') }}"></script>
 	<script type="text/javascript" src="{{ URL::asset('js/bootstrap-multiselect.js') }}"></script>

@@ -78,6 +78,7 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+		@yield('top-banner')
     <div class="container">
     	<div class='page-header'>
 				<div class="title-right">

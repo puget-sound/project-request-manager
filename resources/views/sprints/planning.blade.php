@@ -1,6 +1,8 @@
 @extends('app')
+@section('top-banner')
 @include('errors.list')
 @include('settings.google')
+@endsection
 @section('title')
 Sprint Planning - Sprint {{$sprint->sprintNumber}}
 @endsection
@@ -120,7 +122,8 @@ Sprint Planning - Sprint {{$sprint->sprintNumber}}
   var google_search_type = "table",
   apiKey = "{{$GAapiKey}}",
   clientId = "{{$GAclientId}}",
-  google_content = "Project Folders";
+  google_content = "Project Folders",
+  google_scope = "admin";
   </script>
   <script type="text/javascript" src="{{ URL::asset('js/google-drive.js') }}"></script>
 <script async defer src="https://apis.google.com/js/api.js"
