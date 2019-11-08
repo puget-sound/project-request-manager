@@ -1,6 +1,8 @@
 @extends('app')
+@section('top-banner')
 @include('errors.list')
 @include('settings.google')
+@endsection
 @section('title')
 Project Folders
 @endsection
@@ -27,7 +29,8 @@ Project Folders
   clientId = "{{$GAclientId}}",
   google_parents = [],
   google_parents_query = "",
-  google_content = "Project Folders";
+  google_content = "Project Folders",
+  google_scope = "admin";
 
   @foreach ($owners as $owner)
     google_parents.push("{{ $owner->google_id }}");

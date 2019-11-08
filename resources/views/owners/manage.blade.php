@@ -1,6 +1,8 @@
 @extends('app')
+@section('top-banner')
 @include('errors.list')
 @include('settings.google')
+@endsection
 @section('title')
 Manage {{ $owner->name }}
 @endsection
@@ -76,7 +78,8 @@ Manage {{ $owner->name }}
 	apiKey = "{{$GAapiKey}}",
   clientId = "{{$GAclientId}}"
 	ownerGoogleId = "{{ $owner->google_id }}",
-	google_content = "Google Drives";
+	google_content = "Google Drives",
+	google_scope = "admin";
 
 	</script>
 	<script type="text/javascript" src="{{ URL::asset('js/google-drive.js') }}"></script>

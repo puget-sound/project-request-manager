@@ -1,5 +1,11 @@
 var GoogleAuth;
-var SCOPE = 'https://www.googleapis.com/auth/drive';
+
+var SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
+// increase scope for admin users
+if(google_scope === 'admin') {
+  SCOPE = 'https://www.googleapis.com/auth/drive';
+}
+
 var googlePageToken = "";
 
 function handleClientLoad() {
@@ -122,9 +128,18 @@ function createDriveFolder() {
 }
 }
 function searchDriveFolderTable() {
+  var all_projects = [];
   $(".google-drive-table tbody tr").each(function( index ) {
-    var project_num = $(this).find(".google-project-number").text();
-    var google_link = $(this).find(".google-folder");
+    all_projects.push($(this));
+  });
+
+  getProjectFolder();
+  function getProjectFolder() {
+    var $project_row = all_projects.pop();
+    var project_num = $project_row.find(".google-project-number").text();
+
+    if(project_num !== '') {
+    var google_link = $project_row.find(".google-folder");
     gapi.client.drive.files.list({
       "includeTeamDriveItems": true,
       "q": "name contains '" + project_num + "' and mimeType= 'application/vnd.google-apps.folder' and trashed = false and fullText contains 'prm-project-folder'",
@@ -135,9 +150,19 @@ function searchDriveFolderTable() {
                 if(response.result.files.length > 0) {
                 google_link.attr("href", "https://drive.google.com/drive/folders/" + response.result.files[0].id).show();
               }
+              if (all_projects.length) {
+                //setTimeout(getProjectFolder, 2);
+                getProjectFolder();
+              }
               },
               function(err) { console.error("Execute error", err); });
-            });
+        }
+        else {
+          if (all_projects.length) {
+            getProjectFolder();
+          }
+        }
+    }
 }
 
 function searchDriveFolder() {
@@ -157,6 +182,7 @@ function searchDriveFolder() {
               },
               function(err) { console.error("Execute error", err); });
 }
+
 function listParentFolders() {
     gapi.client.drive.files.list({
       "includeTeamDriveItems": true,

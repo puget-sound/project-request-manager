@@ -108,6 +108,10 @@ body {
   color:#285f8f;
 }
 
+.google-link {
+  display:none;
+}
+
 #create-google-folder {
     display:none;
 }
