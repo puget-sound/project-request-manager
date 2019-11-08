@@ -120,6 +120,10 @@ body {
     margin-bottom: 4px;
 }
 
+a.google-folder {
+    white-space: nowrap;
+}
+
 a.google-folder:hover {
   text-decoration: none;
 }
