@@ -135,6 +135,11 @@ a.google-folder span.glyphicon {
 .google-link {
   margin-right:15px;
   display:none;
+  float:left;
+}
+
+#signoffRequestsContainer {
+  float:left;
 }
 
 #signoffRequestsContainer h6 small {
@@ -152,6 +157,7 @@ a.google-folder span.glyphicon {
 .signoff-status {
     display:inline-block;
     float:right;
+    margin-left: 6px;
 }
 
 .get-signoff-link {
