@@ -141,6 +141,7 @@ function searchDriveFolderTable() {
     if(project_num !== '') {
     var google_link = $project_row.find(".google-folder");
     gapi.client.drive.files.list({
+      "corpora": "allDrives",
       "includeTeamDriveItems": true,
       "q": "name contains '" + project_num + "' and mimeType= 'application/vnd.google-apps.folder' and trashed = false and fullText contains 'prm-project-folder'",
       "supportsTeamDrives": true
@@ -167,6 +168,7 @@ function searchDriveFolderTable() {
 
 function searchDriveFolder() {
     gapi.client.drive.files.list({
+      "corpora": "allDrives",
       "includeTeamDriveItems": true,
       "q": "name contains '" + project_number + "' and mimeType= 'application/vnd.google-apps.folder' and trashed = false and fullText contains 'prm-project-folder'",
       "supportsTeamDrives": true
