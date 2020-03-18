@@ -200,13 +200,16 @@ class SprintsController extends Controller {
 		$sprint = Sprints::where('id', '=', $sprint_id)->first();
 		$project = Projects::where('id', '=', $id)->first();
 		$next_sprint_id = (int)$sprint_id + 1;
-		$next_sprint = Sprints::where('id', '=', $next_sprint_id)->first();
+		$next_sprint_number = (int)$sprint->sprintNumber + 1;
+		//$next_sprint = Sprints::where('id', '=', $next_sprint_id)->first();
+		$next_sprint = Sprints::where('sprintNumber', '=', $next_sprint_number)->first();
 		if (! $project->sprints->contains($next_sprint->id)) {
-			$project->sprints()->attach($next_sprint_id);
+			//$project->sprints()->attach($next_sprint_id);
+			$project->sprints()->attach($next_sprint->id);
 			$project->save();
 		}
 
-		return redirect()->back()->withSuccess("Successfully extended '" . $project->request_name . "' into Sprint " . $next_sprint->sprintNumber);
+		return redirect()->back()->withSuccess("Successfully extended <strong>" . $project->request_name . "</strong> into <strong>Sprint " . $next_sprint->sprintNumber . "</strong>");
 	}
 
 	public function move_project(EmptyRequest $request) {
