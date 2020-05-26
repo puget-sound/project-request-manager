@@ -222,6 +222,7 @@
 	google_search_type = "single",
 	apiKey = "{{$GAapiKey}}",
 	clientId = "{{$GAclientId}}",
+	google_folder_id = "",
 	google_content = "Project Folder";
 	@if($user->isLP())
 			var google_scope = "admin";

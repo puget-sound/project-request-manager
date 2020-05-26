@@ -176,6 +176,7 @@ function searchDriveFolder() {
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
                 if(response.result.files.length > 0) {
+                  google_folder_id = response.result.files[0].id;
                 $(".google-link").attr("href", "https://drive.google.com/drive/folders/" + response.result.files[0].id).css("display", "block");
               }
               else {
