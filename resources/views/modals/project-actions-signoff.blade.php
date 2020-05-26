@@ -87,9 +87,13 @@
           <div class="col-sm-8">
             <select id='projectOwnerSelect' class="selectpicker" title="Please Select One..." data-live-search="true">
               <option data-hidden="true" value='1'></option>
+              @if (empty($signoff_owners))
+	            	<option value="Technology Services">Technology Services</option>
+				      @else
               @foreach ($signoff_owners as $owner)
                 <option value="{{ $owner->ownerName }}">{{ $owner->ownerName }}</option>
               @endforeach
+            @endif
             </select>
           </div>
         </div>
