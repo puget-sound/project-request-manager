@@ -13,7 +13,7 @@
           <div class="col-sm-8">
             <select id='typeOfWork' class="selectpicker" title="Please Select One...">
               <option value='1' data-hidden="true"></option>
-              <option value='project'>Project (SoundNet, LP)</option>
+              <option value='project'>Project</option>
               <option value='ticket'>KACE Ticket</option>
               <option value='req'>Requirements &amp; Docs</option>
             </select>
@@ -38,9 +38,9 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="projectNumber" class="col-sm-4 control-label">SoundNet Folder Link</label>
+              <label for="soundNetLink" class="col-sm-4 control-label">Google Drive Folder Link</label>
               <div class="col-sm-8">
-                <input style="width: 300px;"type="text" class="form-control" id="soundNetLink" placeholder="Paste SoundNet Link here">
+                <input style="width: 300px;"type="text" class="form-control" id="soundNetLink" placeholder="Paste Google Drive Link here">
               </div>
             </div>
             <div class="form-group">

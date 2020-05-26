@@ -10,6 +10,9 @@ function clearRequestForm() {
   $("#ticketNumber").val("");
   $("#projectNumber").val(project_number);
   $("#soundNetLink").val("");
+  if(google_folder_id != "") {
+    $("#soundNetLink").val("https://drive.google.com/drive/folders/" + google_folder_id);
+  }
   $("#lpProjectLink").val("");
   if(lp_id != "") {
     $("#lpProjectLink").val("https://app.liquidplanner.com/space/" + lp_workspace + "/projects/show/" + lp_id);
