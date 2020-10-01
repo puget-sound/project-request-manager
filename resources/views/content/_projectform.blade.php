@@ -51,7 +51,7 @@
 	{!! Form::label('client_request_month', 'To Be Completed By') !!}
 	<div class="form-inline">
 	{!! Form::select('client_request_month', ["" => 'Month', 'January' => 'January', 'February' => 'February', 'March' => 'March', 'April' => 'April', 'May' => 'May', 'June' => 'June', 'July' => 'July', 'August' => 'August', 'September' => 'September', 'October' => 'October', 'November' => 'November', 'December' => 'December'], null, ['class' => 'form-control']) !!}
-	{!! Form::select('client_request_year', ["" => 'Year', '2018' => '2018', '2019' => '2019', '2020' => '2020'], null, ['class' => 'form-control']) !!}
+	{!! Form::select('client_request_year', ["" => 'Year', '2020' => '2020', '2021' => '2021', '2022' => '2022'], null, ['class' => 'form-control']) !!}
 	</div>
 </div>
 </div>
@@ -66,7 +66,7 @@
 	{!! Form::label('ts_request_month', 'TS Estimated Completion Date') !!}
 	<div class="form-inline">
 	{!! Form::select('ts_request_month', ["" => 'Month', 'January' => 'January', 'February' => 'February', 'March' => 'March', 'April' => 'April', 'May' => 'May', 'June' => 'June', 'July' => 'July', 'August' => 'August', 'September' => 'September', 'October' => 'October', 'November' => 'November', 'December' => 'December'], null, ['class' => 'form-control']) !!}
-	{!! Form::select('ts_request_year', ["" => 'Year', '2018' => '2018', '2019' => '2019', '2020' => '2020'], null, ['class' => 'form-control']) !!}
+	{!! Form::select('ts_request_year', ["" => 'Year', '2020' => '2020', '2021' => '2021', '2022' => '2022'], null, ['class' => 'form-control']) !!}
 	</div>
 </div>
 	<div class="col-md-4 form-group">
