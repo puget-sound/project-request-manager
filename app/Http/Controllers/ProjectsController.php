@@ -280,7 +280,8 @@ class ProjectsController extends Controller {
 		->where('comment_project_id', '=', $id)
 		->orderBy('created_at', 'asc')
 		->get();
-		$url = 'http://signoff.pugetsound.edu/php/loadProjectOwners.php';
+		$signoff_base_url = env('SIGNOFF_BASE_URL');
+		$url = $signoff_base_url . 'php/loadProjectOwners.php';
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
