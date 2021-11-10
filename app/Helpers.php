@@ -70,7 +70,7 @@ function ldapGetFullName($username) {
 		$ldapbind = ldap_bind($ldapconn, $ldapAuthName, $ldappass);
 		$result = ldap_search($ldapconn, "ou=Accounts,dc=pugetsound,dc=edu", "(cn=$id)") or die ("Error in search query: ".ldap_error($ldapconn));
 		$data = ldap_get_entries($ldapconn, $result);
-		@$fullName = $data[0]['description'][0];
+		@$fullName = $data[0]['displayname'][0];
 		if ($fullName != null) {
 			return $fullName;
 		} else {
