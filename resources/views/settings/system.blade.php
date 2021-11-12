@@ -5,6 +5,7 @@ System Settings
 @endsection
 @section('content')
 <div class="tabbable">
+	{{Helpers::sync_names()}}
 	<div class="col-md-2">
 		<ul class="nav nav-pills nav-stacked">
 			<li>
@@ -32,7 +33,7 @@ System Settings
 	<div class="col-md-10">
 		<div class="tab-content">
 			<div class="tab-pane" id="tab1">
-				
+
 					<div class="row">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -62,10 +63,10 @@ System Settings
 							</div>
 						</div>
 					</div>
-				
+
 			</div>
 			<div class="tab-pane" id="tab2">
-				
+
 					<div class="row">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -95,10 +96,10 @@ System Settings
 							</div>
 						</div>
 					</div>
-				
+
 			</div>
 			<div class="tab-pane" id="tab3">
-				
+
 					<div class="row">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -114,7 +115,7 @@ System Settings
 												</div>
 
 											</li>
-											
+
 										@endforeach
 									</ul>
 								</div>
@@ -129,10 +130,10 @@ System Settings
 							</div>
 						</div>
 					</div>
-				
+
 			</div>
 			<div class="tab-pane" id="tab4">
-				
+
 					<div class="row">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -162,7 +163,7 @@ System Settings
 							</div>
 						</div>
 					</div>
-				
+
 			</div>
 		</div>
 	</div>
