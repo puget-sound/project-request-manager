@@ -47,6 +47,27 @@ class Helpers {
 			return View::share('userinfo', $userinfo);
 		}
 	}
+
+	public static function sync_names() {
+	  $users = Users::where('active', '!=', 'Inactive')->orderBy('role', 'desc')->orderBy('fullname', 'asc')->get();
+
+	  foreach ($users as $user) {
+	     $username = $user->username;
+	     $fullname = $user->fullname;
+	      $ldapAuthName = 'cn=LDAP Authenticator,cn=Users,dc=pugetsound,dc=edu';
+	      $ldappass = 'Sspr609z';
+	      $ldapconn = ldap_connect("dm-1.pugetsound.edu dm-3.pugetsound.edu dm-2.pugetsound.edu dm-4.pugetsound.edu")
+	          or die("Could not connect to LDAP server.");
+	      $ldapbind = ldap_bind($ldapconn, $ldapAuthName, $ldappass);
+	      $result = ldap_search($ldapconn, "ou=Accounts,dc=pugetsound,dc=edu", "(samaccountname=$username)") or die ("Error in search query: ".ldap_error($ldapconn));
+	      $data = ldap_get_entries($ldapconn, $result);
+
+	      if((trim($data[0]['displayname'][0]) !== trim($fullname)) && trim($data[0]['displayname'][0]) !== ''){
+	        $user->fullname = $data[0]['displayname'][0];
+	      }
+	   ldap_close($ldapconn);
+	}
+	}
 }
 
 function ldapGetFullName($username) {
