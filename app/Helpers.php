@@ -61,10 +61,12 @@ class Helpers {
 	      $ldapbind = ldap_bind($ldapconn, $ldapAuthName, $ldappass);
 	      $result = ldap_search($ldapconn, "ou=Accounts,dc=pugetsound,dc=edu", "(samaccountname=$username)") or die ("Error in search query: ".ldap_error($ldapconn));
 	      $data = ldap_get_entries($ldapconn, $result);
-
-	      if((trim($data[0]['displayname'][0]) !== trim($fullname)) && trim($data[0]['displayname'][0]) !== ''){
-	        $user->fullname = $data[0]['displayname'][0];
-	      }
+				if($data["count"] > 0) {
+	      	if((trim($data[0]['displayname'][0]) !== trim($fullname)) && trim($data[0]['displayname'][0]) !== ''){
+	        	$user->fullname = $data[0]['displayname'][0];
+						$user->save();
+	      	}
+				}
 	   ldap_close($ldapconn);
 	}
 	}
