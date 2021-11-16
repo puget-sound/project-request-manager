@@ -26,6 +26,7 @@
 	</head>
 
 	<body style="padding-top: 80px;">
+	{{Helpers::sync_names()}}
 	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
