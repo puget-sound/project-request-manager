@@ -5,7 +5,6 @@ System Settings
 @endsection
 @section('content')
 <div class="tabbable">
-	{{Helpers::sync_names()}}
 	<div class="col-md-2">
 		<ul class="nav nav-pills nav-stacked">
 			<li>
