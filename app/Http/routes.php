@@ -10,9 +10,13 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+//Authenticate Controller
+Route::get('authenticate', 'AuthenticateController@okta_authenticate');
 
 //Project Controller
-Route::get('/', function() {return redirect('requests');});
+//Route::get('/', function() {return redirect('requests');});
+//Authenticate 
+Route::get('/', 'AuthenticateController@okta_authenticate');
 Route::get('projects/search', 'ProjectsController@project_search');
 Route::get('projects/search/results', 'ProjectsController@process_search');
 Route::get('projects/folders', 'ProjectsController@project_folders');

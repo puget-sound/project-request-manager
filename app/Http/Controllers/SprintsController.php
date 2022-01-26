@@ -28,6 +28,9 @@ class SprintsController extends Controller {
 	}
 
 	public function show_to_all() {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$details_sprints = array();
@@ -90,6 +93,9 @@ class SprintsController extends Controller {
 		}
 		}
 		$categories = ERPReportCategory::orderBy('name', 'ASC')->get();
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		return view('sprints.view', ['projects' => $projects, 'sprint' => $sprint, 'sprint_phases' => $sprint_phases, 'sprint_statuses' => $sprint_statuses, 'categories' => $categories, 'user' => $userdata]);
@@ -289,6 +295,9 @@ class SprintsController extends Controller {
 	}
 
 	public function planning($sprintNumber){
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$sprint = Sprints::where('sprintNumber', '=', $sprintNumber)->first();
