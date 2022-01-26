@@ -38,13 +38,43 @@ class Helpers {
 	}
 
 	public static function full_authenticate() {
-		Cas::authenticate();
-		$username = Cas::getCurrentUser();
-		$userinfo = Users::where('username', '=', $username)->where('active', '=', 'Active')->first();
-		if ($userinfo == NULL) {
-			//return URL::to('www.google.com');
-		} else {
-			return View::share('userinfo', $userinfo);
+		$client_id = env('OKTA_CLIENT_ID');
+		$client_secret = env('OKTA_CLIENT_SECRET');
+		$redirect_uri = env('OKTA_REDIRECT_URL');
+
+		$metadata_url = env('OKTA_METADATA_URL');
+		$authorization_endpoint = env('OKTA_AUTHORIZATION_ENDPOINT');
+
+		// If there is a username, they are logged in, and we'll show the logged-in view
+		if(session('username') !== null) {
+  		$username_parts = explode("@", session('username'));
+  		$username_short = $username_parts[0];
+			$username = $username_short;
+			$userinfo = Users::where('username', '=', $username)->where('active', '=', 'Active')->first();
+			if ($userinfo == NULL) {
+				//return URL::to('www.google.com');
+			} else {
+				return View::share('userinfo', $userinfo);
+			}
+		}
+		// If there is no username, they are logged out, so show them the login link
+		if(session('username') === null)  {
+  		// Generate a random state parameter for CSRF security
+			session()->put('state', bin2hex(openssl_random_pseudo_bytes(5)));
+			session()->save();
+
+			// Build the authorization URL by starting with the authorization endpoint
+			// and adding a few query string parameters identifying this application
+			$authorize_url = $authorization_endpoint.'?'.http_build_query([
+  			'response_type' => 'code',
+  			'client_id' => $client_id,
+  			'redirect_uri' => $redirect_uri,
+  			'state' => session('state'),
+  			'scope' => 'openid',
+			]);
+  		//echo '<p>Not logged in</p>';
+  		//echo '<p><a href="'.$authorize_url.'">Log In</a></p>';
+  		header('Location: ' . $authorize_url);
 		}
 	}
 
@@ -70,6 +100,14 @@ class Helpers {
 	   ldap_close($ldapconn);
 	}
 	}
+}
+
+function http($url, $params=false) {
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  if($params)
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+  return json_decode(curl_exec($ch));
 }
 
 function ldapGetFullName($username) {
