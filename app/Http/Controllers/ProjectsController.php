@@ -31,6 +31,9 @@ class ProjectsController extends Controller {
 	//Loads Open Projects into projects view throught projects.blade.php
 
 	public function projects_by_owner($owner_id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$owner = Owners::where('id', '=', $owner_id)->first();
@@ -67,6 +70,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function my_open_projects() {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$is_owner = UserMappings::where('user_id', '=', $user_id)->first();
@@ -120,6 +126,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function all_open_projects() {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
@@ -169,6 +178,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function reorder($id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$project = Projects::where('id', '=', $id)->first();
@@ -195,6 +207,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function create() {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$first_owner = Owners::orderBy('id', 'ASC')->first()->id;
@@ -209,6 +224,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function delete($id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$project = Projects::where('id', '=', $id)->first();
@@ -267,6 +285,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function get_project($id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
@@ -343,6 +364,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function send_to_liquidplanner($id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$userdata = Users::findOrFail($user_id);
 		$project = Projects::join('project_owners', 'requests.project_owner', '=', 'project_owners.id')->select('requests.*', 'project_owners.name')->where('requests.id', '=', $id)->first();
@@ -423,6 +447,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function add_comment(CommentsRequest $request) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$request['comment_user_id'] = $user_id;
 		Comments::create($request->all());
@@ -435,6 +462,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function edit($id) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$my_projects = Projects::leftJoin('user_mappings', 'requests.project_owner', '=', 'user_mappings.owner_id')
@@ -504,6 +534,9 @@ class ProjectsController extends Controller {
 
 	public function update_status(ReorderRequest $request) {
 		//get user details
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		//update project
@@ -527,6 +560,9 @@ class ProjectsController extends Controller {
 	}
 
 	public function mark_complete(ReorderRequest $request) {
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$id = $request['project_id'];
 		$project = Projects::where('id', '=', $id)->first();
@@ -582,6 +618,9 @@ class ProjectsController extends Controller {
 
 	public function project_folders() {
 		//get user details
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$owners = Owners::where('active', '=', 'Active')->orderby('name', 'asc')->whereNotNull('google_id')->get();

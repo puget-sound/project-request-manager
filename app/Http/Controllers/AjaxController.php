@@ -19,6 +19,9 @@ class AjaxController extends Controller {
 
 	public function flag_project($project_id)
 	{
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$status_code = 200;
 		$exists = Notifications::where('notif_user_id', '=', $user_id)->where('notif_project_id', '=', $project_id)->first();
@@ -36,6 +39,9 @@ class AjaxController extends Controller {
 
 	public function getNewNotificationCount() {
 		$status_code = 200;
+		if(session('username') === null)  {
+			return redirect('authenticate');
+		}
 		$user_id = Helpers::full_authenticate()->id;
 		$last_check = CheckNotifications::where('notif_check_user_id', '=', $user_id)->pluck('updated_at');
 		if($last_check == '') {
