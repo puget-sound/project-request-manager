@@ -72,7 +72,7 @@
             <li>
               <a class='dropdown-toggle' data-toggle='dropdown' role='button' href="#"><span class='glyphicon glyphicon-lock'></span>&nbsp;&nbsp;{{ Helpers::full_authenticate()->fullname }}<span class='caret'></span></a>
                 <ul class='dropdown-menu'>
-                  <li><a href='{{ url('logout') }}'>Sign out</a></li>
+                  <!--<li><a href='{{ url('logout') }}'>Sign out</a></li>-->
                 </ul>
             </li>
           </ul>

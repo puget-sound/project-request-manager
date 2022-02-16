@@ -81,7 +81,8 @@ class AuthenticateController extends Controller {
 			]);
 			//echo '<p>Not logged in</p>';
 			//echo '<p><a href="'.$authorize_url.'">Log In</a></p>';
-			header('Location: ' . $authorize_url);
+			//header('Location: ' . $authorize_url);
+			return redirect()->away($authorize_url);
 		}
 	}
 }
