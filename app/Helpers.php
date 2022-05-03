@@ -79,6 +79,7 @@ class Helpers {
 	}
 
 	public static function sync_names() {
+		if(!env('IS_DEV')) {
 	  $users = Users::where('active', '!=', 'Inactive')->orderBy('role', 'desc')->orderBy('fullname', 'asc')->get();
 
 	  foreach ($users as $user) {
@@ -100,6 +101,7 @@ class Helpers {
 	   ldap_close($ldapconn);
 	}
 	}
+}
 }
 
 function http($url, $params=false) {

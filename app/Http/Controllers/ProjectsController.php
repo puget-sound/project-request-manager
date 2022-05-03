@@ -169,6 +169,7 @@ class ProjectsController extends Controller {
 			}
 		}
 		$notifications = Notifications::where('notif_user_id', '=', $user_id)->select('id as notif_id', 'notif_user_id', 'notif_project_id')->lists('notif_project_id');
+
 		return view('content.projects', ['projects' => $projects, 'user' => $userdata, 'edit_projects' => $edit_projects, 'notifications' => $notifications], compact('my_projects'));
 	}
 
@@ -213,11 +214,13 @@ class ProjectsController extends Controller {
 		$user_id = Helpers::full_authenticate()->id;
 		$user_details = Users::where('id', '=', $user_id)->first();
 		$first_owner = Owners::orderBy('id', 'ASC')->first()->id;
+		$years_selection = array(''=>'Year', date('Y')=>date('Y'), date('Y', strtotime('+1 year'))=>date('Y', strtotime('+1 year')),
+                  date('Y', strtotime('+2 years'))=>date('Y', strtotime('+2 years')));
 		if ($user_details->isAdmin()) {
 			//get owners to populate project owners
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			$erp_report_categories = ERPReportCategory::all()->lists('name', 'id');
-			return view('content.create', ['owners' => $owners, 'users' => $user_details, 'first_owner' => $first_owner, 'erp_report_categories' => $erp_report_categories]);
+			return view('content.create', ['owners' => $owners, 'users' => $user_details, 'first_owner' => $first_owner, 'erp_report_categories' => $erp_report_categories, 'years_selection' => $years_selection]);
 		} else {
 			return redirect('requests')->withErrors(['no' => 'You are not authorized for this function.']);
 		}
@@ -472,11 +475,13 @@ class ProjectsController extends Controller {
 		->where('user_mappings.edit', '=', 1)
 		->select('requests.*', 'user_mappings.user_id', 'user_mappings.owner_id')
 		->lists('requests.id');
+		$years_selection = array(''=>'Year', date('Y')=>date('Y'), date('Y', strtotime('+1 year'))=>date('Y', strtotime('+1 year')),
+                  date('Y', strtotime('+2 years'))=>date('Y', strtotime('+2 years')));
 		if ($user_details->isAdmin() || in_array($id, $my_projects)) {
 			$project = Projects::findOrFail($id);
 			$owners = Owners::where('active', '=', 'Active')->lists('name', 'id');
 			$erp_report_categories = ERPReportCategory::all()->lists('name', 'id');
-			return view('content.edit', ['project' => $project, 'user_details' => $user_details, 'erp_report_categories' => $erp_report_categories], compact('owners'));
+			return view('content.edit', ['project' => $project, 'user_details' => $user_details, 'erp_report_categories' => $erp_report_categories, 'years_selection' => $years_selection], compact('owners'));
 		} else {
 			return redirect()->back()->withErrors(['noauth' => 'You are not authorized for this function.']);
 		}
