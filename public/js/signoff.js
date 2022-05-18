@@ -66,7 +66,7 @@ function validateRequest() {
     window.scrollTo(0, 0);
     $("#errorValidate").show();
     return false;
-  } else if ($("#testingTypeSelect").val() == "" && $("#typeOfWork".val() != "req")) {
+  } else if ($("#testingTypeSelect").val() == 1 && $("#typeOfWork").val() != "req") {
     $("#errorValidate").html("You need to select a <strong>Proof-of-Testing Type</strong>. This selection is required.");
     window.scrollTo(0, 0);
     $("#errorValidate").show();
@@ -155,7 +155,8 @@ function submitNewRequest() {
         $('#newRequestModal').modal('hide');
         getRequests(true);
       }
-    });}
+    });
+  }
 }
     $(document).ready(function() {
       getRequests(false);

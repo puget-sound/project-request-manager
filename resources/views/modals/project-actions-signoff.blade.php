@@ -6,7 +6,6 @@
         <h4 class="modal-title" id="myModalLabel">New Sign-off Request</h4>
       </div>
       <div class="modal-body">
-      <div style="display: none;" class="alert alert-danger" id="errorValidate" role="alert"></div>
       <form class='form-horizontal'>
         <div class="form-group">
           <label for="projectOwnerSelect" class="col-sm-4 control-label">Type</label>
@@ -129,6 +128,7 @@
           </div>
         </div>
       </form>
+      <div style="display: none;" class="alert alert-danger" id="errorValidate" role="alert"></div>
 <!-- end modal -->
 </div>
 <div class="modal-footer">
